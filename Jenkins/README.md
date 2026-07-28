@@ -113,7 +113,7 @@ The Promote-Dev job uses a shorter, package-only flow:
 
 `BuildCookRun` intentionally remains one stage because that exact flow is proven. The workspace is not deleted after builds; Unreal's `Binaries`, `Intermediate`, and caches make incremental builds much faster. Only `BuildOutput` is recreated for packaging.
 
-Every script line uses millisecond timestamps and a named stage. Native tool output is also saved separately under `BuildLogs`. Commands report sanitized arguments, exit code, and elapsed time. Butler uploads additionally echo verbose live status to the Jenkins console; noisy Unreal editor and cook output remains available in the archived native logs.
+Every script line uses millisecond timestamps and a named stage. Native tool output is also saved separately under `BuildLogs`. Commands report sanitized arguments, exit code, and elapsed time. Butler uploads additionally echo live phase and result lines to the Jenkins console while filtering terminal animation frames; noisy Unreal editor and cook output remains available in the archived native logs. Butler verbose mode is intentionally disabled because it prints temporary signed upload URLs.
 
 ## Build identity
 

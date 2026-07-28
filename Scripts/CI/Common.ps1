@@ -71,7 +71,8 @@ function Invoke-LoggedProcess {
         [string[]]$Arguments = @(),
         [string]$WorkingDirectory = $script:RepositoryRoot,
         [int[]]$SuccessExitCodes = @(0),
-        [switch]$EchoToConsole
+        [switch]$EchoToConsole,
+        [switch]$FilterInteractiveProgress
     )
 
     Initialize-CIDirectories
@@ -88,7 +89,24 @@ function Invoke-LoggedProcess {
             if ($EchoToConsole) {
                 & $FilePath @Arguments 2>&1 |
                     Tee-Object -FilePath $nativeLog |
-                    ForEach-Object { Write-Host $_ }
+                    ForEach-Object {
+                        $consoleLine = [string]$_
+                        $isInteractiveFrame = $FilterInteractiveProgress -and (
+                            [string]::IsNullOrWhiteSpace($consoleLine) -or
+                            $consoleLine -match '[\u2580-\u259f]'
+                        )
+                        if (-not $isInteractiveFrame) {
+                            if ($FilterInteractiveProgress) {
+                                $consoleLine = $consoleLine.
+                                    Replace([string][char]0x2219, '*').
+                                    Replace([string][char]0x221A, '[OK]').
+                                    Replace([string][char]0x2192, '->').
+                                    Replace([string][char]0x2190, '<-').
+                                    Replace([string][char]0x2713, '[OK]')
+                            }
+                            Write-Host $consoleLine
+                        }
+                    }
             }
             else {
                 & $FilePath @Arguments 2>&1 | Tee-Object -FilePath $nativeLog

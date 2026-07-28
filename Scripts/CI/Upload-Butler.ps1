@@ -23,6 +23,6 @@ Invoke-CIStage -Name 'itch.io Upload' -Body {
     $PackageDirectory = Get-RequiredPath -Path $PackageDirectory -Description 'Verified package'
     Get-RequiredPath -Path $ButlerPath -Description 'itch.io Butler' | Out-Null
     Invoke-LoggedProcess -Stage 'itch.io Upload' -FilePath $ButlerPath -Arguments @(
-        'push', '--verbose', '--assume-yes', $PackageDirectory, "$Target`:$Channel", '--userversion', $Version
-    ) -EchoToConsole | Out-Null
+        'push', '--assume-yes', $PackageDirectory, "$Target`:$Channel", '--userversion', $Version
+    ) -EchoToConsole -FilterInteractiveProgress | Out-Null
 }

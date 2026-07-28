@@ -64,9 +64,9 @@ Invoke-CIStage -Name 'Project Validation' -Body {
         -not $releasePipeline.Contains('currentBuild.displayName')) {
         throw 'Release Jenkins pipeline must build the Release stream, upload windows, and apply the informative Build ID.'
     }
-    if (-not $butlerUpload.Contains("'--verbose'") -or
-        -not $butlerUpload.Contains('-EchoToConsole')) {
-        throw 'Butler uploads must provide verbose live progress in the Jenkins console.'
+    if ($butlerUpload.Contains("'--verbose'") -or
+        -not $butlerUpload.Contains('-EchoToConsole -FilterInteractiveProgress')) {
+        throw 'Butler uploads must provide filtered live status without verbose signed upload URLs.'
     }
     Write-CILog -Stage 'Project Validation' -Message 'Blueprint-only UE 5.8 Combat project settings are valid.'
 }
