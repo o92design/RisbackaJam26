@@ -57,15 +57,15 @@ Invoke-CIStage -Name 'Dashboard' -Body {
 <tr class="$class">
   <td><span class="badge">$((ConvertTo-HtmlText $run.result))</span></td>
   <td>$((ConvertTo-HtmlText $run.stream))</td>
-  <td><code>$buildId</code></td>
-  <td>$promotedChannels</td>
+  <td title="$buildId"><code>$buildId</code></td>
+  <td title="$promotedChannels">$promotedChannels</td>
   <td>$((ConvertTo-HtmlText $stockholm))</td>
-  <td>$computer</td>
+  <td title="$computer">$computer</td>
   <td>$((ConvertTo-HtmlText $run.buildNumber))</td>
   <td><code>$((ConvertTo-HtmlText $run.shortCommit))</code></td>
-  <td>$tag</td>
+  <td title="$tag">$tag</td>
   <td title="$((ConvertTo-HtmlText $run.subject))">$((ConvertTo-HtmlText $run.subject))</td>
-  <td>$((ConvertTo-HtmlText $run.failureStage))</td>
+  <td title="$((ConvertTo-HtmlText $run.failureStage))">$((ConvertTo-HtmlText $run.failureStage))</td>
   <td>$duration s</td>
   <td>$sizeMB MB</td>
   <td>$jenkinsLink &middot; <a href="$((ConvertTo-HtmlText $run.itchPage))">itch.io</a></td>
@@ -100,10 +100,11 @@ Invoke-CIStage -Name 'Dashboard' -Body {
 <style>
 :root{color-scheme:dark;--bg:#11151c;--panel:#1b2330;--ink:#edf3ff;--muted:#94a4ba;--line:#2c394b;--ok:#50d890;--bad:#ff667d;--warn:#ffca63}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top left,#243047 0,var(--bg) 38%);color:var(--ink);font:14px/1.45 system-ui,Segoe UI,sans-serif}
-main{max-width:1500px;margin:auto;padding:30px}h1{margin:0;font-size:30px}header p{color:var(--muted);margin:.4rem 0 1.5rem}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+main{width:100%;margin:0;padding:24px}h1{margin:0;font-size:30px}header p{color:var(--muted);margin:.4rem 0 1.5rem}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
 .card,.chart,.table-wrap{background:rgba(27,35,48,.92);border:1px solid var(--line);border-radius:12px;padding:16px;box-shadow:0 16px 40px #0004}.label{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.08em}.value{font-size:22px;margin-top:5px}
-.chart{margin-top:12px}svg{width:100%;height:100px}.table-wrap{margin-top:12px;overflow:auto;padding:0}table{border-collapse:collapse;width:100%;white-space:nowrap}th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);max-width:340px;overflow:hidden;text-overflow:ellipsis}th{position:sticky;top:0;background:#202a39;color:var(--muted)}code{color:#9ed4ff}
+.chart{margin-top:12px}svg{width:100%;height:100px}.table-wrap{margin-top:12px;overflow:hidden;padding:0}table{border-collapse:collapse;table-layout:fixed;width:100%;white-space:nowrap}th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);overflow:hidden;text-overflow:ellipsis}th{position:sticky;top:0;background:#202a39;color:var(--muted)}code{color:#9ed4ff}
 .badge{padding:3px 7px;border-radius:999px;background:#ffffff12}.success .badge{color:var(--ok)}.failure .badge{color:var(--bad)}.unstable .badge{color:var(--warn)}a{color:#8dc7ff}footer{color:var(--muted);margin-top:12px}
+@media(max-width:1100px){main{padding:16px}.table-wrap{overflow-x:auto}table{min-width:1100px}}
 </style>
 </head>
 <body><main>
@@ -116,7 +117,15 @@ main{max-width:1500px;margin:auto;padding:30px}h1{margin:0;font-size:30px}header
   <div class="card"><div class="label">Latest release</div><div class="value">$(ConvertTo-HtmlText $latestReleaseText)</div></div>
 </section>
 <section class="chart"><div class="label">Recent duration trend (minutes; green success, red failure)</div><svg viewBox="0 0 500 100" preserveAspectRatio="none">$bars</svg></section>
-<section class="table-wrap"><table><thead><tr><th>Result</th><th>Stream</th><th>Build ID</th><th>Promoted channels</th><th>Archived</th><th>Machine</th><th>Build</th><th>Commit</th><th>Tag</th><th>Subject</th><th>Failure stage</th><th>Duration</th><th>Package</th><th>Links</th></tr></thead><tbody>$($rows -join [Environment]::NewLine)</tbody></table></section>
+<section class="table-wrap"><table>
+<colgroup>
+  <col style="width:5%"><col style="width:5%"><col style="width:16%"><col style="width:7%">
+  <col style="width:10%"><col style="width:7%"><col style="width:4%"><col style="width:8%">
+  <col style="width:5%"><col style="width:11%"><col style="width:6%"><col style="width:4%">
+  <col style="width:5%"><col style="width:7%">
+</colgroup>
+<thead><tr><th>Result</th><th>Stream</th><th>Build ID</th><th>Promoted channels</th><th>Archived</th><th>Machine</th><th>Build</th><th>Commit</th><th>Tag</th><th>Subject</th><th>Failure stage</th><th>Duration</th><th>Package</th><th>Links</th></tr></thead>
+<tbody>$($rows -join [Environment]::NewLine)</tbody></table></section>
 <footer>Generated $generated &middot; refreshes every two minutes &middot; immutable data: $(ConvertTo-HtmlText $ArchiveRoot)</footer>
 </main></body></html>
 "@

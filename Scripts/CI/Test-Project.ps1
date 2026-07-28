@@ -73,5 +73,20 @@ Invoke-CIStage -Name 'Project Validation' -Body {
     if ($dashboardGenerator -match '[^\x00-\x7F]') {
         throw 'Dashboard generator must remain ASCII-only for Windows PowerShell 5.1 compatibility.'
     }
+    foreach ($layoutContract in @(
+        'main{width:100%;margin:0;padding:24px}',
+        '.table-wrap{margin-top:12px;overflow:hidden;padding:0}',
+        'table{border-collapse:collapse;table-layout:fixed;width:100%;white-space:nowrap}',
+        '@media(max-width:1100px)'
+    )) {
+        if (-not $dashboardGenerator.Contains($layoutContract)) {
+            throw "Dashboard responsive layout contract is missing: $layoutContract"
+        }
+    }
+    $colgroup = [regex]::Match($dashboardGenerator, '(?s)<colgroup>(.*?)</colgroup>')
+    $columnWidths = @([regex]::Matches($colgroup.Groups[1].Value, 'width:(\d+)%') | ForEach-Object { [int]$_.Groups[1].Value })
+    if (-not $colgroup.Success -or $columnWidths.Count -ne 14 -or ($columnWidths | Measure-Object -Sum).Sum -ne 100) {
+        throw 'Dashboard history table must define fourteen columns totaling exactly 100% width.'
+    }
     Write-CILog -Stage 'Project Validation' -Message 'Blueprint-only UE 5.8 Combat project settings are valid.'
 }
