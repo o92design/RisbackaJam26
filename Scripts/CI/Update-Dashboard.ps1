@@ -35,12 +35,14 @@ Invoke-CIStage -Name 'Dashboard' -Body {
         $duration = [Math]::Round((@($run.stages) | Measure-Object -Property elapsedSeconds -Sum).Sum, 1)
         $sizeMB = if ($run.package -and $run.package.sizeBytes) { [Math]::Round([double]$run.package.sizeBytes / 1MB, 1) } else { 0 }
         $jenkinsLink = if ($run.buildUrl) { "<a href='$(ConvertTo-HtmlText $run.buildUrl)'>Jenkins</a>" } else { 'local' }
+        $computer = if ($run.PSObject.Properties['buildComputer']) { ConvertTo-HtmlText $run.buildComputer } else { 'unknown' }
         $tag = if ($run.tag) { ConvertTo-HtmlText $run.tag } else { '—' }
         @"
 <tr class="$class">
   <td><span class="badge">$((ConvertTo-HtmlText $run.result))</span></td>
   <td>$((ConvertTo-HtmlText $run.stream))</td>
   <td>$((ConvertTo-HtmlText $stockholm))</td>
+  <td>$computer</td>
   <td>$((ConvertTo-HtmlText $run.buildNumber))</td>
   <td><code>$((ConvertTo-HtmlText $run.shortCommit))</code></td>
   <td>$tag</td>
@@ -94,7 +96,7 @@ main{max-width:1500px;margin:auto;padding:30px}h1{margin:0;font-size:30px}header
   <div class="card"><div class="label">Latest release</div><div class="value">$(ConvertTo-HtmlText $latestReleaseText)</div></div>
 </section>
 <section class="chart"><div class="label">Recent duration trend (minutes; green success, red failure)</div><svg viewBox="0 0 500 100" preserveAspectRatio="none">$bars</svg></section>
-<section class="table-wrap"><table><thead><tr><th>Result</th><th>Stream</th><th>Archived</th><th>Build</th><th>Commit</th><th>Tag</th><th>Subject</th><th>Failure stage</th><th>Duration</th><th>Package</th><th>Links</th></tr></thead><tbody>$($rows -join [Environment]::NewLine)</tbody></table></section>
+<section class="table-wrap"><table><thead><tr><th>Result</th><th>Stream</th><th>Archived</th><th>Machine</th><th>Build</th><th>Commit</th><th>Tag</th><th>Subject</th><th>Failure stage</th><th>Duration</th><th>Package</th><th>Links</th></tr></thead><tbody>$($rows -join [Environment]::NewLine)</tbody></table></section>
 <footer>Generated $generated · refreshes every two minutes · immutable data: $(ConvertTo-HtmlText $ArchiveRoot)</footer>
 </main></body></html>
 "@

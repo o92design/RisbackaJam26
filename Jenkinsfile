@@ -38,7 +38,7 @@ pipeline {
             steps {
                 powershell(
                     label: 'Capture reproducible build metadata',
-                    script: '& .\\Scripts\\CI\\New-BuildContext.ps1 -Configuration Development -Channel windows-dev -Version "jenkins-$env:BUILD_NUMBER"'
+                    script: '& .\\Scripts\\CI\\New-BuildContext.ps1 -Configuration Development -Channel windows-dev'
                 )
             }
         }
@@ -89,7 +89,7 @@ pipeline {
                 withCredentials([string(credentialsId: 'itch-butler-api-key', variable: 'BUTLER_API_KEY')]) {
                     powershell(
                         label: 'Butler differential upload',
-                        script: '& .\\Scripts\\CI\\Upload-Butler.ps1 -Channel windows-dev -Version "jenkins-$env:BUILD_NUMBER"'
+                        script: '& .\\Scripts\\CI\\Upload-Butler.ps1 -Channel windows-dev'
                     )
                 }
             }

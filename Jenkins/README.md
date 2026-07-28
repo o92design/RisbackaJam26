@@ -72,6 +72,26 @@ Both jobs expose small, reusable stages:
 
 Every script line uses millisecond timestamps and a named stage. Native tool output is also saved separately under `BuildLogs`. Commands report sanitized arguments, exit code, and elapsed time.
 
+## Build identity
+
+Development builds use one identity consistently for the archive folder, manifest,
+packaged `BuildInfo.json`, and itch.io user version:
+
+```text
+Build-DESKTOP-6M3T3NU-20260728-184602Z-Development-Build-12-696540b1e6e7
+```
+
+Release archive identities also include the immutable semantic tag:
+
+```text
+Build-DESKTOP-6M3T3NU-20260728-184602Z-Release-v0.1.0-Build-4-696540b1e6e7
+```
+
+The timestamp is the build start in UTC (`Z`). The dashboard displays timestamps in
+Stockholm time. Result and failure stage remain in the manifest and dashboard because
+they are only final after archival and upload; immutable archive folders are not renamed.
+Release uploads continue using the semantic tag itself as the itch.io user version.
+
 ## Archive and retention
 
 Jenkins keeps five build records. The HDD keeps all build attempts with no automatic deletion:

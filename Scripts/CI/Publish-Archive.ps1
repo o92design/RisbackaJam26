@@ -30,8 +30,8 @@ Invoke-CIStage -Name 'Immutable Archive' -Body {
     }
 
     $stream = if ($context.configuration -eq 'Shipping') { 'Release' } else { 'Development' }
-    $safeBuild = ([string]$context.buildNumber) -replace '[^A-Za-z0-9_.-]', '-'
-    $runName = '{0}-{1}-{2}' -f ([DateTime]::UtcNow.ToString('yyyyMMdd-HHmmssZ')), $safeBuild, $context.shortCommit
+    $runName = [string]$context.buildId
+    if (-not $runName) { throw 'Build context does not contain a build ID.' }
     $stagingPath = Join-Path (Join-Path $ArchiveRoot 'Staging') $runName
     $finalPath = Join-Path (Join-Path (Join-Path $ArchiveRoot 'Runs') $stream) $runName
 
@@ -96,10 +96,13 @@ Invoke-CIStage -Name 'Immutable Archive' -Body {
     }
 
     $manifest = [ordered]@{
-        schemaVersion     = 1
+        schemaVersion     = 2
         runName           = $runName
+        buildId           = $context.buildId
+        buildComputer     = $context.buildComputer
         result            = $Result
         stream            = $stream
+        startedUtc        = $context.startedUtc
         archivedUtc       = [DateTime]::UtcNow.ToString('o')
         project           = $context.project
         jobName           = $context.jobName
