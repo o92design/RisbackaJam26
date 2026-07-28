@@ -46,10 +46,12 @@ Invoke-CIStage -Name 'Project Validation' -Body {
     $promotionPipelinePath = Get-RequiredPath -Path (Join-Path $script:RepositoryRoot 'Jenkins\Jenkinsfile.promote-dev') -Description 'Development promotion Jenkinsfile'
     $releasePipelinePath = Get-RequiredPath -Path (Join-Path $script:RepositoryRoot 'Jenkins\Jenkinsfile.release') -Description 'Release Jenkinsfile'
     $butlerUploadPath = Get-RequiredPath -Path (Join-Path $script:RepositoryRoot 'Scripts\CI\Upload-Butler.ps1') -Description 'Butler upload script'
+    $dashboardGeneratorPath = Get-RequiredPath -Path (Join-Path $script:RepositoryRoot 'Scripts\CI\Update-Dashboard.ps1') -Description 'Dashboard generator'
     $testPipeline = Get-Content -Raw -LiteralPath $testPipelinePath
     $promotionPipeline = Get-Content -Raw -LiteralPath $promotionPipelinePath
     $releasePipeline = Get-Content -Raw -LiteralPath $releasePipelinePath
     $butlerUpload = Get-Content -Raw -LiteralPath $butlerUploadPath
+    $dashboardGenerator = Get-Content -Raw -Encoding UTF8 -LiteralPath $dashboardGeneratorPath
     if (-not $testPipeline.Contains("ITCH_CHANNEL  = 'windows-test'") -or
         -not $testPipeline.Contains('-Stream Test -Channel windows-test') -or
         -not $testPipeline.Contains('currentBuild.displayName')) {
@@ -67,6 +69,9 @@ Invoke-CIStage -Name 'Project Validation' -Body {
     if ($butlerUpload.Contains("'--verbose'") -or
         -not $butlerUpload.Contains('-EchoToConsole -FilterInteractiveProgress')) {
         throw 'Butler uploads must provide filtered live status without verbose signed upload URLs.'
+    }
+    if ($dashboardGenerator -match '[^\x00-\x7F]') {
+        throw 'Dashboard generator must remain ASCII-only for Windows PowerShell 5.1 compatibility.'
     }
     Write-CILog -Stage 'Project Validation' -Message 'Blueprint-only UE 5.8 Combat project settings are valid.'
 }

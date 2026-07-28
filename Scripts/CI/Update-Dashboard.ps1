@@ -50,9 +50,9 @@ Invoke-CIStage -Name 'Dashboard' -Body {
             ConvertTo-HtmlText ((@($run.promotions | ForEach-Object { $_.channel }) | Sort-Object -Unique) -join ', ')
         }
         else {
-            '—'
+            '&mdash;'
         }
-        $tag = if ($run.tag) { ConvertTo-HtmlText $run.tag } else { '—' }
+        $tag = if ($run.tag) { ConvertTo-HtmlText $run.tag } else { '&mdash;' }
         @"
 <tr class="$class">
   <td><span class="badge">$((ConvertTo-HtmlText $run.result))</span></td>
@@ -68,7 +68,7 @@ Invoke-CIStage -Name 'Dashboard' -Body {
   <td>$((ConvertTo-HtmlText $run.failureStage))</td>
   <td>$duration s</td>
   <td>$sizeMB MB</td>
-  <td>$jenkinsLink · <a href="$((ConvertTo-HtmlText $run.itchPage))">itch.io</a></td>
+  <td>$jenkinsLink &middot; <a href="$((ConvertTo-HtmlText $run.itchPage))">itch.io</a></td>
 </tr>
 "@
     }
@@ -84,9 +84,9 @@ Invoke-CIStage -Name 'Dashboard' -Body {
         $bars += "<rect x='$x' y='$y' width='16' height='$height' rx='3' fill='$color'><title>$(ConvertTo-HtmlText $trendRuns[$i].runName)</title></rect>"
     }
 
-    $latestTestText = if ($latestTest) { "$($latestTest.result) · #$($latestTest.buildNumber) · $($latestTest.shortCommit)" } else { 'No test builds yet' }
-    $latestDevText = if ($latestDevelopment) { "#$($latestDevelopment.run.buildNumber) · $($latestDevelopment.run.shortCommit)" } else { 'No development promotion yet' }
-    $latestReleaseText = if ($latestRelease) { "$($latestRelease.result) · $($latestRelease.tag) · $($latestRelease.shortCommit)" } else { 'No releases yet' }
+    $latestTestText = if ($latestTest) { "$($latestTest.result) | #$($latestTest.buildNumber) | $($latestTest.shortCommit)" } else { 'No test builds yet' }
+    $latestDevText = if ($latestDevelopment) { "#$($latestDevelopment.run.buildNumber) | $($latestDevelopment.run.shortCommit)" } else { 'No development promotion yet' }
+    $latestReleaseText = if ($latestRelease) { "$($latestRelease.result) | $($latestRelease.tag) | $($latestRelease.shortCommit)" } else { 'No releases yet' }
     $generated = [TimeZoneInfo]::ConvertTimeBySystemTimeZoneId([DateTime]::UtcNow, 'W. Europe Standard Time').ToString('yyyy-MM-dd HH:mm:ss')
 
     $html = @"
@@ -96,7 +96,7 @@ Invoke-CIStage -Name 'Dashboard' -Body {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta http-equiv="refresh" content="120">
-<title>Risbacka Jam 26 · Build Dashboard</title>
+<title>Risbacka Jam 26 &middot; Build Dashboard</title>
 <style>
 :root{color-scheme:dark;--bg:#11151c;--panel:#1b2330;--ink:#edf3ff;--muted:#94a4ba;--line:#2c394b;--ok:#50d890;--bad:#ff667d;--warn:#ffca63}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top left,#243047 0,var(--bg) 38%);color:var(--ink);font:14px/1.45 system-ui,Segoe UI,sans-serif}
@@ -107,7 +107,7 @@ main{max-width:1500px;margin:auto;padding:30px}h1{margin:0;font-size:30px}header
 </style>
 </head>
 <body><main>
-<header><h1>Risbacka Jam 26</h1><p>Jenkins build, test, package, archive, and itch.io history · Stockholm time</p></header>
+<header><h1>Risbacka Jam 26</h1><p>Jenkins build, test, package, archive, and itch.io history &middot; Stockholm time</p></header>
 <section class="cards">
   <div class="card"><div class="label">Build attempts</div><div class="value">$total</div></div>
   <div class="card"><div class="label">Success rate</div><div class="value">$successRate%</div></div>
@@ -117,7 +117,7 @@ main{max-width:1500px;margin:auto;padding:30px}h1{margin:0;font-size:30px}header
 </section>
 <section class="chart"><div class="label">Recent duration trend (minutes; green success, red failure)</div><svg viewBox="0 0 500 100" preserveAspectRatio="none">$bars</svg></section>
 <section class="table-wrap"><table><thead><tr><th>Result</th><th>Stream</th><th>Build ID</th><th>Promoted channels</th><th>Archived</th><th>Machine</th><th>Build</th><th>Commit</th><th>Tag</th><th>Subject</th><th>Failure stage</th><th>Duration</th><th>Package</th><th>Links</th></tr></thead><tbody>$($rows -join [Environment]::NewLine)</tbody></table></section>
-<footer>Generated $generated · refreshes every two minutes · immutable data: $(ConvertTo-HtmlText $ArchiveRoot)</footer>
+<footer>Generated $generated &middot; refreshes every two minutes &middot; immutable data: $(ConvertTo-HtmlText $ArchiveRoot)</footer>
 </main></body></html>
 "@
 
