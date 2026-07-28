@@ -1,0 +1,377 @@
+We have completed and verified a working automated Unreal Engine → Jenkins → itch.io build pipeline. Use the information below as the basis for setting up the real hackathon project.
+
+BUILD SERVER
+
+The build server is an Alienware computer running Windows 10.
+
+Hostname:
+DESKTOP-6M3T3NU
+
+Jenkins LAN URL:
+http://DESKTOP-6M3T3NU:8080/
+
+Jenkins runs as:
+NT AUTHORITY\SYSTEM (LocalSystem)
+
+Jenkins home:
+C:\ProgramData\Jenkins\.jenkins
+
+Jenkins workspaces:
+C:\ProgramData\Jenkins\.jenkins\workspace
+
+Jenkins and active Unreal builds are stored on the primary SSD. The secondary drive is a 1 TB 5400-RPM mechanical HDD, model ST1000LM024 HN-M101MBB. The HDD should only be used for completed build archives and backups. Do not place Jenkins workspaces, Unreal Intermediate files, or Derived Data Cache on the HDD.
+
+The SSD originally had approximately 194 GB free. Disk usage must be monitored because Unreal workspaces, cooked content, Intermediate files, and caches can grow considerably.
+
+Because Jenkins runs as LocalSystem, it does not inherit a logged-in user’s mapped network drives or authenticated network-share credentials. Source code should move between computers through GitHub, and builds should occur entirely on the Alienware’s local SSD.
+
+INSTALLED SOFTWARE
+
+Git:
+2.55.0.windows.3
+
+Git LFS:
+3.7.1
+
+7-Zip is installed.
+
+Visual Studio:
+Visual Studio 2026 Community
+
+Visual Studio path:
+C:\Program Files\Microsoft Visual Studio\18\Community
+
+Visual Studio locator:
+C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe
+
+Installed Visual Studio components include:
+- C++ Core Features
+- MSVC Build Tools for x64/x86
+- Visual Studio Tools for Unreal Engine
+- Windows SDK 10.0.26100.0
+- .NET 10
+
+Unreal Engine:
+5.8
+
+Unreal Engine path:
+C:\Epic\UE_5.8
+
+Unreal Automation Tool:
+C:\Epic\UE_5.8\Engine\Build\BatchFiles\RunUAT.bat
+
+Java:
+Oracle JDK 25.0.4
+
+JAVA_HOME points to the actual JDK directory under:
+C:\Program Files\Java\...
+
+The following path is only Oracle’s Java redirect and must not be used as JAVA_HOME:
+C:\Program Files\Common Files\Oracle\Java\javapath
+
+Jenkins:
+Current Jenkins LTS, running as a Windows service on port 8080
+
+itch.io Butler:
+15.29.0
+
+Butler path:
+C:\Tools\butler\butler.exe
+
+VISUAL STUDIO WARNING
+
+UE 5.8 currently builds with MSVC 14.51.36252 on this server. Unreal reports that its preferred compiler is 14.50.35717 because 14.51 is newer and less tested. The warning is non-blocking, and all test builds completed successfully.
+
+JENKINS VERIFICATION
+
+A Jenkins environment-check Pipeline verified that the LocalSystem service can access:
+- Git
+- Git LFS
+- Java 25
+- Unreal Automation Tool
+- Visual Studio
+
+WORKING TEST PROJECT
+
+Local development path:
+J:\dev\Projects\Unreal\JenkinsTest\JenkinsTest
+
+Project file:
+JenkinsTest.uproject
+
+Public GitHub repository:
+https://github.com/o92design/JenkinsTest
+
+Branch:
+master
+
+Test itch.io page:
+https://kioskars.itch.io/jenkins-test
+
+Butler target:
+kioskars/jenkins-test
+
+Development channel:
+windows-dev
+
+Full Butler destination:
+kioskars/jenkins-test:windows-dev
+
+GIT CONFIGURATION
+
+The project uses Git LFS for Unreal binary assets.
+
+The .gitattributes file contains:
+
+*.uasset filter=lfs diff=lfs merge=lfs -text
+*.umap filter=lfs diff=lfs merge=lfs -text
+*.fbx filter=lfs diff=lfs merge=lfs -text
+*.wav filter=lfs diff=lfs merge=lfs -text
+*.tga filter=lfs diff=lfs merge=lfs -text
+
+The .gitignore file contains:
+
+.vs/
+*.sln
+*.slnx
+
+**/Binaries/
+**/DerivedDataCache/
+**/Intermediate/
+**/Saved/
+
+BuildOutput/
+
+For the test project, 849 files were committed initially, 753 Unreal assets were correctly tracked through Git LFS, and no committed file exceeded GitHub’s 100 MB per-file limit.
+
+ITCH.IO CREDENTIAL
+
+An itch.io API key is securely stored in Jenkins as a Secret Text credential.
+
+Jenkins credential ID:
+itch-butler-api-key
+
+The actual API key was never placed in Git or the Jenkinsfile and must not be copied into another project’s source code.
+
+JENKINS JOB
+
+The working end-to-end Jenkins job is named:
+JenkinsTest
+
+Its configuration is:
+
+Definition:
+Pipeline script from SCM
+
+SCM:
+Git
+
+Repository URL:
+https://github.com/o92design/JenkinsTest.git
+
+Credentials:
+None, because the repository is public
+
+Branch specifier:
+*/master
+
+Script path:
+Jenkinsfile
+
+Lightweight checkout:
+Enabled
+
+Poll SCM:
+Enabled
+
+Polling schedule:
+H/2 * * * *
+
+This checks GitHub approximately every two minutes and starts a build only when master has changed. Several rapid pushes may be combined into one build of the newest commit.
+
+Jenkins is private on the LAN. Port 8080 is not publicly exposed. A GitHub webhook was not used because GitHub cannot contact a LAN-only Jenkins server. Polling avoids exposing Jenkins to the internet.
+
+Temporary diagnostic Jenkins jobs also exist:
+- environment-check
+- itch-upload-test
+
+The JenkinsTest job is the actual version-controlled end-to-end Pipeline.
+
+PIPELINE BEHAVIOR
+
+The Jenkinsfile is stored in the GitHub repository.
+
+The Pipeline performs these operations:
+
+1. Checks out the master branch.
+2. Runs git lfs pull.
+3. Verifies that the .uproject, Unreal Automation Tool, and Butler exist.
+4. Builds the project for Win64 Development.
+5. Cooks all required content.
+6. Stages and packages the game.
+7. Archives the packaged output into BuildOutput.
+8. Uploads the unpacked Windows package through Butler.
+9. Publishes it to the windows-dev itch.io channel.
+10. Uses the Jenkins build number as the itch.io user version.
+11. Keeps only five Jenkins build records.
+12. Prevents concurrent Unreal builds.
+13. Uses a 90-minute timeout.
+
+The Pipeline intentionally preserves Binaries, Intermediate files, and Unreal caches between builds. Do not add deleteDir() or automatically erase the whole workspace after every build. Preserving those files reduced the test build from roughly 50 minutes to approximately 3 minutes.
+
+The BuildOutput directory itself is deleted and recreated before each package operation.
+
+WORKING UNREAL BUILD COMMAND
+
+The successful command is equivalent to:
+
+call "C:\Epic\UE_5.8\Engine\Build\BatchFiles\RunUAT.bat" BuildCookRun ^
+  -project="%WORKSPACE%\ProjectName.uproject" ^
+  -noP4 ^
+  -platform=Win64 ^
+  -clientconfig=Development ^
+  -build ^
+  -cook ^
+  -stage ^
+  -pak ^
+  -package ^
+  -archive ^
+  -archivedirectory="%WORKSPACE%\BuildOutput" ^
+  -utf8output ^
+  -unattended
+
+The packaged output is placed under:
+
+%WORKSPACE%\BuildOutput\Windows
+
+The top-level executable should be launched, for example:
+
+BuildOutput\Windows\ProjectName.exe
+
+Do not launch the duplicate executable directly from the internal Binaries\Win64 directory when testing the packaged game.
+
+WORKING BUTLER UPLOAD
+
+The successful Butler command is equivalent to:
+
+"C:\Tools\butler\butler.exe" push ^
+  "%WORKSPACE%\BuildOutput\Windows" ^
+  "itch-username/game-slug:windows-dev" ^
+  --userversion "jenkins-%BUILD_NUMBER%"
+
+The unpacked Windows package directory should be uploaded rather than a ZIP. Butler uses differential uploads, so later uploads transfer only changed data.
+
+Butler receives authentication through the Jenkins credential:
+
+environment {
+    BUTLER_API_KEY = credentials('itch-butler-api-key')
+}
+
+BUILD RESULTS
+
+The first clean build took approximately 49 minutes and 45 seconds.
+
+Approximate first-build breakdown:
+- C++ compilation: 7 minutes
+- Cooking: 42 minutes
+- Shaders compiled: 8,658
+- Final result: ExitCode=0 / BUILD SUCCESSFUL
+
+The first build was slow because the build server initially lacked compiled shaders and build caches.
+
+The Alienware has:
+- 4 physical CPU cores
+- 8 logical CPU cores
+- Approximately 8 GB RAM
+
+The next incremental Jenkins build, including the itch.io upload, took approximately 3 minutes and 10 seconds.
+
+The packaged game was downloaded from itch.io onto the development computer and launched successfully. The level and controls worked correctly.
+
+CURRENT TEST JENKINSFILE
+
+The tested Jenkinsfile is available here:
+https://github.com/o92design/JenkinsTest/blob/master/Jenkinsfile
+
+Use that file as the starting point for the real hackathon project.
+
+REAL HACKATHON PROJECT SETUP
+
+For the real project:
+
+1. Confirm that it uses Unreal Engine 5.8.
+2. Open PowerShell in the directory containing the real .uproject file.
+3. Initialize Git using the master branch.
+4. Run git lfs install.
+5. Add the same .gitignore and .gitattributes rules listed above.
+6. Stage the files.
+7. Verify that .uasset and .umap files appear in git lfs ls-files.
+8. Commit the project.
+9. Create an empty public GitHub repository without a generated README, license, or .gitignore.
+10. Add the GitHub repository as origin.
+11. Push master.
+12. Create the real project page on itch.io and initially leave it Draft or Restricted.
+13. Copy the tested Jenkinsfile from JenkinsTest into the real repository.
+14. Update PROJECT_FILE in the Jenkinsfile.
+15. Update ITCH_TARGET in the Jenkinsfile.
+16. Keep UE_ROOT set to C:\Epic\UE_5.8.
+17. Initially keep ITCH_CHANNEL set to windows-dev.
+18. Commit and push the Jenkinsfile.
+19. Create a new Jenkins Pipeline-from-SCM job for the real repository.
+20. Configure it for the master branch and Jenkinsfile script path.
+21. Enable Poll SCM with H/2 * * * *.
+22. Run one manual build first.
+23. Download the resulting itch.io build and test it on another computer.
+24. After the manual test succeeds, allow polling to handle later builds automatically.
+
+The primary Jenkinsfile values that must change are:
+
+PROJECT_FILE = 'RealProject.uproject'
+ITCH_TARGET = 'itch-username/real-game-slug'
+
+These can normally remain unchanged:
+
+UE_ROOT = 'C:\\Epic\\UE_5.8'
+ITCH_CHANNEL = 'windows-dev'
+
+For development builds, keep:
+
+-clientconfig=Development
+
+For a final public release, consider changing it to:
+
+-clientconfig=Shipping
+
+Development uploads should continue using:
+
+windows-dev
+
+Final approved releases should use a separate channel, such as:
+
+windows
+
+Do not let every development commit overwrite the final release channel.
+
+SECURITY AND SERVER OPERATIONS
+
+- Do not expose Jenkins port 8080 directly to the internet.
+- Continue using LAN access and Git polling.
+- Do not store GitHub or itch.io secrets in Git.
+- Keep the itch.io API key only in Jenkins Credentials.
+- Disable sleep and hibernation on the build server.
+- Prevent automatic Windows restarts during the hackathon.
+- Monitor SSD free space.
+- If SSD free space approaches 50 GB, stop builds and clean old workspaces or unused generated data.
+- Avoid placing active Jenkins workspaces, Unreal Intermediate files, or DDC on the HDD.
+- Finished archives and backups can be copied to the HDD.
+- Limit Jenkins to one Unreal build at a time.
+- Keep the Jenkins build-discard policy at five builds unless more history is genuinely required.
+
+DESIRED FINAL FLOW
+
+Push a commit to GitHub master
+→ Jenkins detects it within approximately two minutes
+→ Jenkins downloads Git and Git LFS changes
+→ Unreal incrementally compiles, cooks, and packages the project
+→ Butler differentially uploads the Windows build
+→ The new build becomes available on the itch.io windows-dev channel

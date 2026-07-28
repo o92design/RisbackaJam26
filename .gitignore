@@ -1,0 +1,34 @@
+# Visual Studio and local IDE state
+.vs/
+.idea/
+*.sln
+*.slnx
+*.VC.db
+*.VC.opendb
+
+# Unreal-generated directories (preserve these on Jenkins workspaces, never commit them)
+**/Binaries/
+**/DerivedDataCache/
+**/Intermediate/
+**/Saved/
+
+# Per-user Unreal content
+**/Content/Developers/
+
+# Local and CI outputs
+BuildOutput/
+BuildLogs/
+BuildMetadata/
+TestOutput/
+.cache/
+
+# Local environment overrides and secrets
+.env
+.env.*
+!.env.example
+*.local.ps1
+
+# Operating-system noise
+Thumbs.db
+Desktop.ini
+.DS_Store
