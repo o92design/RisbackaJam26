@@ -39,6 +39,9 @@ pipeline {
                     label: 'Validate promotion source',
                     script: '& .\\Scripts\\CI\\New-PromotionContext.ps1 -BuildId $env:TEST_BUILD_ID -Channel windows-dev'
                 )
+                script {
+                    currentBuild.displayName = "Promote-Dev-${env.TEST_BUILD_ID}"
+                }
             }
         }
 

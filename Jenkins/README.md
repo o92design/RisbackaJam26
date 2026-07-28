@@ -137,6 +137,11 @@ Release uploads continue using the semantic tag itself as the itch.io user versi
 Promotion to `windows-dev` preserves the source Test Build ID so the exact tested binary
 remains traceable.
 
+Jenkins applies these identities as the visible run names after the Build context stage.
+Its internal sequence number and URL remain numeric (for example, `/1/`); this is normal
+Jenkins behavior. Development promotion runs are displayed as
+`Promote-Dev-<source Test Build ID>`.
+
 ## Archive and retention
 
 Jenkins keeps five records for each build job and ten lightweight promotion records. The HDD keeps all build attempts with no automatic deletion:

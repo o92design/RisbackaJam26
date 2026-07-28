@@ -8,6 +8,7 @@
 
 # Unreal-generated directories (preserve these on Jenkins workspaces, never commit them)
 **/Binaries/
+**/Build/*/FileOpenOrder/
 **/DerivedDataCache/
 **/Intermediate/
 **/Saved/

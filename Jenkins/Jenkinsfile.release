@@ -51,6 +51,13 @@ pipeline {
                     label: 'Capture reproducible release metadata',
                     script: '& .\\Scripts\\CI\\New-BuildContext.ps1 -Configuration Shipping -Stream Release -Channel windows -Version $env:RELEASE_TAG'
                 )
+                script {
+                    currentBuild.displayName = powershell(
+                        label: 'Apply informative Jenkins build name',
+                        returnStdout: true,
+                        script: "(Get-Content -Raw -LiteralPath '.\\BuildMetadata\\BuildContext.json' | ConvertFrom-Json).buildId"
+                    ).trim()
+                }
             }
         }
 

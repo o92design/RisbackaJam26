@@ -100,6 +100,11 @@ function Invoke-LoggedProcess {
     if ($SuccessExitCodes -notcontains $exitCode) {
         throw "$Stage failed with exit code $exitCode. See $nativeLog"
     }
+    # Jenkins' PowerShell step uses the final native process exit code when the
+    # script itself does not call exit. Normalize accepted codes (for example,
+    # robocopy 1 means files copied successfully) so they cannot mark the build
+    # unstable after this function has already classified the command as valid.
+    $global:LASTEXITCODE = 0
     return $exitCode
 }
 
@@ -119,6 +124,7 @@ function Get-GitText {
     if ($exitCode -ne 0 -and -not $AllowFailure) {
         throw "git $($Arguments -join ' ') failed with exit code $exitCode"
     }
+    $global:LASTEXITCODE = 0
     return ($output | Out-String).Trim()
 }
 

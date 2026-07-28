@@ -49,16 +49,18 @@ Invoke-CIStage -Name 'Project Validation' -Body {
     $promotionPipeline = Get-Content -Raw -LiteralPath $promotionPipelinePath
     $releasePipeline = Get-Content -Raw -LiteralPath $releasePipelinePath
     if (-not $testPipeline.Contains("ITCH_CHANNEL  = 'windows-test'") -or
-        -not $testPipeline.Contains('-Stream Test -Channel windows-test')) {
-        throw 'Automatic Jenkins pipeline must build the Test stream and upload windows-test.'
+        -not $testPipeline.Contains('-Stream Test -Channel windows-test') -or
+        -not $testPipeline.Contains('currentBuild.displayName')) {
+        throw 'Automatic Jenkins pipeline must build the Test stream, upload windows-test, and apply the informative Build ID.'
     }
     if (-not $promotionPipeline.Contains("name: 'TEST_BUILD_ID'") -or
         -not $promotionPipeline.Contains("ITCH_CHANNEL        = 'windows-dev'")) {
         throw 'Development promotion pipeline must require TEST_BUILD_ID and target windows-dev.'
     }
     if (-not $releasePipeline.Contains("ITCH_CHANNEL  = 'windows'") -or
-        -not $releasePipeline.Contains('-Stream Release -Channel windows')) {
-        throw 'Release Jenkins pipeline must build the Release stream and upload windows.'
+        -not $releasePipeline.Contains('-Stream Release -Channel windows') -or
+        -not $releasePipeline.Contains('currentBuild.displayName')) {
+        throw 'Release Jenkins pipeline must build the Release stream, upload windows, and apply the informative Build ID.'
     }
     Write-CILog -Stage 'Project Validation' -Message 'Blueprint-only UE 5.8 Combat project settings are valid.'
 }
