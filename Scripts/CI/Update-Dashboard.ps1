@@ -26,7 +26,16 @@ Invoke-CIStage -Name 'Dashboard' -Body {
     $total = $runs.Count
     $successes = @($runs | Where-Object { $_.result -eq 'Success' }).Count
     $successRate = if ($total -gt 0) { [Math]::Round(($successes / $total) * 100, 1) } else { 0 }
-    $latestDevelopment = $runs | Where-Object { $_.stream -eq 'Development' } | Select-Object -First 1
+    $latestTest = $runs | Where-Object { $_.stream -eq 'Test' } | Select-Object -First 1
+    $developmentPromotions = @($runs | ForEach-Object {
+        $run = $_
+        if ($run.PSObject.Properties['promotions']) {
+            @($run.promotions | Where-Object { $_.channel -eq 'windows-dev' } | ForEach-Object {
+                [pscustomobject]@{ run = $run; promotion = $_ }
+            })
+        }
+    } | Sort-Object { [DateTime]::Parse($_.promotion.promotedUtc) } -Descending)
+    $latestDevelopment = $developmentPromotions | Select-Object -First 1
     $latestRelease = $runs | Where-Object { $_.stream -eq 'Release' } | Select-Object -First 1
 
     $rows = foreach ($run in ($runs | Select-Object -First 100)) {
@@ -35,12 +44,21 @@ Invoke-CIStage -Name 'Dashboard' -Body {
         $duration = [Math]::Round((@($run.stages) | Measure-Object -Property elapsedSeconds -Sum).Sum, 1)
         $sizeMB = if ($run.package -and $run.package.sizeBytes) { [Math]::Round([double]$run.package.sizeBytes / 1MB, 1) } else { 0 }
         $jenkinsLink = if ($run.buildUrl) { "<a href='$(ConvertTo-HtmlText $run.buildUrl)'>Jenkins</a>" } else { 'local' }
+        $buildId = if ($run.PSObject.Properties['buildId']) { ConvertTo-HtmlText $run.buildId } else { ConvertTo-HtmlText $run.runName }
         $computer = if ($run.PSObject.Properties['buildComputer']) { ConvertTo-HtmlText $run.buildComputer } else { 'unknown' }
+        $promotedChannels = if ($run.PSObject.Properties['promotions'] -and @($run.promotions).Count -gt 0) {
+            ConvertTo-HtmlText ((@($run.promotions | ForEach-Object { $_.channel }) | Sort-Object -Unique) -join ', ')
+        }
+        else {
+            '—'
+        }
         $tag = if ($run.tag) { ConvertTo-HtmlText $run.tag } else { '—' }
         @"
 <tr class="$class">
   <td><span class="badge">$((ConvertTo-HtmlText $run.result))</span></td>
   <td>$((ConvertTo-HtmlText $run.stream))</td>
+  <td><code>$buildId</code></td>
+  <td>$promotedChannels</td>
   <td>$((ConvertTo-HtmlText $stockholm))</td>
   <td>$computer</td>
   <td>$((ConvertTo-HtmlText $run.buildNumber))</td>
@@ -66,7 +84,8 @@ Invoke-CIStage -Name 'Dashboard' -Body {
         $bars += "<rect x='$x' y='$y' width='16' height='$height' rx='3' fill='$color'><title>$(ConvertTo-HtmlText $trendRuns[$i].runName)</title></rect>"
     }
 
-    $latestDevText = if ($latestDevelopment) { "$($latestDevelopment.result) · #$($latestDevelopment.buildNumber) · $($latestDevelopment.shortCommit)" } else { 'No development builds yet' }
+    $latestTestText = if ($latestTest) { "$($latestTest.result) · #$($latestTest.buildNumber) · $($latestTest.shortCommit)" } else { 'No test builds yet' }
+    $latestDevText = if ($latestDevelopment) { "#$($latestDevelopment.run.buildNumber) · $($latestDevelopment.run.shortCommit)" } else { 'No development promotion yet' }
     $latestReleaseText = if ($latestRelease) { "$($latestRelease.result) · $($latestRelease.tag) · $($latestRelease.shortCommit)" } else { 'No releases yet' }
     $generated = [TimeZoneInfo]::ConvertTimeBySystemTimeZoneId([DateTime]::UtcNow, 'W. Europe Standard Time').ToString('yyyy-MM-dd HH:mm:ss')
 
@@ -92,11 +111,12 @@ main{max-width:1500px;margin:auto;padding:30px}h1{margin:0;font-size:30px}header
 <section class="cards">
   <div class="card"><div class="label">Build attempts</div><div class="value">$total</div></div>
   <div class="card"><div class="label">Success rate</div><div class="value">$successRate%</div></div>
-  <div class="card"><div class="label">Latest development</div><div class="value">$(ConvertTo-HtmlText $latestDevText)</div></div>
+  <div class="card"><div class="label">Latest test</div><div class="value">$(ConvertTo-HtmlText $latestTestText)</div></div>
+  <div class="card"><div class="label">Latest development promotion</div><div class="value">$(ConvertTo-HtmlText $latestDevText)</div></div>
   <div class="card"><div class="label">Latest release</div><div class="value">$(ConvertTo-HtmlText $latestReleaseText)</div></div>
 </section>
 <section class="chart"><div class="label">Recent duration trend (minutes; green success, red failure)</div><svg viewBox="0 0 500 100" preserveAspectRatio="none">$bars</svg></section>
-<section class="table-wrap"><table><thead><tr><th>Result</th><th>Stream</th><th>Archived</th><th>Machine</th><th>Build</th><th>Commit</th><th>Tag</th><th>Subject</th><th>Failure stage</th><th>Duration</th><th>Package</th><th>Links</th></tr></thead><tbody>$($rows -join [Environment]::NewLine)</tbody></table></section>
+<section class="table-wrap"><table><thead><tr><th>Result</th><th>Stream</th><th>Build ID</th><th>Promoted channels</th><th>Archived</th><th>Machine</th><th>Build</th><th>Commit</th><th>Tag</th><th>Subject</th><th>Failure stage</th><th>Duration</th><th>Package</th><th>Links</th></tr></thead><tbody>$($rows -join [Environment]::NewLine)</tbody></table></section>
 <footer>Generated $generated · refreshes every two minutes · immutable data: $(ConvertTo-HtmlText $ArchiveRoot)</footer>
 </main></body></html>
 "@

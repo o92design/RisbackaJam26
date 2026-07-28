@@ -41,5 +41,24 @@ Invoke-CIStage -Name 'Project Validation' -Body {
 
     $combatMap = Join-Path (Split-Path $paths.Project) 'Content\Variant_Combat\Lvl_Combat.umap'
     Get-RequiredPath -Path $combatMap -Description 'Combat variant map' | Out-Null
+
+    $testPipelinePath = Get-RequiredPath -Path (Join-Path $script:RepositoryRoot 'Jenkinsfile') -Description 'Automatic Test Jenkinsfile'
+    $promotionPipelinePath = Get-RequiredPath -Path (Join-Path $script:RepositoryRoot 'Jenkins\Jenkinsfile.promote-dev') -Description 'Development promotion Jenkinsfile'
+    $releasePipelinePath = Get-RequiredPath -Path (Join-Path $script:RepositoryRoot 'Jenkins\Jenkinsfile.release') -Description 'Release Jenkinsfile'
+    $testPipeline = Get-Content -Raw -LiteralPath $testPipelinePath
+    $promotionPipeline = Get-Content -Raw -LiteralPath $promotionPipelinePath
+    $releasePipeline = Get-Content -Raw -LiteralPath $releasePipelinePath
+    if (-not $testPipeline.Contains("ITCH_CHANNEL  = 'windows-test'") -or
+        -not $testPipeline.Contains('-Stream Test -Channel windows-test')) {
+        throw 'Automatic Jenkins pipeline must build the Test stream and upload windows-test.'
+    }
+    if (-not $promotionPipeline.Contains("name: 'BUILD_ID'") -or
+        -not $promotionPipeline.Contains("ITCH_CHANNEL        = 'windows-dev'")) {
+        throw 'Development promotion pipeline must require BUILD_ID and target windows-dev.'
+    }
+    if (-not $releasePipeline.Contains("ITCH_CHANNEL  = 'windows'") -or
+        -not $releasePipeline.Contains('-Stream Release -Channel windows')) {
+        throw 'Release Jenkins pipeline must build the Release stream and upload windows.'
+    }
     Write-CILog -Stage 'Project Validation' -Message 'Blueprint-only UE 5.8 Combat project settings are valid.'
 }

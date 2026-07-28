@@ -15,6 +15,7 @@ $buildInfo = [ordered]@{
     tag            = $context.tag
     subject        = $context.subject
     author         = $context.author
+    stream         = $context.stream
     configuration  = $context.configuration
     engineVersion  = $context.engineVersion
     platform       = $context.platform

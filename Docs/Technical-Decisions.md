@@ -22,6 +22,6 @@ The Windows desktop baseline keeps Maximum quality, DX12, Shader Model 6, Lumen,
 
 ## Delivery model
 
-`master` is trunk. Every detected push produces a Development build for `windows-dev`. Immutable `vMAJOR.MINOR.PATCH` tags produce Shipping builds for `windows`.
+`master` is trunk. Every detected push produces a tested Development-configuration package for `windows-test`. A successful archived Test Build ID can be promoted unchanged to `windows-dev`; promotion never rebuilds the package. Immutable `vMAJOR.MINOR.PATCH` tags produce independent Shipping builds for `windows`.
 
 Active work, cooking, Intermediate, and Derived Data Cache stay on the build server SSD. The slower `D:` HDD is only for completed immutable run archives, manifests, logs, reports, checksums, and the generated dashboard.

@@ -25,11 +25,14 @@ Invoke-CIStage -Name 'Immutable Archive' -Body {
         Write-CILog -Stage 'Immutable Archive' -Level WARN -Message "Archive drive has $freeGBBefore GB free (warning threshold: $WarningFreeGB GB)."
     }
 
-    foreach ($directory in @('Runs\Development', 'Runs\Release', 'History', 'Dashboard', 'Staging')) {
+    foreach ($directory in @('Runs\Test', 'Runs\Development', 'Runs\Release', 'History', 'Promotions', 'Dashboard', 'Staging')) {
         New-Item -ItemType Directory -Force -Path (Join-Path $ArchiveRoot $directory) | Out-Null
     }
 
-    $stream = if ($context.configuration -eq 'Shipping') { 'Release' } else { 'Development' }
+    $stream = [string]$context.stream
+    if ($stream -notin @('Test', 'Development', 'Release')) {
+        throw "Unsupported archive stream in build context: $stream"
+    }
     $runName = [string]$context.buildId
     if (-not $runName) { throw 'Build context does not contain a build ID.' }
     $stagingPath = Join-Path (Join-Path $ArchiveRoot 'Staging') $runName
@@ -126,6 +129,7 @@ Invoke-CIStage -Name 'Immutable Archive' -Body {
         tests             = $testSummary
         stages            = $stages
         package           = $packageSummary
+        promotions        = @()
         changelog         = $changelog
         archivePath       = $finalPath
         diskFreeGBBefore  = $freeGBBefore

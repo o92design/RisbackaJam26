@@ -10,7 +10,7 @@ Jenkins runs as LocalSystem. Keep the repository workspace and all active Unreal
 
 ## Server-wide prerequisites
 
-1. Set the Windows build node to **1 executor**. Both project jobs also disable concurrent builds, but one executor prevents them from overlapping each other.
+1. Set the Windows build node to **1 executor**. All project jobs also disable concurrent runs, but one executor prevents Unreal builds and promotions from overlapping each other.
 2. Confirm the Secret Text credential `itch-butler-api-key` exists.
 3. Disable sleep and hibernation during the jam.
 4. Prevent automatic Windows restarts during the jam window.
@@ -20,9 +20,15 @@ Jenkins runs as LocalSystem. Keep the repository workspace and all active Unreal
 
 The MSVC 14.51 warning from UE 5.8 is known and non-blocking on this server.
 
-## Development job
+## Jenkins folder
 
-Create a **Pipeline script from SCM** job named `RisbackaJam26-Dev`:
+Create a Jenkins folder named `RisbackaJam26`. The jobs below live inside it and therefore
+have the full names `RisbackaJam26/Test`, `RisbackaJam26/Promote-Dev`, and
+`RisbackaJam26/Release`.
+
+## Test job
+
+Inside the folder, create a **Pipeline script from SCM** job named `Test`:
 
 | Setting | Value |
 |---|---|
@@ -36,9 +42,38 @@ Create a **Pipeline script from SCM** job named `RisbackaJam26-Dev`:
 
 Run one manual build first. Download it from the restricted itch.io page and launch it on another computer before relying on polling.
 
+This job packages Development configuration once, archives it under `Runs\Test`, and
+uploads it to `windows-test`.
+
+## Development promotion job
+
+Inside the folder, create another **Pipeline script from SCM** job named `Promote-Dev`:
+
+| Setting | Value |
+|---|---|
+| SCM | Git |
+| Repository | `https://github.com/o92design/RisbackaJam26.git` |
+| Credentials | None (public repository) |
+| Branch specifier | `*/master` |
+| Script path | `Jenkins/Jenkinsfile.promote-dev` |
+| Lightweight checkout | Enabled |
+| Poll SCM | Disabled |
+
+Under **General**, enable **This project is parameterized** and add a String parameter:
+
+| Parameter | Value |
+|---|---|
+| Name | `BUILD_ID` |
+| Default | Empty |
+| Description | Exact successful Test Build ID from the dashboard or `D:\RisbackaJam26\Runs\Test` |
+
+Run this job only with **Build with Parameters**. It resolves the selected Test archive,
+verifies every SHA-256 checksum, and uploads the unchanged package to `windows-dev`.
+It does not run Unreal, cook, or create a second package.
+
 ## Release job
 
-Create a separate **Pipeline script from SCM** job named `RisbackaJam26-Release`:
+Inside the folder, create a **Pipeline script from SCM** job named `Release`:
 
 | Setting | Value |
 |---|---|
@@ -52,9 +87,9 @@ Create a separate **Pipeline script from SCM** job named `RisbackaJam26-Release`
 
 The pipeline rejects anything except an exact `vMAJOR.MINOR.PATCH` tag and uploads Shipping builds to `windows`.
 
-## Pipeline stages
+## Build pipeline stages
 
-Both jobs expose small, reusable stages:
+The Test and Release jobs expose small, reusable stages:
 
 1. checkout and Git LFS pull;
 2. LFS pointer validation;
@@ -68,17 +103,25 @@ Both jobs expose small, reusable stages:
 10. Butler upload;
 11. final manifest, dashboard, and Jenkins diagnostic artifacts.
 
+The Promote-Dev job uses a shorter, package-only flow:
+
+1. checkout the promotion scripts without Git LFS content;
+2. resolve one exact successful Test Build ID;
+3. verify the archived executable and every SHA-256 checksum;
+4. upload the unchanged package to `windows-dev`;
+5. record the promotion and regenerate the dashboard.
+
 `BuildCookRun` intentionally remains one stage because that exact flow is proven. The workspace is not deleted after builds; Unreal's `Binaries`, `Intermediate`, and caches make incremental builds much faster. Only `BuildOutput` is recreated for packaging.
 
 Every script line uses millisecond timestamps and a named stage. Native tool output is also saved separately under `BuildLogs`. Commands report sanitized arguments, exit code, and elapsed time.
 
 ## Build identity
 
-Development builds use one identity consistently for the archive folder, manifest,
-packaged `BuildInfo.json`, and itch.io user version:
+Test builds use one identity consistently for the archive folder, manifest,
+packaged `BuildInfo.json`, `windows-test` version, and later development promotion:
 
 ```text
-Build-DESKTOP-6M3T3NU-20260728-184602Z-Development-Build-12-696540b1e6e7
+Build-DESKTOP-6M3T3NU-20260728-184602Z-Test-Build-12-696540b1e6e7
 ```
 
 Release archive identities also include the immutable semantic tag:
@@ -91,16 +134,20 @@ The timestamp is the build start in UTC (`Z`). The dashboard displays timestamps
 Stockholm time. Result and failure stage remain in the manifest and dashboard because
 they are only final after archival and upload; immutable archive folders are not renamed.
 Release uploads continue using the semantic tag itself as the itch.io user version.
+Promotion to `windows-dev` preserves the source Test Build ID so the exact tested binary
+remains traceable.
 
 ## Archive and retention
 
-Jenkins keeps five build records. The HDD keeps all build attempts with no automatic deletion:
+Jenkins keeps five records for each build job and ten lightweight promotion records. The HDD keeps all build attempts with no automatic deletion:
 
 ```text
 D:\RisbackaJam26\
+├─ Runs\Test\
 ├─ Runs\Development\
 ├─ Runs\Release\
 ├─ History\
+├─ Promotions\
 ├─ Dashboard\
 └─ Staging\
 ```
@@ -125,4 +172,6 @@ Dashboard generation errors mark an otherwise successful build unstable; they do
 - If SSD space is below 50 GB, stop and remove only knowingly disposable old workspaces/caches.
 - If `D:` is below 50 GB, expand or manually curate archives before retrying. There is no automatic deletion.
 - If upload fails, the verified package remains in its immutable archive and can be uploaded later with Butler.
+- If promotion fails before upload, correct the reported archive/checksum problem; never bypass verification.
+- If promotion upload succeeds but final recording fails, inspect the Jenkins log before retrying so channel history and the manifest remain understandable.
 - Never use `deleteDir()` as a routine fix; it destroys incremental build performance.

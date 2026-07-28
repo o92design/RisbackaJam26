@@ -2,6 +2,7 @@
 param(
     [ValidateSet('Development', 'Shipping')][string]$Configuration = 'Development',
     [string]$Channel = 'windows-dev',
+    [ValidateSet('Test', 'Development', 'Release')][string]$Stream,
     [string]$Version
 )
 
@@ -29,7 +30,15 @@ Invoke-CIStage -Name 'Build Context' -Body {
     $buildNumber = if ($env:BUILD_NUMBER) { $env:BUILD_NUMBER } else { 'local' }
     $buildComputer = [Environment]::MachineName
     $startedUtc = [DateTime]::UtcNow
-    $stream = if ($Configuration -eq 'Shipping') { 'Release' } else { 'Development' }
+    if (-not $Stream) {
+        $Stream = if ($Configuration -eq 'Shipping') { 'Release' } else { 'Development' }
+    }
+    if ($Configuration -eq 'Shipping' -and $Stream -ne 'Release') {
+        throw "Shipping configuration requires the Release stream; got $Stream."
+    }
+    if ($Configuration -eq 'Development' -and $Stream -eq 'Release') {
+        throw 'Development configuration cannot use the Release stream.'
+    }
 
     $safeComputer = $buildComputer -replace '[^A-Za-z0-9_.-]', '-'
     $safeBuildNumber = ([string]$buildNumber) -replace '[^A-Za-z0-9_.-]', '-'
@@ -37,9 +46,9 @@ Invoke-CIStage -Name 'Build Context' -Body {
         'Build',
         $safeComputer,
         $startedUtc.ToString("yyyyMMdd-HHmmss'Z'"),
-        $stream
+        $Stream
     )
-    if ($stream -eq 'Release' -and $exactTag) {
+    if ($Stream -eq 'Release' -and $exactTag) {
         $buildIdParts += ($exactTag -replace '[^A-Za-z0-9_.-]', '-')
     }
     $buildIdParts += @('Build', $safeBuildNumber, $shortCommit)
@@ -64,6 +73,7 @@ Invoke-CIStage -Name 'Build Context' -Body {
         shortCommit    = $shortCommit
         author         = $author
         subject        = $subject
+        stream         = $Stream
         configuration  = $Configuration
         platform       = 'Win64'
         channel        = $Channel
@@ -75,5 +85,5 @@ Invoke-CIStage -Name 'Build Context' -Body {
 
     $path = Join-Path $script:MetadataRoot 'BuildContext.json'
     $context | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $path -Encoding UTF8
-    Write-CILog -Stage 'Build Context' -Message "Build ID $buildId; $Configuration, $Channel, version $Version."
+    Write-CILog -Stage 'Build Context' -Message "Build ID $buildId; $Stream, $Configuration, $Channel, version $Version."
 }

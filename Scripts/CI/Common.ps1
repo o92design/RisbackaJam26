@@ -176,4 +176,10 @@ function Read-BuildContext {
     return Get-Content -Raw -LiteralPath $path | ConvertFrom-Json
 }
 
+function Read-PromotionContext {
+    $path = Join-Path $script:MetadataRoot 'PromotionContext.json'
+    Get-RequiredPath -Path $path -Description 'Promotion context' | Out-Null
+    return Get-Content -Raw -LiteralPath $path | ConvertFrom-Json
+}
+
 Initialize-CIDirectories

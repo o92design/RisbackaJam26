@@ -3,6 +3,7 @@ param(
     [string]$Target = 'kioskars/risbacka-jam-26',
     [Parameter(Mandatory)][string]$Channel,
     [string]$Version,
+    [string]$PackageDirectory,
     [string]$ButlerPath = $(if ($env:BUTLER_PATH) { $env:BUTLER_PATH } else { 'C:\Tools\butler\butler.exe' })
 )
 
@@ -15,10 +16,13 @@ Invoke-CIStage -Name 'itch.io Upload' -Body {
         $Version = [string]$context.version
     }
     if (-not $Version) { throw 'itch.io user version is unavailable from both the command and build context.' }
-    $paths = Get-UEPaths
-    $packageDirectory = Get-RequiredPath -Path $paths.PackageFolder -Description 'Verified package'
+    if (-not $PackageDirectory) {
+        $paths = Get-UEPaths
+        $PackageDirectory = $paths.PackageFolder
+    }
+    $PackageDirectory = Get-RequiredPath -Path $PackageDirectory -Description 'Verified package'
     Get-RequiredPath -Path $ButlerPath -Description 'itch.io Butler' | Out-Null
     Invoke-LoggedProcess -Stage 'itch.io Upload' -FilePath $ButlerPath -Arguments @(
-        'push', $packageDirectory, "$Target`:$Channel", '--userversion', $Version
+        'push', $PackageDirectory, "$Target`:$Channel", '--userversion', $Version
     ) | Out-Null
 }

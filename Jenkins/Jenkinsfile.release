@@ -48,7 +48,7 @@ pipeline {
             steps {
                 powershell(
                     label: 'Capture reproducible release metadata',
-                    script: '& .\\Scripts\\CI\\New-BuildContext.ps1 -Configuration Shipping -Channel windows -Version $env:RELEASE_TAG'
+                    script: '& .\\Scripts\\CI\\New-BuildContext.ps1 -Configuration Shipping -Stream Release -Channel windows -Version $env:RELEASE_TAG'
                 )
             }
         }

@@ -1,0 +1,77 @@
+pipeline {
+    agent any
+
+    environment {
+        GIT_LFS_SKIP_SMUDGE = '1'
+        BUTLER_PATH         = 'C:\\Tools\\butler\\butler.exe'
+        ARCHIVE_ROOT        = 'D:\\RisbackaJam26'
+        ITCH_TARGET         = 'kioskars/risbacka-jam-26'
+        ITCH_CHANNEL        = 'windows-dev'
+    }
+
+    parameters {
+        string(
+            name: 'BUILD_ID',
+            defaultValue: '',
+            description: 'Exact successful Test Build ID from the dashboard or D:\\RisbackaJam26\\Runs\\Test'
+        )
+    }
+
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+        disableConcurrentBuilds()
+        skipDefaultCheckout(true)
+        timestamps()
+        timeout(time: 30, unit: 'MINUTES')
+    }
+
+    stages {
+        stage('Checkout promotion scripts') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Resolve selected Test build') {
+            steps {
+                powershell(
+                    label: 'Validate promotion source',
+                    script: '& .\\Scripts\\CI\\New-PromotionContext.ps1 -BuildId $env:BUILD_ID -Channel windows-dev'
+                )
+            }
+        }
+
+        stage('Verify archived package checksums') {
+            steps {
+                powershell(label: 'Verify immutable package', script: '& .\\Scripts\\CI\\Test-ArchivedPackage.ps1')
+            }
+        }
+
+        stage('Upload selected build to itch.io development') {
+            steps {
+                withCredentials([string(credentialsId: 'itch-butler-api-key', variable: 'BUTLER_API_KEY')]) {
+                    powershell(label: 'Promote with Butler', script: '& .\\Scripts\\CI\\Upload-Promotion.ps1')
+                }
+            }
+        }
+
+        stage('Record successful promotion') {
+            steps {
+                powershell(label: 'Update promotion history', script: '& .\\Scripts\\CI\\Finalize-Promotion.ps1')
+            }
+        }
+    }
+
+    post {
+        always {
+            catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+                powershell(label: 'Regenerate static dashboard', script: '& .\\Scripts\\CI\\Update-Dashboard.ps1')
+            }
+            archiveArtifacts(
+                allowEmptyArchive: true,
+                artifacts: 'BuildLogs/**,BuildMetadata/**',
+                fingerprint: false
+            )
+        }
+    }
+}

@@ -6,7 +6,7 @@ pipeline {
         BUTLER_PATH   = 'C:\\Tools\\butler\\butler.exe'
         ARCHIVE_ROOT  = 'D:\\RisbackaJam26'
         ITCH_TARGET   = 'kioskars/risbacka-jam-26'
-        ITCH_CHANNEL  = 'windows-dev'
+        ITCH_CHANNEL  = 'windows-test'
     }
 
     options {
@@ -38,7 +38,7 @@ pipeline {
             steps {
                 powershell(
                     label: 'Capture reproducible build metadata',
-                    script: '& .\\Scripts\\CI\\New-BuildContext.ps1 -Configuration Development -Channel windows-dev'
+                    script: '& .\\Scripts\\CI\\New-BuildContext.ps1 -Configuration Development -Stream Test -Channel windows-test'
                 )
             }
         }
@@ -84,12 +84,12 @@ pipeline {
             }
         }
 
-        stage('Upload to itch.io development') {
+        stage('Upload to itch.io test') {
             steps {
                 withCredentials([string(credentialsId: 'itch-butler-api-key', variable: 'BUTLER_API_KEY')]) {
                     powershell(
                         label: 'Butler differential upload',
-                        script: '& .\\Scripts\\CI\\Upload-Butler.ps1 -Channel windows-dev'
+                        script: '& .\\Scripts\\CI\\Upload-Butler.ps1 -Channel windows-test'
                     )
                 }
             }

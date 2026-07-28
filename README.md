@@ -12,7 +12,8 @@ The current gameplay title **Zummer TimeZ** is a working idea, not a final produ
 - Quality: Maximum
 - Rendering: DX12, SM6, Lumen, Nanite; hardware ray tracing disabled
 - Default branch: `master`
-- Development channel: `kioskars/risbacka-jam-26:windows-dev`
+- Automatic test channel: `kioskars/risbacka-jam-26:windows-test`
+- Promoted development channel: `kioskars/risbacka-jam-26:windows-dev`
 - Release channel: `kioskars/risbacka-jam-26:windows`
 
 ## Repository layout
@@ -23,7 +24,7 @@ RisbackaJam26/
 ├─ Scripts/CI/              Small reusable build/test/release steps
 ├─ Jenkins/                 Release pipeline and server setup
 ├─ Docs/                    Decisions and editor handoffs
-├─ Jenkinsfile              Development pipeline
+├─ Jenkinsfile              Automatic Test pipeline
 ├─ Setup-Local.ps1          One-time Git/LFS setup
 ├─ Test.ps1                 Local project and functional tests
 └─ Package.ps1              Local Windows package
@@ -47,7 +48,8 @@ Before the first CI run, create the Blueprint smoke test described in [Docs/Unre
 2. Work in a small, clearly owned set of assets.
 3. Test in Editor; run `.\Test.ps1` before pushing.
 4. Commit a small coherent change and push to `master`.
-5. Jenkins detects the push within about two minutes, runs tests, packages a Development build, archives it, then uploads to `windows-dev`.
+5. Jenkins detects the push within about two minutes, runs tests, packages once, archives the result, then uploads it to `windows-test`.
+6. When a build is suitable for shared play, manually promote that exact archived package to `windows-dev` without rebuilding it.
 
 Unreal maps and Blueprints are binary. Coordinate ownership before both developers edit the same `.umap` or `.uasset`; Git cannot merge them reliably. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
@@ -96,6 +98,6 @@ The repository-level [.codex/config.toml](.codex/config.toml) points Codex at `h
 
 ## Jenkins
 
-The complete two-job setup and operational checklist are in [Jenkins/README.md](Jenkins/README.md). The generated LAN dashboard is:
+The complete folder-based three-job setup and operational checklist are in [Jenkins/README.md](Jenkins/README.md). The generated LAN dashboard is:
 
 `http://DESKTOP-6M3T3NU:8080/userContent/RisbackaJam26/`
