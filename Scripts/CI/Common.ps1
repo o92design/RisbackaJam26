@@ -70,7 +70,8 @@ function Invoke-LoggedProcess {
         [Parameter(Mandatory)][string]$FilePath,
         [string[]]$Arguments = @(),
         [string]$WorkingDirectory = $script:RepositoryRoot,
-        [int[]]$SuccessExitCodes = @(0)
+        [int[]]$SuccessExitCodes = @(0),
+        [switch]$EchoToConsole
     )
 
     Initialize-CIDirectories
@@ -84,7 +85,14 @@ function Invoke-LoggedProcess {
         $previousErrorAction = $ErrorActionPreference
         $ErrorActionPreference = 'Continue'
         try {
-            & $FilePath @Arguments 2>&1 | Tee-Object -FilePath $nativeLog
+            if ($EchoToConsole) {
+                & $FilePath @Arguments 2>&1 |
+                    Tee-Object -FilePath $nativeLog |
+                    ForEach-Object { Write-Host $_ }
+            }
+            else {
+                & $FilePath @Arguments 2>&1 | Tee-Object -FilePath $nativeLog
+            }
             $exitCode = $LASTEXITCODE
         }
         finally {

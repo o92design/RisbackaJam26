@@ -45,9 +45,11 @@ Invoke-CIStage -Name 'Project Validation' -Body {
     $testPipelinePath = Get-RequiredPath -Path (Join-Path $script:RepositoryRoot 'Jenkinsfile') -Description 'Automatic Test Jenkinsfile'
     $promotionPipelinePath = Get-RequiredPath -Path (Join-Path $script:RepositoryRoot 'Jenkins\Jenkinsfile.promote-dev') -Description 'Development promotion Jenkinsfile'
     $releasePipelinePath = Get-RequiredPath -Path (Join-Path $script:RepositoryRoot 'Jenkins\Jenkinsfile.release') -Description 'Release Jenkinsfile'
+    $butlerUploadPath = Get-RequiredPath -Path (Join-Path $script:RepositoryRoot 'Scripts\CI\Upload-Butler.ps1') -Description 'Butler upload script'
     $testPipeline = Get-Content -Raw -LiteralPath $testPipelinePath
     $promotionPipeline = Get-Content -Raw -LiteralPath $promotionPipelinePath
     $releasePipeline = Get-Content -Raw -LiteralPath $releasePipelinePath
+    $butlerUpload = Get-Content -Raw -LiteralPath $butlerUploadPath
     if (-not $testPipeline.Contains("ITCH_CHANNEL  = 'windows-test'") -or
         -not $testPipeline.Contains('-Stream Test -Channel windows-test') -or
         -not $testPipeline.Contains('currentBuild.displayName')) {
@@ -61,6 +63,10 @@ Invoke-CIStage -Name 'Project Validation' -Body {
         -not $releasePipeline.Contains('-Stream Release -Channel windows') -or
         -not $releasePipeline.Contains('currentBuild.displayName')) {
         throw 'Release Jenkins pipeline must build the Release stream, upload windows, and apply the informative Build ID.'
+    }
+    if (-not $butlerUpload.Contains("'--verbose'") -or
+        -not $butlerUpload.Contains('-EchoToConsole')) {
+        throw 'Butler uploads must provide verbose live progress in the Jenkins console.'
     }
     Write-CILog -Stage 'Project Validation' -Message 'Blueprint-only UE 5.8 Combat project settings are valid.'
 }
