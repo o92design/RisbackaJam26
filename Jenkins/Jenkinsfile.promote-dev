@@ -7,11 +7,12 @@ pipeline {
         ARCHIVE_ROOT        = 'D:\\RisbackaJam26'
         ITCH_TARGET         = 'kioskars/risbacka-jam-26'
         ITCH_CHANNEL        = 'windows-dev'
+        DASHBOARD_PUBLISH_ROOT = 'C:\\ProgramData\\Jenkins\\.jenkins\\userContent\\RisbackaJam26'
     }
 
     parameters {
         string(
-            name: 'BUILD_ID',
+            name: 'TEST_BUILD_ID',
             defaultValue: '',
             description: 'Exact successful Test Build ID from the dashboard or D:\\RisbackaJam26\\Runs\\Test'
         )
@@ -36,7 +37,7 @@ pipeline {
             steps {
                 powershell(
                     label: 'Validate promotion source',
-                    script: '& .\\Scripts\\CI\\New-PromotionContext.ps1 -BuildId $env:BUILD_ID -Channel windows-dev'
+                    script: '& .\\Scripts\\CI\\New-PromotionContext.ps1 -BuildId $env:TEST_BUILD_ID -Channel windows-dev'
                 )
             }
         }

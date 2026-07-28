@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
     [string]$ArchiveRoot = $(if ($env:ARCHIVE_ROOT) { $env:ARCHIVE_ROOT } else { 'D:\RisbackaJam26' }),
-    [string]$PublishRoot = $(if ($env:JENKINS_HOME) { Join-Path $env:JENKINS_HOME 'userContent\RisbackaJam26' } else { '' })
+    [string]$PublishRoot = $(if ($env:DASHBOARD_PUBLISH_ROOT) { $env:DASHBOARD_PUBLISH_ROOT } elseif ($env:JENKINS_HOME) { Join-Path $env:JENKINS_HOME 'userContent\RisbackaJam26' } else { '' })
 )
 
 . (Join-Path $PSScriptRoot 'Common.ps1')

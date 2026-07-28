@@ -63,7 +63,7 @@ Under **General**, enable **This project is parameterized** and add a String par
 
 | Parameter | Value |
 |---|---|
-| Name | `BUILD_ID` |
+| Name | `TEST_BUILD_ID` |
 | Default | Empty |
 | Description | Exact successful Test Build ID from the dashboard or `D:\RisbackaJam26\Runs\Test` |
 

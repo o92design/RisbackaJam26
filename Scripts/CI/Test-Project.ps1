@@ -52,9 +52,9 @@ Invoke-CIStage -Name 'Project Validation' -Body {
         -not $testPipeline.Contains('-Stream Test -Channel windows-test')) {
         throw 'Automatic Jenkins pipeline must build the Test stream and upload windows-test.'
     }
-    if (-not $promotionPipeline.Contains("name: 'BUILD_ID'") -or
+    if (-not $promotionPipeline.Contains("name: 'TEST_BUILD_ID'") -or
         -not $promotionPipeline.Contains("ITCH_CHANNEL        = 'windows-dev'")) {
-        throw 'Development promotion pipeline must require BUILD_ID and target windows-dev.'
+        throw 'Development promotion pipeline must require TEST_BUILD_ID and target windows-dev.'
     }
     if (-not $releasePipeline.Contains("ITCH_CHANNEL  = 'windows'") -or
         -not $releasePipeline.Contains('-Stream Release -Channel windows')) {
