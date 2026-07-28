@@ -82,10 +82,30 @@ Inside the folder, create a **Pipeline script from SCM** job named `Release`:
 | RefSpec | `+refs/tags/v*:refs/remotes/origin/tags/v*` |
 | Branch specifier | `refs/tags/v*` |
 | Script path | `Jenkins/Jenkinsfile.release` |
-| Lightweight checkout | Enabled |
+| Lightweight checkout | **Disabled** |
 | Poll SCM | `H/2 * * * *` |
 
 The pipeline rejects anything except an exact `vMAJOR.MINOR.PATCH` tag and uploads Shipping builds to `windows`.
+Lightweight checkout must remain disabled for this job: on Windows, Jenkins' JGit
+SCM-file lookup treats the wildcard in `refs/tags/v*` as a literal path character and
+fails before the Jenkinsfile can start. The normal Git checkout resolves the tag
+wildcard correctly.
+
+## Validated baseline
+
+The complete workflow was validated on 2026-07-29:
+
+- automatic Test build
+  `Build-DESKTOP-6M3T3NU-20260728-222916Z-Test-Build-4-3455516f8f4e`
+  passed and uploaded to `windows-test`;
+- Test build
+  `Build-DESKTOP-6M3T3NU-20260728-215321Z-Test-Build-2-7f788a9ac17d`
+  was checksum-verified and promoted unchanged to `windows-dev`;
+- annotated tag `v0.0.1` produced Shipping build
+  `Build-DESKTOP-6M3T3NU-20260728-225824Z-Release-v0.0.1-Build-2-3455516f8f4e`,
+  archived it under `Runs\Release`, and uploaded it to `windows`.
+
+All three channels were confirmed on the restricted itch.io project page.
 
 ## Build pipeline stages
 

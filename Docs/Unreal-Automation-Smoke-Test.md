@@ -1,7 +1,7 @@
 # Blueprint automation smoke test
 
 The CI test runner is ready, but Unreal binary assets must be authored and saved by
-Unreal Editor. Complete this once before enabling either Jenkins job.
+Unreal Editor. Complete this once before enabling the Jenkins build jobs.
 
 ## Current status
 
