@@ -11,13 +11,16 @@ Invoke-CIStage -Name 'Project Validation' -Body {
 
     $pluginMap = @{}
     foreach ($plugin in $project.Plugins) { $pluginMap[$plugin.Name] = $plugin }
-    foreach ($name in @('ModelContextProtocol', 'AllToolsets')) {
+    foreach ($name in @('ModelContextProtocol', 'EditorToolset', 'AutomationTestToolset', 'ConfigSettingsToolset')) {
         if (-not $pluginMap.ContainsKey($name) -or -not $pluginMap[$name].Enabled) {
             throw "Required editor plugin is not enabled: $name"
         }
         if ($pluginMap[$name].TargetAllowList -notcontains 'Editor') {
             throw "$name must be restricted to Editor targets."
         }
+    }
+    if ($pluginMap.ContainsKey('AllToolsets') -and $pluginMap['AllToolsets'].Enabled) {
+        throw 'AllToolsets must remain disabled; enable only the approved focused toolsets.'
     }
 
     $engineIni = Get-Content -Raw -LiteralPath (Join-Path (Split-Path $paths.Project) 'Config\DefaultEngine.ini')
@@ -27,7 +30,8 @@ Invoke-CIStage -Name 'Project Validation' -Body {
         'DefaultGraphicsRHI=DefaultGraphicsRHI_DX12',
         '+D3D12TargetedShaderFormats=PCD3D_SM6',
         'r.RayTracing=False',
-        'bUseSplitscreen=True'
+        'bUseSplitscreen=True',
+        '+PackageRedirects=(OldName="/Game/LevelPrototyping/Interactable/Door/Assets/Meshes/SM_DoorFrame_Edge",NewName="/Game/LevelPrototyping/Interactable/Door/Meshes/SM_DoorFrame_Edge")'
     )
     foreach ($setting in $requiredSettings) {
         if (-not $engineIni.Contains($setting)) { throw "Missing required DefaultEngine.ini setting: $setting" }

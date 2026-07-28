@@ -82,7 +82,11 @@ The separate release job polls `vMAJOR.MINOR.PATCH` tags, creates a Shipping bui
 
 ## Unreal MCP for Codex
 
-The project enables UE 5.8's experimental `ModelContextProtocol` and `AllToolsets` plugins for Editor targets only. After Unreal restarts, open the Output Log and run:
+The project enables UE 5.8's experimental `ModelContextProtocol` plugin plus the focused
+`EditorToolset`, `AutomationTestToolset`, and `ConfigSettingsToolset` plugins for Editor
+targets only. The `AllToolsets` aggregator is intentionally excluded because it loads
+unrelated experimental Game Features and Dataflow plugins. After Unreal restarts, open
+the Output Log and run:
 
 ```text
 ModelContextProtocol.StartServer

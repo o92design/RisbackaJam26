@@ -23,7 +23,21 @@
 			]
 		},
 		{
-			"Name": "AllToolsets",
+			"Name": "EditorToolset",
+			"Enabled": true,
+			"TargetAllowList": [
+				"Editor"
+			]
+		},
+		{
+			"Name": "AutomationTestToolset",
+			"Enabled": true,
+			"TargetAllowList": [
+				"Editor"
+			]
+		},
+		{
+			"Name": "ConfigSettingsToolset",
 			"Enabled": true,
 			"TargetAllowList": [
 				"Editor"
