@@ -1,18 +1,21 @@
 # Blueprint automation smoke test
 
-The CI test runner is ready, but Unreal binary assets must be authored and saved by
-Unreal Editor. Complete this once before enabling the Jenkins build jobs.
+The CI test runner and Unreal-authored smoke-test assets are ready for the Jenkins
+build jobs.
 
 ## Current status
 
-The first milestone deliberately contains only these three inexpensive checks:
+The smoke test contains these six inexpensive boot checks:
 
 1. The world has a valid Game Instance.
 2. The authoritative GameMode is `BP_CombatGameMode`.
 3. A `BP_CombatCharacter` can be spawned.
+4. `/Game/Input/IMC_Default` is valid.
+5. `/Game/Input/Actions/IA_Move` is valid.
+6. `/Game/Variant_Combat/Input/IMC_Combat` is valid.
 
-`BP_AutomationSmoke` has been created and the nodes for all three checks have been laid
-out. The close-up screenshots confirm that the success and failure routes are correct:
+`BP_AutomationSmoke` has been created with the core checks and boot-input validations
+wired into one success path. The success and failure routes are:
 
 - [x] Game Instance failure ends with **Failed**; success continues to GameMode.
 - [x] GameMode cast failure ends with **Failed**; success continues to character spawn.
@@ -24,32 +27,34 @@ out. The close-up screenshots confirm that the success and failure routes are co
       `BP_CombatCharacter is valid`.
 - [x] Exactly one `BP_AutomationSmoke` actor is present in the level.
 - [x] The corrected Blueprint has been compiled and saved.
+- [x] The three boot-critical input assets are hard-referenced and validated.
+- [x] Each missing input asset has its own named failure route.
 - [x] The test passes in the Editor.
 - [x] The test passes through the repository-level `Test.ps1` command.
 
-Verified Editor result on 2026-07-28:
+Latest verified Editor result on 2026-07-29:
 
 ```text
 Project.Functional Tests.RisbackaJam26.Tests.L_AutomationSmoke.BP_AutomationSmoke
 Result: Success
 Tests: 1, Failures: 0, Skipped: 0
-Duration: 0.453 seconds
+Duration: 0.824 seconds
 ```
 
-Verified command-line result on 2026-07-28:
+Latest verified command-line result on 2026-07-29:
 
 ```text
 Project validation: Success
 Blueprint functional tests: Success
 Tests: 1, Failures: 0, Skipped: 0
-Test duration: 0.501 seconds
-Pipeline duration: 21.627 seconds
+Test duration: 0.638 seconds
+Pipeline duration: 21.628 seconds
 ```
 
 Do not move `.uasset` files with Windows Explorer. Moving the Blueprint in Unreal keeps
 asset references and redirectors valid.
 
-## Finish the current three-check graph
+## Core three-check graph
 
 The white execution wires should form one success path:
 
@@ -58,6 +63,9 @@ Event Start Test
   -> Assert Game Instance is valid
   -> Cast to BP_CombatGameMode
   -> Spawn and assert BP_CombatCharacter is valid
+  -> Assert IMC_Default is valid
+  -> Assert IA_Move is valid
+  -> Assert IMC_Combat is valid
   -> Finish Test: Succeeded
 ```
 
@@ -145,7 +153,7 @@ In the test level's **World Settings**, set **GameMode Override** to
 `BP_CombatGameMode`. This makes the GameMode check deterministic even if the project's
 default map settings change later.
 
-## Run the milestone
+## Run the smoke test
 
 Pressing the regular **Play** button only starts Play In Editor. It does not invoke the
 Functional Test manager, so the level will continue running until Play is stopped. The
@@ -179,10 +187,10 @@ Before running, check the World Outliner and make sure the level contains exactl
    git lfs ls-files
    ```
 
-## Deferred input-asset checks
+## Input-asset checks
 
-Input-asset validation is intentionally deferred until the three-check milestone runs
-successfully. The next small extension should validate these hard references:
+After the spawned character is registered for automatic cleanup, the graph validates
+these hard references in order:
 
 ```text
 /Game/Input/IMC_Default
@@ -190,9 +198,17 @@ successfully. The next small extension should validate these hard references:
 /Game/Variant_Combat/Input/IMC_Combat
 ```
 
-For each asset, drag it from the Content Drawer into the graph, pass it to
-`Assert Is Valid`, and route a failed assertion to **Finish Test: Failed** with a
-message naming that asset.
+Each asset is passed to `Assert Is Valid`. A failed assertion ends immediately at
+**Finish Test: Failed** with one of these messages:
+
+```text
+IMC_Default is missing
+IA_Move is missing
+IMC_Combat is missing
+```
+
+The success output continues to the next asset. After `IMC_Combat` succeeds, the test
+ends at **Finish Test: Succeeded** with `Smoke Tests Success`.
 
 ## CI contract
 
