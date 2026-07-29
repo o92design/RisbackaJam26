@@ -114,6 +114,29 @@ context remains the coordinator.
 - Prefer new assets over editing template originals unless the task explicitly
   requires the original.
 
+## Editor automation via MCP
+
+Implementation may be performed by driving the Unreal Editor through the MCP
+server rather than by hand. This keeps the project Blueprint-only (no `Source/`
+directory; CI fails if one exists).
+
+- Standard MCP toolsets create Blueprints, interfaces, components, DataTables,
+  and materials; author graphs via the Blueprint DSL; place actors; and run
+  automation tests (`DiscoverTests`, `RunTests`, `GetTestResults`).
+- The stock tools cannot create or populate `UserDefinedEnum` /
+  `UserDefinedStruct` assets, and there is no direct Python tool. For those, use
+  the TAPython **Python bridge**. See
+  [Docs/Unreal-MCP-Python-Bridge.md](Docs/Unreal-MCP-Python-Bridge.md) for setup,
+  the execution protocol, and the verified enum/struct API.
+- Work one MCP call at a time (let the editor finish each operation) and use
+  `/Game/...` package paths, not absolute filesystem paths.
+- The bridge executes arbitrary editor Python; use it only on a trusted editor
+  host and only within your claimed asset scope. Do not commit
+  `Content/Python/init_unreal.py` without explicit coordinator approval.
+- Verify created assets independently with `find_assets` / `get_asset_class`
+  rather than trusting a script's own report, and record the evidence in the
+  handoff.
+
 ## Test-driven implementation
 
 For each implementation task:
