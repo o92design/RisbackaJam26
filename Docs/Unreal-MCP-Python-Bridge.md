@@ -165,9 +165,40 @@ and `AssetTools.read_file` can use it:
 2. Poll `read_file` `<Project>/Saved/rtapy/out.json` until the JSON's `id` matches.
 3. Read `ok`, `output`, `stdout`, `error` from the result.
 
-A ready-to-use client is committed at [Scripts/UnrealMCP/ue.py](../Scripts/UnrealMCP/ue.py)
-(`pyexec`, `bridge_ping`, plus thin `call`/`describe` helpers; host and Saved path come
-from `RISBACKA_MCP_URL` / `RISBACKA_MCP_SAVED`). The essential shape:
+The main, agent-neutral client is committed at
+[Scripts/UnrealMCP/ue.py](../Scripts/UnrealMCP/ue.py). It provides `status`,
+`toolsets`, `describe`, `call`, `ping`, and `pyexec` CLI commands plus compatible
+Python helpers (`call`, `describe`, `pyexec`, and `bridge_ping`). The previous
+curl-based implementation remains at
+[Scripts/UnrealMCP/ue_legacy.py](../Scripts/UnrealMCP/ue_legacy.py) for
+troubleshooting only.
+
+Configuration is not tied to Codex. The main client checks, in order:
+
+1. `--url` / `--saved-dir`;
+2. `RISBACKA_MCP_URL` / `RISBACKA_MCP_SAVED`;
+3. the agent-neutral
+   [Scripts/UnrealMCP/client.json](../Scripts/UnrealMCP/client.json);
+4. a repository `.mcp.json` `unreal-mcp` entry;
+5. `.codex/config.toml` as an optional fallback; and
+6. `http://127.0.0.1:8000/mcp` plus automatic local `.uproject` discovery.
+
+`client.json` is the shared project default, not a Codex setting. If the editor
+host's LAN address changes, update that file or override it with
+`RISBACKA_MCP_URL`.
+
+Examples:
+
+```powershell
+python Scripts/UnrealMCP/ue.py status
+python Scripts/UnrealMCP/ue.py ping
+python Scripts/UnrealMCP/ue.py call get_asset_class `
+  --toolset editor_toolset.toolsets.asset.AssetTools `
+  --arg asset_path=/Game/CodexTestEnum
+python Scripts/UnrealMCP/ue.py pyexec --code "output = 6 * 7"
+```
+
+The essential bridge shape:
 
 ```python
 import json, time, uuid
