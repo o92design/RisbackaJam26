@@ -55,6 +55,12 @@ Structs:
 No existing binary asset is claimed. Components, maps, GameMode, player,
 template/vendor assets, and contract test assets are outside this claim.
 
+Temporary local-only generation tooling is permitted only below
+`RisbackaJam26Game/Plugins/Developer/RisbackaContractGenerator/**`. It must be
+removed before the implementation commit and must never become an asset
+dependency or staged change. Ignored probes may remain below
+`RisbackaJam26Game/Saved/Codex/**`.
+
 ## Lease Keys
 
 - `contracts`
