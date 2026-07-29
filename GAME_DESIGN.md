@@ -1,4 +1,4 @@
-# Defend Risbacka - Game Design Document
+# Risbacka Game Design Document
 
 ## Context
 A cozy-yet-tense tower defense game set at a real Swedish homestead (Risbacka skogsväg 8, Härryda) where players defend against nightly wild boar attacks, manage repairs, and establish community relationships. Inspired by MDA framework (Koster), narrative-focused systems (Adams), and player psychology (Shell).
@@ -33,6 +33,7 @@ A cozy-yet-tense tower defense game set at a real Swedish homestead (Risbacka sk
 ### Mechanics (Rules & Systems)
 **Defense System:**
 - Fence building (wood → stone → electric)
+- Chop marked wood sources with an axe, collect the dropped wood, and deposit it in a shared storage area
 - Trap placement (pit, spring, electrified wire)
 - Guard post (player controlled or AI-assisted)
 - Home reinforcement (walls, doors, shutters)
@@ -62,12 +63,13 @@ A cozy-yet-tense tower defense game set at a real Swedish homestead (Risbacka sk
 - Boar population scales with in-game day count
 - Boss encounters (larger, more aggressive boars)
 - Seasonal patterns (autumn has more aggressive boars)
-- Failed defenses trigger retreat but not game over (consequences instead)
+- Damage short of total destruction persists into the next day and creates repair pressure
+- The run fails if the main base is destroyed or no active player remains alive
 
 **Player Agency Moments:**
 - Moral choice: Kill boars or just deter them?
 - Resource allocation: Repair home or build offense?
-- Community help: Call neighbors for assistance (Örjan, Andreas)
+- Community help: Call neighbors for assistance (Bamse, Andreas)
 - Risk tolerance: Invest in expensive tech vs. simpler defenses?
 
 **Tension Curve:**
@@ -96,7 +98,7 @@ A cozy-yet-tense tower defense game set at a real Swedish homestead (Risbacka sk
 **Location: Risbacka (Real Swedish Homestead)**
 - Main house (main structure to defend)
 - Tool shed (resource storage)
-- Neighbor Örjan's compound (safe zone for meat processing)
+- Neighbor Bamse's compound (safe zone for meat processing)
 - Neighbor Andreas's house (beer Easter egg location)
 - Surrounding forest (boar spawn points)
 - Fields (where boars emerge from)
@@ -111,7 +113,7 @@ A cozy-yet-tense tower defense game set at a real Swedish homestead (Risbacka sk
 
 ## Neighbor Relationships (Narrative Mechanics)
 
-**Örjan (Primary Neighbor):**
+**Bamse (Primary Neighbor):**
 - **Role:** Meat processor and economic hub
 - **Mechanic:** Trade boar meat for money/supplies
 - **Story Arc:** Builds relationship over time
@@ -160,10 +162,10 @@ A cozy-yet-tense tower defense game set at a real Swedish homestead (Risbacka sk
 ### Combat System (Real-Time)
 
 **Player Actions (During Night):**
-- Move around home with weapon (shovel, spear, rifle)
-- Aim and shoot/strike at boars
+- Move around the home with an axe used for both chopping wood and fighting boars
+- Aim and strike at boars
 - Activate traps manually
-- Call for help (cooldown-based, Örjan or Andreas)
+- Call for help (cooldown-based, Bamse or Andreas)
 - Retreat to safe room if overwhelmed
 
 **Boar AI:**
@@ -183,7 +185,7 @@ A cozy-yet-tense tower defense game set at a real Swedish homestead (Risbacka sk
 **Tasks Available Each Day:**
 1. **Cleanup** (Required)
    - Collect dead boars (mini-game: dragging/loading)
-   - Transport to Örjan (travel phase)
+   - Transport to Bamse (travel phase)
    - Receive payment
 
 2. **Repair** (Priority)
@@ -197,7 +199,10 @@ A cozy-yet-tense tower defense game set at a real Swedish homestead (Risbacka sk
    - Takes time (can be interrupted)
 
 4. **Gather** (Optional)
-   - Scavenge forest for resources
+   - Chop marked wood sources with the axe
+   - Collect and carry dropped wood pickups
+   - Deposit wood in the shared storage area for building and repairs
+   - Scavenge the forest for other resources later in progression
    - Risk/reward (might encounter stray boar)
 
 5. **Rest** (Necessary)
@@ -207,13 +212,20 @@ A cozy-yet-tense tower defense game set at a real Swedish homestead (Risbacka sk
 
 ### Time Management
 
-**Day Cycle (6 in-game hours):**
+**Full Cycle:**
+- One complete cycle represents 24 in-game hours
+- Day runs from 6am to 6pm (12 in-game hours)
+- Night runs from 6pm to 6am (12 in-game hours)
+- Phase 1 uses a 3-minute preparation day and a 5-minute defense night
+- Real-time durations remain tunable for later balancing
+
+**Day Cycle (12 in-game hours / 3 real minutes in Phase 1):**
 - 6-8am: Morning cleanup and repairs (focus on speed)
 - 8am-12pm: Main building/resource gathering
-- 12pm-3pm: Travel and trading (Örjan's house)
+- 12pm-3pm: Travel and trading (Bamse's house)
 - 3pm-6pm: Final preparations and rest
 
-**Night Cycle (6 in-game hours):**
+**Night Cycle (12 in-game hours / 5 real minutes in Phase 1):**
 - 6pm-8pm: Early waves (easy)
 - 8pm-12am: Mid waves (harder)
 - 12am-4am: Peak waves (boss encounters)
@@ -261,7 +273,7 @@ A cozy-yet-tense tower defense game set at a real Swedish homestead (Risbacka sk
 ## Tone & Writing (Adams' Narrative Approach)
 
 **Voice:** Humble, practical, slightly deadpan Swedish humor
-- Örjan's pragmatism: "Boars will be boars. Meat is meat."
+- Bamse's pragmatism: "Boars will be boars. Meat is meat."
 - Andreas's optimism: "More beer than sense, but both help."
 - Your character: Internal monologue reflecting on rural life
 
@@ -278,29 +290,34 @@ A cozy-yet-tense tower defense game set at a real Swedish homestead (Risbacka sk
 
 ---
 
-## Implementation Roadmap (Unreal MCP Targets)
+## Implementation Roadmap
 
 **Phase 1: Core Loop**
-- Boar spawning and pathfinding (ActorTools, SceneTools)
-- Defense placement system (BlueprintTools)
-- Day/night cycle manager (EditorAppToolset)
+- Placeholder boar spawning and objective-focused pathfinding
+- Wood gathering, shared storage, and simple fence placement
+- Day/night cycle and shared-camera local co-op
 - Basic wave system
 
 **Phase 2: Home & Damage**
-- Home structure integrity visualization (MaterialTools)
+- Home structure integrity visualization
 - Repair system integration
 - Cleanup mechanics (resource collection)
 
 **Phase 3: NPC & Economy**
-- Neighbor NPCs (Örjan, Andreas) (ActorTools)
+- Neighbor NPCs (Bamse, Andreas)
 - Trading system
 - Morale/energy tracking
 
 **Phase 4: Polish & Easter Eggs**
+- Integrate the selected Fab boar models, physics assets, and slapstick ragdolls
 - Seasonal weather effects
 - Audio/ambient systems
 - Hidden events and Easter eggs
 - Leaderboard/progression tracking
+
+Technical architecture, asset targets, and Unreal MCP workflow notes live in
+[Docs/Implementation-Plan.md](Docs/Implementation-Plan.md). Executable work packages,
+dependencies, and current status live in [Tasks/README.md](Tasks/README.md).
 
 ---
 
@@ -319,14 +336,17 @@ A cozy-yet-tense tower defense game set at a real Swedish homestead (Risbacka sk
 
 ## Scope Decisions (Confirmed)
 
-✓ **Mode:** Local Co-op (2 players)  
-✓ **Tone:** Comedy-first with slapstick physics  
-✓ **Start:** Core loop (day/night + simple defense)  
+- ✓ **Mode:** Local Co-op (2 players)
+- ✓ **Camera:** Shared view of the complete active playing area
+- ✓ **Tone:** Comedy-first with slapstick physics
+- ✓ **Start:** Core loop (day/night + simple defense)
 
 ### Implications:
-- Split-screen or shared camera (TBD based on Unreal setup)
-- Boars have exaggerated physics, humorous failure states
-- Simplified defenses in phase 1 (no complex economy yet)
+- Both players remain visible in one shared, high-angle gameplay view
+- Neighbor homes do not need to fit inside the Phase 1 playing area
+- How distant neighbor interactions work remains a later design decision
+- Final boar models and exaggerated ragdoll physics arrive after Phase 1
+- Phase 1 economy is limited to wood pickups, shared storage, and wooden defenses
 - Two-player coordination becomes strategic layer
 
 ---
@@ -335,45 +355,57 @@ A cozy-yet-tense tower defense game set at a real Swedish homestead (Risbacka sk
 
 ### Deliverables:
 1. **Day/Night Cycle Manager**
-   - 12 in-game hours per cycle (adjustable speed)
+   - 24 in-game hours per full cycle
+   - 3-minute preparation day followed by a 5-minute defense night
    - UI shows time, events, and tasks
    - Transitions with audio/visual cues
 
 2. **Boar Spawning & Wave System**
    - 3 difficulty tiers (easy, medium, hard)
-   - Exaggerated physics (ragdoll, oversized colliders)
+   - Placeholder enemy presentation until the Fab animal models are integrated
    - Simple AI (walk toward home, break things)
 
-3. **Defense Placement (Simple Version)**
-   - Place 1-2 fence types
-   - Basic wood/stone walls
+3. **Wood Gathering & Shared Storage**
+   - Chop marked wood sources with the axe
+   - Collect physical wood pickups
+   - Carry and drop wood inside a designated storage area
+   - Convert deposited pickups into a shared wood stockpile
+
+4. **Defense Placement (Simple Version)**
+   - Place one wooden fence type
+   - Spend wood from the shared storage stockpile
    - Player collision detection
 
-4. **Home Structure**
+5. **Home Structure**
    - Visible damage model (temporary for phase 1)
    - Simple "gates" that boars breach
    - Health bar or visual indicator
 
-5. **Two-Player Controls**
-   - Split controls (one defends north, one south)
-   - Shared responsibility system
+6. **Two-Player Controls & Shared Camera**
+   - Two locally controlled player characters
+   - One camera frames the complete active playing area
+   - Shared responsibility for gathering, building, and defense
    - Rally point (regroup mechanic)
 
+7. **Failure Conditions**
+   - Main base destruction immediately fails the run
+   - Player death fails single-player
+   - The death of both players fails local co-op
+
 ### Success Criteria (Phase 1):
+- Players can complete a 3-minute day and 5-minute night
+- Players can chop, carry, deposit, and spend wood
 - Playable 5-minute night cycle
-- 2 players can cooperatively build 1 fence and defend it
+- 2 players share one camera, cooperatively build 1 fence, and defend it
 - Boars pathfind and damage home
+- Player/base failure conditions end the run cleanly
 - Can complete 1 full day/night cycle without crash
 
-### Files to Create/Modify (Unreal):
-- GameMode: DayNightCycleManager
-- Blueprints: BoarSpawner, BoarAI, FenceBase, HomeStructure
-- UI: DayNightHUD, WaveCounter, CoopIndicator
-- Level: Combat level (iterate from existing)
-
 ### Not in Phase 1:
-- NPC dialogue (Örjan, Andreas)
-- Resource economy
+- NPC dialogue or visits (Bamse, Andreas)
+- Distant-neighbor travel/interaction flow
+- Economy beyond the shared wood loop
 - Cleanup mechanics
 - Weather effects
 - Easter eggs
+- Final Fab boar models and slapstick ragdoll polish

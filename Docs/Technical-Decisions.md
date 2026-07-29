@@ -2,15 +2,23 @@
 
 ## Bootstrap scope
 
-This setup deliberately stops at reliable source control, testing, packaging, archival, dashboarding, and release delivery. It does not add EOS, Steam, online sessions, host/join UI, replicated combat, zombie AI, or base building.
+This setup deliberately stops at reliable source control, testing, packaging,
+archival, dashboarding, and release delivery. It does not yet add online sessions,
+replicated combat, boar gameplay, gathering, defense construction, or the day/night
+loop.
 
 The intended future modes are:
 
 - single-player;
-- two players on one desktop using split-screen;
+- two players on one desktop using a shared camera;
 - two computers over LAN.
 
 Hybrid local/network parties are not planned. Network architecture should be decided after the jam prototype proves the core loop.
+
+The shared camera should show the complete active playing area. Distant neighbor
+interactions are intentionally unresolved until the team chooses between visits,
+deliveries/remote contact, or a separate travel transition. Neighbor interaction is
+outside Phase 1.
 
 ## Blueprint baseline
 

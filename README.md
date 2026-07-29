@@ -2,7 +2,15 @@
 
 Unreal Engine 5.8 game-jam project by Oskar Månsson and Daniel Sjöholm.
 
-The current gameplay title **Zummer TimeZ** is a working idea, not a final product name. The early concept is a base-building survival game where players fend off zombie attacks. Planned play modes are single-player, two-player local split-screen, and two computers over LAN. Multiplayer gameplay is deliberately outside this repository bootstrap.
+The game does not have a final title yet. It is a cozy-comedy defense game about
+gathering resources by day and protecting the Risbacka homestead from wild boars
+at night. The confirmed multiplayer direction is two-player local co-op with one
+shared camera showing the complete active playing area. Network multiplayer remains
+outside the repository bootstrap.
+
+See [GAME_DESIGN.md](GAME_DESIGN.md) for the game design and
+[Docs/Title-Ideas.md](Docs/Title-Ideas.md) for working title candidates. Active,
+agent-oriented implementation work is tracked in [Tasks/README.md](Tasks/README.md).
 
 ## Project baseline
 
@@ -24,6 +32,7 @@ RisbackaJam26/
 ├─ Scripts/CI/              Small reusable build/test/release steps
 ├─ Jenkins/                 Release pipeline and server setup
 ├─ Docs/                    Decisions and editor handoffs
+├─ Tasks/                   Linked agent task board and specifications
 ├─ Jenkinsfile              Automatic Test pipeline
 ├─ Setup-Local.ps1          One-time Git/LFS setup
 ├─ Test.ps1                 Local project and functional tests
