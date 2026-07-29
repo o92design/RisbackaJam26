@@ -6,6 +6,12 @@
 *.VC.db
 *.VC.opendb
 
+# Obsidian: keep shared vault, graph, plugin, and appearance settings in Git.
+# Ignore only per-device UI/session state and rebuildable cache data.
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/cache/
+
 # Unreal-generated directories (preserve these on Jenkins workspaces, never commit them)
 **/Binaries/
 **/Build/*/FileOpenOrder/
