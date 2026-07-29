@@ -165,7 +165,9 @@ and `AssetTools.read_file` can use it:
 2. Poll `read_file` `<Project>/Saved/rtapy/out.json` until the JSON's `id` matches.
 3. Read `ok`, `output`, `stdout`, `error` from the result.
 
-Reference client (Python), calling the MCP `call_tool` wrapper:
+A ready-to-use client is committed at [Scripts/UnrealMCP/ue.py](../Scripts/UnrealMCP/ue.py)
+(`pyexec`, `bridge_ping`, plus thin `call`/`describe` helpers; host and Saved path come
+from `RISBACKA_MCP_URL` / `RISBACKA_MCP_SAVED`). The essential shape:
 
 ```python
 import json, time, uuid
