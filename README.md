@@ -11,6 +11,10 @@ outside the repository bootstrap.
 See [GAME_DESIGN.md](GAME_DESIGN.md) for the game design and
 [Docs/Title-Ideas.md](Docs/Title-Ideas.md) for working title candidates. Active,
 agent-oriented implementation work is tracked in [Tasks/README.md](Tasks/README.md).
+Module boundaries, public contracts, TDD gates, and independent architecture reviews
+are tracked separately in [Architecture/README.md](Architecture/README.md).
+Codex/Claude scheduling, claims, parallel-work rules, and fresh-context handoffs
+are defined in [Agent-Orchestration/README.md](Agent-Orchestration/README.md).
 
 ## Project baseline
 
@@ -32,6 +36,7 @@ RisbackaJam26/
 ├─ Scripts/CI/              Small reusable build/test/release steps
 ├─ Jenkins/                 Release pipeline and server setup
 ├─ Docs/                    Decisions and editor handoffs
+├─ Architecture/            Modules, contracts, TDD gates, and reviews
 ├─ Tasks/                   Linked agent task board and specifications
 ├─ Jenkinsfile              Automatic Test pipeline
 ├─ Setup-Local.ps1          One-time Git/LFS setup

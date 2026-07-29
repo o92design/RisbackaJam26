@@ -1,7 +1,7 @@
 ---
 id: SUBTASK-001A
 parent: TASK-001
-status: READY
+status: BLOCKED
 owner: unassigned
 depends_on: []
 updated: 2026-07-29

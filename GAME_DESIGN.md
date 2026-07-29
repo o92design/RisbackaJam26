@@ -315,8 +315,10 @@ A cozy-yet-tense tower defense game set at a real Swedish homestead (Risbacka sk
 - Hidden events and Easter eggs
 - Leaderboard/progression tracking
 
-Technical architecture, asset targets, and Unreal MCP workflow notes live in
-[Docs/Implementation-Plan.md](Docs/Implementation-Plan.md). Executable work packages,
+Detailed module architecture, public contracts, and quality gates live in
+[Architecture/README.md](Architecture/README.md). High-level asset targets and Unreal
+workflow notes live in
+[Docs/Implementation-Plan.md](Docs/Implementation-Plan.md). Executable feature work,
 dependencies, and current status live in [Tasks/README.md](Tasks/README.md).
 
 ---

@@ -24,6 +24,11 @@ outside Phase 1.
 
 Gameplay starts Blueprint-only so both developers can iterate in the Editor. Unreal itself and some template/plugin functionality still use C++ internally, and the build machine therefore retains the Visual Studio toolchain. A project `Source/` directory should only be introduced by an explicit team decision.
 
+The Blueprint/content module boundaries, public interfaces, composition rules, and
+test-driven delivery gates are documented in the
+[Architecture index](../Architecture/README.md). In that documentation, “module”
+means a logical Blueprint/content boundary rather than an Unreal C++ module.
+
 ## Rendering
 
 The Windows desktop baseline keeps Maximum quality, DX12, Shader Model 6, Lumen, Nanite, virtual shadows, and mesh distance fields. Hardware ray tracing is disabled to reduce shader/build cost and avoid narrowing supported jam hardware.

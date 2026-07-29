@@ -3,7 +3,19 @@
 This is the overview and status board for AI agents and developers implementing the
 first playable Risbacka loop. The player-facing requirements are in
 [GAME_DESIGN.md](../GAME_DESIGN.md), and the proposed Unreal architecture is in
+[Architecture/README.md](../Architecture/README.md). High-level asset targets and
+Unreal workflow notes remain in
 [Docs/Implementation-Plan.md](../Docs/Implementation-Plan.md).
+
+Architecture shells, red tests, and fresh-context reviews are tracked on the separate
+[Architecture Task Board](../Architecture/Tasks/README.md). Feature implementation
+must satisfy the linked architecture gate in each task; the two boards remain separate
+so feature progress is not confused with architecture readiness.
+
+Scheduling is controlled by the machine-checked
+[Agent Task Graph](../Agent-Orchestration/task-graph.json) and its
+[orchestration guide](../Agent-Orchestration/README.md). The board below is a
+human-readable summary.
 
 Last board update: **2026-07-29**
 
@@ -14,30 +26,35 @@ Last board update: **2026-07-29**
 | `READY` | Dependencies are satisfied and an agent may claim the task |
 | `BLOCKED` | Do not start implementation until the listed dependencies are done |
 | `IN_PROGRESS` | One named owner has claimed the task and its assets |
-| `IN_REVIEW` | Implementation is complete and awaiting verification/integration |
-| `DONE` | Acceptance criteria and verification are complete |
-| `PAUSED` | Work started but was intentionally stopped; read the handoff notes |
+| `REVIEW_READY` | Implementation and evidence are complete at an immutable commit |
+| `IN_REVIEW` | A fresh context is reviewing that exact commit |
+| `CHANGES_REQUESTED` | Independent review found required corrections |
+| `DONE` | Acceptance criteria, verification, and all completion reviews are approved |
 
 ## Agent Coordination Contract
 
 1. Read this board, the selected task, every linked subtask, and
    [CONTRIBUTING.md](../CONTRIBUTING.md) before editing.
-2. Pull immediately before claiming a task.
-3. Claim by setting `status`, `owner`, `computer`, and `branch` in the task file.
+2. Read the task's architecture modules/contracts and confirm its shell/red-test gate
+   is complete.
+3. Validate the graph and confirm the task is `READY` before claiming it.
+4. Claim by recording `status`, `owner`, `computer`, `context`, `branch`,
+   `worktree`, `base_sha`, exact paths, and lease keys.
    Commit and push that claim before opening any shared Unreal asset.
-4. Treat every `.uasset` and `.umap` path listed under **Exclusive ownership** as
+5. Treat every `.uasset` and `.umap` path listed under **Exclusive ownership** as
    locked to that task owner. These files cannot be merged safely.
-5. Do not edit template/vendor assets. Duplicate or extend them below
+6. Do not edit template/vendor assets. Duplicate or extend them below
    `/Game/RisbackaJam26/`.
-6. Stay inside the task's declared asset paths. If another file is necessary, record
+7. Stay inside the task's declared asset paths. If another file is necessary, record
    the proposed expansion in the task and coordinate before editing it.
-7. Update subtask status in its own file. The coordinator updates this overview board
+8. Update subtask status in its own file. The coordinator updates this overview board
    when task-level status changes, preventing many agents from editing this file.
-8. Compile every changed Blueprint, save intentionally, and run the task's verification.
-9. Before handoff, record exact changed assets, tests run, known limitations, and the
-   commit SHA in the parent task.
-10. Never mark a task `DONE` merely because its implementation exists; all acceptance
-    criteria must pass.
+9. Compile every changed Blueprint, save intentionally, and run the task's verification.
+10. Before handoff, move to `REVIEW_READY` and record exact changed assets,
+    red/green tests, regression results, known limitations, and the immutable
+    implementation commit.
+11. Never mark a task `DONE` merely because its implementation exists; all acceptance
+    criteria and the linked independent architecture review must pass.
 
 Suggested branch format: `codex/task-###-short-name`.
 
@@ -45,7 +62,7 @@ Suggested branch format: `codex/task-###-short-name`.
 
 | ID | Task | Status | Depends on | Primary exclusive area |
 |---|---|---|---|---|
-| [TASK-001](01-foundation/TASK-001-foundation.md) | Foundation and game-owned baseline | `READY` | — | `/Game/RisbackaJam26/Core`, `/Characters` |
+| [TASK-001](01-foundation/TASK-001-foundation.md) | Foundation and game-owned baseline | `BLOCKED` | Architecture contract shell/red test | `/Game/RisbackaJam26/Core`, `/Characters` |
 | [TASK-010](02-shared-camera/TASK-010-shared-camera.md) | Shared camera and two local players | `BLOCKED` | TASK-001 | `/Camera`, GameMode camera hookup |
 | [TASK-020](03-day-night/TASK-020-day-night.md) | Day/night cycle manager | `BLOCKED` | TASK-001 | `/Cycle` |
 | [TASK-030](04-home-failure/TASK-030-home-failure.md) | Home objective and failure signals | `BLOCKED` | TASK-001 | `/Home` |
@@ -53,11 +70,19 @@ Suggested branch format: `codex/task-###-short-name`.
 | [TASK-050](06-boar-ai/TASK-050-boar-ai.md) | Placeholder boar and objective AI | `BLOCKED` | TASK-001 | `/Enemies` |
 | [TASK-060](07-wave-director/TASK-060-wave-director.md) | Three-wave night director | `BLOCKED` | TASK-001 | `/Waves` |
 | [TASK-070](08-fence-building/TASK-070-fence-building.md) | Wooden fence placement | `BLOCKED` | TASK-040 | `/Building`, player build hookup |
-| [TASK-080](09-hud/TASK-080-hud.md) | Phase 1 HUD | `BLOCKED` | TASK-020, 030, 040, 060 | `/UI` |
+| [TASK-080](09-hud/TASK-080-hud.md) | Phase 1 HUD | `BLOCKED` | TASK-010, 020, 030, 040, 060 | `/UI` |
 | [TASK-090](10-integration/TASK-090-integration.md) | Prototype level and system integration | `BLOCKED` | TASK-010–080 | `/Maps/L_Risbacka_Prototype`, cross-system hookup |
 | [TASK-100](11-verification/TASK-100-verification.md) | Automation and two-player playtest | `BLOCKED` | TASK-090 | `/Tests/Phase1` |
 
 ## Parallel Execution Waves
+
+### Architecture Preparation — Contracts and Red Tests
+
+Before feature Wave 0, complete the shell and red-test stages of
+[ARCH-TASK-001](../Architecture/Tasks/01-contracts/ARCH-TASK-001-contracts.md). Then
+create the minimal runtime/composition shell in
+[ARCH-TASK-010](../Architecture/Tasks/02-runtime-composition/ARCH-TASK-010-runtime-composition.md).
+This gives TASK-001 stable types and tests before implementation.
 
 ### Wave 0 — Foundation
 
@@ -66,7 +91,8 @@ agents do not touch Combat template assets.
 
 ### Wave 1 — Independent Systems
 
-After TASK-001 is `DONE`, these tasks may run concurrently on different computers:
+After TASK-001 is `DONE` and each domain's shell/red-test gate is complete, these
+tasks may run concurrently in separate worktrees/checkouts on different computers:
 
 - TASK-010 Shared Camera
 - TASK-020 Day/Night

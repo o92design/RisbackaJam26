@@ -6,12 +6,26 @@ owner: unassigned
 computer: unassigned
 branch: unassigned
 depends_on: [TASK-001]
+architecture_gates: [ARCH-TASK-040]
 updated: 2026-07-29
 ---
 
 # TASK-030 — Home Objective and Failure Signals
 
 [Tasks overview](../README.md) · [TASK-001](../01-foundation/TASK-001-foundation.md)
+
+## Architecture Gate
+
+- Modules:
+  [Health & Objectives](../../Architecture/Modules/ARC-MOD-040-health-objectives.md) and
+  [Runtime Coordination](../../Architecture/Modules/ARC-MOD-010-runtime.md)
+- Contracts:
+  [Health & Damage](../../Architecture/Contracts/ARC-CON-020-health-damage.md) and
+  [Run State](../../Architecture/Contracts/ARC-CON-010-run-state.md)
+- Gate:
+  [ARCH-TASK-040](../../Architecture/Tasks/05-health-ai/ARCH-TASK-040-health-ai.md)
+- Home reports destruction; Runtime decides failure. `DONE` requires fresh-context
+  review.
 
 ## Goal
 

@@ -6,12 +6,23 @@ owner: unassigned
 computer: unassigned
 branch: unassigned
 depends_on: [TASK-001]
+architecture_gates: [ARCH-TASK-030]
 updated: 2026-07-29
 ---
 
 # TASK-060 — Three-Wave Night Director
 
 [Tasks overview](../README.md) · [TASK-001](../01-foundation/TASK-001-foundation.md)
+
+## Architecture Gate
+
+- Module: [Waves](../../Architecture/Modules/ARC-MOD-080-waves.md)
+- Contract:
+  [Wave Accounting](../../Architecture/Contracts/ARC-CON-070-wave-accounting.md)
+- Gate:
+  [ARCH-TASK-030](../../Architecture/Tasks/04-cycle-waves/ARCH-TASK-030-cycle-waves.md)
+- The director owns a registered living set and never depends on the concrete boar
+  class. `DONE` requires the independent cycle/wave review.
 
 ## Goal
 

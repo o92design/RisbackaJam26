@@ -1,9 +1,10 @@
 # Risbacka Technical Implementation Plan
 
-This document holds implementation architecture and Unreal workflow details. The
-player-facing design remains in [GAME_DESIGN.md](../GAME_DESIGN.md). Agent ownership,
-dependencies, and live task status are tracked in the
-[Phase 1 task board](../Tasks/README.md).
+This document holds the high-level Phase 1 implementation targets and Unreal workflow
+details. The player-facing design remains in [GAME_DESIGN.md](../GAME_DESIGN.md).
+Detailed module boundaries, contracts, test-driven gates, and independent review live
+in the [architecture index](../Architecture/README.md). Agent ownership, dependencies,
+and live feature status are tracked in the [Phase 1 task board](../Tasks/README.md).
 
 ## Current Baseline
 
@@ -21,8 +22,14 @@ dependencies, and live task status are tracked in the
 ### Game and Cycle
 
 - `BP_GM_Risbacka`
-  - Owns game rules, local-player creation, player starts, victory, and failure
+  - Owns local-player creation, player starts, and composition startup
   - Reuses the useful local multiplayer logic from `BP_CombatGameMode`
+- `BP_RunCoordinator`
+  - Owns run-state transitions, victory, and failure arbitration
+  - Receives facts from the home, player-life, cycle, and wave systems
+- `BP_RisbackaWorldBootstrap`
+  - Holds explicit references to placed systems and initializes them in order
+  - Keeps cross-system wiring out of the Level Blueprint
 - `BP_DayNightManager`
   - Represents a full 24-hour in-game cycle
   - Runs a 3-minute preparation day from 06:00 to 18:00
@@ -89,6 +96,9 @@ Using marked wood sources avoids making full tree destruction a Phase 1 dependen
 - `WBP_CoopStatus`: both player states
 
 ## Suggested Build Order
+
+The executable shell → red test → implementation → review sequence is maintained in
+[Architecture Implementation Sequence](../Architecture/Plans/Implementation-Sequence.md).
 
 1. Create the Risbacka GameMode and prototype level without altering template originals.
 2. Implement and verify the shared camera with two local players.

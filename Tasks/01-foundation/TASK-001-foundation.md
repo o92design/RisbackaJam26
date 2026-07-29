@@ -1,17 +1,28 @@
 ---
 id: TASK-001
 title: Foundation and game-owned baseline
-status: READY
+status: BLOCKED
 owner: unassigned
 computer: unassigned
 branch: unassigned
 depends_on: []
+architecture_gates: [ARCH-TASK-001, ARCH-TASK-010]
 updated: 2026-07-29
 ---
 
 # TASK-001 — Foundation and Game-Owned Baseline
 
 [Tasks overview](../README.md) · [Implementation plan](../../Docs/Implementation-Plan.md)
+
+## Architecture Gate
+
+- Modules: [Shared Contracts](../../Architecture/Modules/ARC-MOD-000-contracts.md) and
+  [Runtime Coordination](../../Architecture/Modules/ARC-MOD-010-runtime.md)
+- Gates: [ARCH-TASK-001](../../Architecture/Tasks/01-contracts/ARCH-TASK-001-contracts.md)
+  and
+  [ARCH-TASK-010](../../Architecture/Tasks/02-runtime-composition/ARCH-TASK-010-runtime-composition.md)
+- Implement against the compileable shells and recorded red tests. `DONE` requires the
+  linked fresh-context reviews.
 
 ## Goal
 
@@ -36,14 +47,16 @@ Do not edit the existing Combat template assets; duplicate or derive from them.
 - `BP_GM_Risbacka`, based on the useful local-player logic in `BP_CombatGameMode`
 - `BP_PC_Risbacka`, based on `BP_CombatPlayerController`
 - `BP_Player_Risbacka`, based on `BP_CombatCharacter`
-- `E_RisbackaPhase` with `Day`, `Night`, `Success`, and `Failure`
+- `E_RisbackaPhase` with `Day` and `Night`
+- `E_RisbackaRunState` with `Bootstrapping`, `Ready`, `Playing`, `Success`, and
+  `Failure`
 - All new Blueprints compile without warnings introduced by this task
 
 ## Subtasks
 
 | Subtask | Status |
 |---|---|
-| [SUBTASK-001A](subtasks/SUBTASK-001A-content-layout.md) | `READY` |
+| [SUBTASK-001A](subtasks/SUBTASK-001A-content-layout.md) | `BLOCKED` |
 | [SUBTASK-001B](subtasks/SUBTASK-001B-gameplay-baseline.md) | `BLOCKED` |
 
 ## Out of Scope

@@ -6,12 +6,22 @@ owner: unassigned
 computer: unassigned
 branch: unassigned
 depends_on: [TASK-001]
+architecture_gates: [ARCH-TASK-020]
 updated: 2026-07-29
 ---
 
 # TASK-010 — Shared Camera and Two Local Players
 
 [Tasks overview](../README.md) · [TASK-001](../01-foundation/TASK-001-foundation.md)
+
+## Architecture Gate
+
+- Module: [Camera & Local Co-op](../../Architecture/Modules/ARC-MOD-020-camera-coop.md)
+- Contract:
+  [Camera Participant](../../Architecture/Contracts/ARC-CON-080-camera-participant.md)
+- Gate: [ARCH-TASK-020](../../Architecture/Tasks/03-camera/ARCH-TASK-020-camera.md)
+- Begin implementation after the camera shell and meaningful red test; `DONE` requires
+  a fresh-context camera review.
 
 ## Goal
 

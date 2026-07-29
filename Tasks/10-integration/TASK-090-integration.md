@@ -6,12 +6,24 @@ owner: unassigned
 computer: unassigned
 branch: unassigned
 depends_on: [TASK-010, TASK-020, TASK-030, TASK-040, TASK-050, TASK-060, TASK-070, TASK-080]
+architecture_gates: [ARCH-TASK-010, ARCH-TASK-070]
 updated: 2026-07-29
 ---
 
 # TASK-090 — Prototype Level and System Integration
 
 [Tasks overview](../README.md) · [Implementation plan](../../Docs/Implementation-Plan.md)
+
+## Architecture Gate
+
+- Modules: [World Composition](../../Architecture/Modules/ARC-MOD-100-composition.md)
+  and [Runtime Coordination](../../Architecture/Modules/ARC-MOD-010-runtime.md)
+- Gates:
+  [ARCH-TASK-010](../../Architecture/Tasks/02-runtime-composition/ARCH-TASK-010-runtime-composition.md)
+  and
+  [ARCH-TASK-070](../../Architecture/Tasks/08-integration-review/ARCH-TASK-070-integration-review.md)
+- Integrate reviewed public APIs through one composition root. `DONE` requires the
+  final fresh-context architecture audit.
 
 ## Goal
 
@@ -52,8 +64,10 @@ This task is single-owner. No other task may edit the integration map concurrent
 ## Acceptance Criteria
 
 - Both players can complete the wood-to-fence loop during day.
+- The real player axe damages/kills a boar through the approved damage contract.
 - Night starts automatically and runs exactly three waves.
 - Boars attack the home or blocking fences.
+- A boar whose blocking fence is destroyed resumes toward the home objective.
 - All defined death/base failure paths end the run cleanly.
 - Clearing wave three reaches dawn/success.
 - A complete eight-minute cycle can run without a crash.

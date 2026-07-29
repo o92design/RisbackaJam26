@@ -6,12 +6,22 @@ owner: unassigned
 computer: unassigned
 branch: unassigned
 depends_on: [TASK-090]
+architecture_gates: [ARCH-TASK-070]
 updated: 2026-07-29
 ---
 
 # TASK-100 — Automation and Two-Player Playtest
 
 [Tasks overview](../README.md) · [TASK-090](../10-integration/TASK-090-integration.md)
+
+## Architecture Gate
+
+- Module: [Verification](../../Architecture/Modules/ARC-MOD-110-verification.md)
+- Plans: [TDD Workflow](../../Architecture/Plans/TDD-Workflow.md) and
+  [Independent Review](../../Architecture/Plans/Independent-Review.md)
+- Gate:
+  [ARCH-TASK-070](../../Architecture/Tasks/08-integration-review/ARCH-TASK-070-integration-review.md)
+- Evidence must trace every feature requirement to a module, test, and reviewed commit.
 
 ## Goal
 

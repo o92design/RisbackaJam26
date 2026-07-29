@@ -6,12 +6,22 @@ owner: unassigned
 computer: unassigned
 branch: unassigned
 depends_on: [TASK-001]
+architecture_gates: [ARCH-TASK-030]
 updated: 2026-07-29
 ---
 
 # TASK-020 — Day and Night Cycle Manager
 
 [Tasks overview](../README.md) · [TASK-001](../01-foundation/TASK-001-foundation.md)
+
+## Architecture Gate
+
+- Module: [Day/Night Cycle](../../Architecture/Modules/ARC-MOD-030-cycle.md)
+- Contract: [Run State](../../Architecture/Contracts/ARC-CON-010-run-state.md)
+- Gate:
+  [ARCH-TASK-030](../../Architecture/Tasks/04-cycle-waves/ARCH-TASK-030-cycle-waves.md)
+- The cycle owns phase/time only. Begin after its shell/red test; `DONE` requires the
+  independent cycle/wave review.
 
 ## Goal
 

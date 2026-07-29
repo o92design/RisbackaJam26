@@ -1,0 +1,454 @@
+{
+  "schema_version": 1,
+  "milestones": ["review_ready", "done"],
+  "nodes": [
+    {
+      "id": "ARCH-SUBTASK-001A",
+      "file": "Architecture/Tasks/01-contracts/subtasks/ARCH-SUBTASK-001A-shell.md",
+      "kind": "architecture-shell",
+      "start_after": [],
+      "done_after": [],
+      "lease_keys": ["contracts"]
+    },
+    {
+      "id": "ARCH-SUBTASK-001B",
+      "file": "Architecture/Tasks/01-contracts/subtasks/ARCH-SUBTASK-001B-red-tests.md",
+      "kind": "red-test",
+      "start_after": [
+        {"id": "ARCH-SUBTASK-001A", "milestone": "done"}
+      ],
+      "done_after": [],
+      "lease_keys": ["tests:contracts"]
+    },
+    {
+      "id": "ARCH-SUBTASK-010A",
+      "file": "Architecture/Tasks/02-runtime-composition/subtasks/ARCH-SUBTASK-010A-shell.md",
+      "kind": "architecture-shell",
+      "start_after": [
+        {"id": "ARCH-SUBTASK-001A", "milestone": "done"}
+      ],
+      "done_after": [],
+      "lease_keys": ["core:runtime", "core:composition"]
+    },
+    {
+      "id": "ARCH-SUBTASK-010B",
+      "file": "Architecture/Tasks/02-runtime-composition/subtasks/ARCH-SUBTASK-010B-red-tests.md",
+      "kind": "red-test",
+      "start_after": [
+        {"id": "ARCH-SUBTASK-010A", "milestone": "done"}
+      ],
+      "done_after": [],
+      "lease_keys": ["tests:runtime"]
+    },
+    {
+      "id": "TASK-001",
+      "file": "Tasks/01-foundation/TASK-001-foundation.md",
+      "kind": "feature",
+      "start_after": [
+        {"id": "ARCH-SUBTASK-001B", "milestone": "done"},
+        {"id": "ARCH-SUBTASK-010B", "milestone": "done"}
+      ],
+      "done_after": [
+        {"id": "ARCH-SUBTASK-001C", "milestone": "done"},
+        {"id": "ARCH-SUBTASK-010C", "milestone": "done"}
+      ],
+      "lease_keys": ["core:gamemode", "character:player"]
+    },
+    {
+      "id": "ARCH-SUBTASK-001C",
+      "file": "Architecture/Tasks/01-contracts/subtasks/ARCH-SUBTASK-001C-review.md",
+      "kind": "independent-review",
+      "start_after": [
+        {"id": "TASK-001", "milestone": "review_ready"}
+      ],
+      "done_after": [],
+      "lease_keys": []
+    },
+    {
+      "id": "ARCH-SUBTASK-010C",
+      "file": "Architecture/Tasks/02-runtime-composition/subtasks/ARCH-SUBTASK-010C-review.md",
+      "kind": "independent-review",
+      "start_after": [
+        {"id": "TASK-001", "milestone": "review_ready"}
+      ],
+      "done_after": [],
+      "lease_keys": []
+    },
+    {
+      "id": "ARCH-SUBTASK-020A",
+      "file": "Architecture/Tasks/03-camera/subtasks/ARCH-SUBTASK-020A-shell.md",
+      "kind": "architecture-shell",
+      "start_after": [
+        {"id": "ARCH-SUBTASK-010A", "milestone": "done"}
+      ],
+      "done_after": [],
+      "lease_keys": ["camera:api"]
+    },
+    {
+      "id": "ARCH-SUBTASK-020B",
+      "file": "Architecture/Tasks/03-camera/subtasks/ARCH-SUBTASK-020B-red-tests.md",
+      "kind": "red-test",
+      "start_after": [
+        {"id": "ARCH-SUBTASK-020A", "milestone": "done"}
+      ],
+      "done_after": [],
+      "lease_keys": ["tests:camera"]
+    },
+    {
+      "id": "TASK-010",
+      "file": "Tasks/02-shared-camera/TASK-010-shared-camera.md",
+      "kind": "feature",
+      "start_after": [
+        {"id": "TASK-001", "milestone": "done"},
+        {"id": "ARCH-SUBTASK-020B", "milestone": "done"}
+      ],
+      "done_after": [
+        {"id": "ARCH-SUBTASK-020C", "milestone": "done"}
+      ],
+      "lease_keys": ["camera", "core:gamemode", "config:camera"]
+    },
+    {
+      "id": "ARCH-SUBTASK-020C",
+      "file": "Architecture/Tasks/03-camera/subtasks/ARCH-SUBTASK-020C-review.md",
+      "kind": "independent-review",
+      "start_after": [
+        {"id": "TASK-010", "milestone": "review_ready"}
+      ],
+      "done_after": [],
+      "lease_keys": []
+    },
+    {
+      "id": "ARCH-SUBTASK-030A",
+      "file": "Architecture/Tasks/04-cycle-waves/subtasks/ARCH-SUBTASK-030A-shell.md",
+      "kind": "architecture-shell",
+      "start_after": [
+        {"id": "ARCH-SUBTASK-010A", "milestone": "done"}
+      ],
+      "done_after": [],
+      "lease_keys": ["cycle:api", "waves:api"]
+    },
+    {
+      "id": "ARCH-SUBTASK-030B",
+      "file": "Architecture/Tasks/04-cycle-waves/subtasks/ARCH-SUBTASK-030B-red-tests.md",
+      "kind": "red-test",
+      "start_after": [
+        {"id": "ARCH-SUBTASK-030A", "milestone": "done"}
+      ],
+      "done_after": [],
+      "lease_keys": ["tests:cycle", "tests:waves"]
+    },
+    {
+      "id": "TASK-020",
+      "file": "Tasks/03-day-night/TASK-020-day-night.md",
+      "kind": "feature",
+      "start_after": [
+        {"id": "TASK-001", "milestone": "done"},
+        {"id": "ARCH-SUBTASK-030B", "milestone": "done"}
+      ],
+      "done_after": [
+        {"id": "ARCH-SUBTASK-030C", "milestone": "done"}
+      ],
+      "lease_keys": ["cycle"]
+    },
+    {
+      "id": "ARCH-SUBTASK-030C",
+      "file": "Architecture/Tasks/04-cycle-waves/subtasks/ARCH-SUBTASK-030C-review.md",
+      "kind": "independent-review",
+      "start_after": [
+        {"id": "TASK-020", "milestone": "review_ready"}
+      ],
+      "done_after": [],
+      "lease_keys": []
+    },
+    {
+      "id": "TASK-060",
+      "file": "Tasks/07-wave-director/TASK-060-wave-director.md",
+      "kind": "feature",
+      "start_after": [
+        {"id": "TASK-001", "milestone": "done"},
+        {"id": "ARCH-SUBTASK-030B", "milestone": "done"}
+      ],
+      "done_after": [
+        {"id": "ARCH-SUBTASK-030D", "milestone": "done"}
+      ],
+      "lease_keys": ["waves"]
+    },
+    {
+      "id": "ARCH-SUBTASK-030D",
+      "file": "Architecture/Tasks/04-cycle-waves/subtasks/ARCH-SUBTASK-030D-wave-review.md",
+      "kind": "independent-review",
+      "start_after": [
+        {"id": "TASK-060", "milestone": "review_ready"}
+      ],
+      "done_after": [],
+      "lease_keys": []
+    },
+    {
+      "id": "ARCH-SUBTASK-040A",
+      "file": "Architecture/Tasks/05-health-ai/subtasks/ARCH-SUBTASK-040A-shell.md",
+      "kind": "architecture-shell",
+      "start_after": [
+        {"id": "ARCH-SUBTASK-010A", "milestone": "done"}
+      ],
+      "done_after": [],
+      "lease_keys": ["health:api", "enemy-ai:api"]
+    },
+    {
+      "id": "ARCH-SUBTASK-040B",
+      "file": "Architecture/Tasks/05-health-ai/subtasks/ARCH-SUBTASK-040B-red-tests.md",
+      "kind": "red-test",
+      "start_after": [
+        {"id": "ARCH-SUBTASK-040A", "milestone": "done"}
+      ],
+      "done_after": [],
+      "lease_keys": ["tests:health", "tests:enemy-ai"]
+    },
+    {
+      "id": "TASK-030",
+      "file": "Tasks/04-home-failure/TASK-030-home-failure.md",
+      "kind": "feature",
+      "start_after": [
+        {"id": "TASK-001", "milestone": "done"},
+        {"id": "ARCH-SUBTASK-040B", "milestone": "done"}
+      ],
+      "done_after": [
+        {"id": "ARCH-SUBTASK-040C", "milestone": "done"}
+      ],
+      "lease_keys": ["home"]
+    },
+    {
+      "id": "ARCH-SUBTASK-040C",
+      "file": "Architecture/Tasks/05-health-ai/subtasks/ARCH-SUBTASK-040C-review.md",
+      "kind": "independent-review",
+      "start_after": [
+        {"id": "TASK-030", "milestone": "review_ready"}
+      ],
+      "done_after": [],
+      "lease_keys": []
+    },
+    {
+      "id": "TASK-050",
+      "file": "Tasks/06-boar-ai/TASK-050-boar-ai.md",
+      "kind": "feature",
+      "start_after": [
+        {"id": "TASK-001", "milestone": "done"},
+        {"id": "ARCH-SUBTASK-040B", "milestone": "done"}
+      ],
+      "done_after": [
+        {"id": "ARCH-SUBTASK-040D", "milestone": "done"}
+      ],
+      "lease_keys": ["enemies"]
+    },
+    {
+      "id": "ARCH-SUBTASK-040D",
+      "file": "Architecture/Tasks/05-health-ai/subtasks/ARCH-SUBTASK-040D-enemy-ai-review.md",
+      "kind": "independent-review",
+      "start_after": [
+        {"id": "TASK-050", "milestone": "review_ready"}
+      ],
+      "done_after": [],
+      "lease_keys": []
+    },
+    {
+      "id": "ARCH-SUBTASK-050A",
+      "file": "Architecture/Tasks/06-resources-building/subtasks/ARCH-SUBTASK-050A-shell.md",
+      "kind": "architecture-shell",
+      "start_after": [
+        {"id": "ARCH-SUBTASK-001A", "milestone": "done"},
+        {"id": "ARCH-SUBTASK-040A", "milestone": "done"}
+      ],
+      "done_after": [],
+      "lease_keys": ["resources:api", "building:api"]
+    },
+    {
+      "id": "ARCH-SUBTASK-050B",
+      "file": "Architecture/Tasks/06-resources-building/subtasks/ARCH-SUBTASK-050B-red-tests.md",
+      "kind": "red-test",
+      "start_after": [
+        {"id": "ARCH-SUBTASK-050A", "milestone": "done"}
+      ],
+      "done_after": [],
+      "lease_keys": ["tests:resources", "tests:building"]
+    },
+    {
+      "id": "TASK-040",
+      "file": "Tasks/05-wood-loop/TASK-040-wood-loop.md",
+      "kind": "feature",
+      "start_after": [
+        {"id": "TASK-001", "milestone": "done"},
+        {"id": "ARCH-SUBTASK-050B", "milestone": "done"}
+      ],
+      "done_after": [
+        {"id": "ARCH-SUBTASK-050C", "milestone": "done"}
+      ],
+      "lease_keys": ["resources", "character:player"]
+    },
+    {
+      "id": "ARCH-SUBTASK-050C",
+      "file": "Architecture/Tasks/06-resources-building/subtasks/ARCH-SUBTASK-050C-review.md",
+      "kind": "independent-review",
+      "start_after": [
+        {"id": "TASK-040", "milestone": "review_ready"}
+      ],
+      "done_after": [],
+      "lease_keys": []
+    },
+    {
+      "id": "TASK-070",
+      "file": "Tasks/08-fence-building/TASK-070-fence-building.md",
+      "kind": "feature",
+      "start_after": [
+        {"id": "TASK-040", "milestone": "done"},
+        {"id": "ARCH-SUBTASK-050B", "milestone": "done"}
+      ],
+      "done_after": [
+        {"id": "ARCH-SUBTASK-050D", "milestone": "done"}
+      ],
+      "lease_keys": ["building", "character:player"]
+    },
+    {
+      "id": "ARCH-SUBTASK-050D",
+      "file": "Architecture/Tasks/06-resources-building/subtasks/ARCH-SUBTASK-050D-building-review.md",
+      "kind": "independent-review",
+      "start_after": [
+        {"id": "TASK-070", "milestone": "review_ready"}
+      ],
+      "done_after": [],
+      "lease_keys": []
+    },
+    {
+      "id": "ARCH-SUBTASK-060A",
+      "file": "Architecture/Tasks/07-ui/subtasks/ARCH-SUBTASK-060A-shell.md",
+      "kind": "architecture-shell",
+      "start_after": [
+        {"id": "ARCH-SUBTASK-001A", "milestone": "done"}
+      ],
+      "done_after": [],
+      "lease_keys": ["ui:api"]
+    },
+    {
+      "id": "ARCH-SUBTASK-060B",
+      "file": "Architecture/Tasks/07-ui/subtasks/ARCH-SUBTASK-060B-red-tests.md",
+      "kind": "red-test",
+      "start_after": [
+        {"id": "ARCH-SUBTASK-060A", "milestone": "done"}
+      ],
+      "done_after": [],
+      "lease_keys": ["tests:ui"]
+    },
+    {
+      "id": "TASK-080",
+      "file": "Tasks/09-hud/TASK-080-hud.md",
+      "kind": "feature",
+      "start_after": [
+        {"id": "TASK-010", "milestone": "done"},
+        {"id": "TASK-020", "milestone": "done"},
+        {"id": "TASK-030", "milestone": "done"},
+        {"id": "TASK-040", "milestone": "done"},
+        {"id": "TASK-060", "milestone": "done"},
+        {"id": "ARCH-SUBTASK-060B", "milestone": "done"}
+      ],
+      "done_after": [
+        {"id": "ARCH-SUBTASK-060C", "milestone": "done"}
+      ],
+      "lease_keys": ["ui"]
+    },
+    {
+      "id": "ARCH-SUBTASK-060C",
+      "file": "Architecture/Tasks/07-ui/subtasks/ARCH-SUBTASK-060C-review.md",
+      "kind": "independent-review",
+      "start_after": [
+        {"id": "TASK-080", "milestone": "review_ready"}
+      ],
+      "done_after": [],
+      "lease_keys": []
+    },
+    {
+      "id": "ARCH-SUBTASK-070A",
+      "file": "Architecture/Tasks/08-integration-review/subtasks/ARCH-SUBTASK-070A-shell.md",
+      "kind": "architecture-shell",
+      "start_after": [
+        {"id": "ARCH-SUBTASK-020A", "milestone": "done"},
+        {"id": "ARCH-SUBTASK-030A", "milestone": "done"},
+        {"id": "ARCH-SUBTASK-040A", "milestone": "done"},
+        {"id": "ARCH-SUBTASK-050A", "milestone": "done"},
+        {"id": "ARCH-SUBTASK-060A", "milestone": "done"}
+      ],
+      "done_after": [],
+      "lease_keys": ["core:composition", "tests:integration"]
+    },
+    {
+      "id": "ARCH-SUBTASK-070B",
+      "file": "Architecture/Tasks/08-integration-review/subtasks/ARCH-SUBTASK-070B-red-tests.md",
+      "kind": "red-test",
+      "start_after": [
+        {"id": "ARCH-SUBTASK-070A", "milestone": "done"}
+      ],
+      "done_after": [],
+      "lease_keys": ["tests:integration"]
+    },
+    {
+      "id": "TASK-090",
+      "file": "Tasks/10-integration/TASK-090-integration.md",
+      "kind": "integration",
+      "start_after": [
+        {"id": "TASK-010", "milestone": "done"},
+        {"id": "TASK-020", "milestone": "done"},
+        {"id": "TASK-030", "milestone": "done"},
+        {"id": "TASK-040", "milestone": "done"},
+        {"id": "TASK-050", "milestone": "done"},
+        {"id": "TASK-060", "milestone": "done"},
+        {"id": "TASK-070", "milestone": "done"},
+        {"id": "TASK-080", "milestone": "done"},
+        {"id": "ARCH-SUBTASK-070B", "milestone": "done"}
+      ],
+      "done_after": [
+        {"id": "ARCH-SUBTASK-010D", "milestone": "done"},
+        {"id": "ARCH-SUBTASK-070C", "milestone": "done"}
+      ],
+      "lease_keys": ["core:composition", "map:prototype", "config:default-map"]
+    },
+    {
+      "id": "ARCH-SUBTASK-010D",
+      "file": "Architecture/Tasks/02-runtime-composition/subtasks/ARCH-SUBTASK-010D-composition-review.md",
+      "kind": "independent-review",
+      "start_after": [
+        {"id": "TASK-090", "milestone": "review_ready"}
+      ],
+      "done_after": [],
+      "lease_keys": []
+    },
+    {
+      "id": "ARCH-SUBTASK-070C",
+      "file": "Architecture/Tasks/08-integration-review/subtasks/ARCH-SUBTASK-070C-review.md",
+      "kind": "independent-review",
+      "start_after": [
+        {"id": "TASK-090", "milestone": "review_ready"}
+      ],
+      "done_after": [],
+      "lease_keys": []
+    },
+    {
+      "id": "TASK-100",
+      "file": "Tasks/11-verification/TASK-100-verification.md",
+      "kind": "verification",
+      "start_after": [
+        {"id": "TASK-090", "milestone": "done"}
+      ],
+      "done_after": [
+        {"id": "ARCH-SUBTASK-070D", "milestone": "done"}
+      ],
+      "lease_keys": ["tests:phase1", "docs:verification"]
+    },
+    {
+      "id": "ARCH-SUBTASK-070D",
+      "file": "Architecture/Tasks/08-integration-review/subtasks/ARCH-SUBTASK-070D-final-review.md",
+      "kind": "independent-review",
+      "start_after": [
+        {"id": "TASK-100", "milestone": "review_ready"}
+      ],
+      "done_after": [],
+      "lease_keys": []
+    }
+  ]
+}

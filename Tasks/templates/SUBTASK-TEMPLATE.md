@@ -3,6 +3,12 @@ id: SUBTASK-###A
 parent: TASK-###
 status: BLOCKED
 owner: unassigned
+computer: unassigned
+context: unassigned
+branch: unassigned
+worktree: unassigned
+base_sha: unassigned
+implementation_commit: unassigned
 updated: YYYY-MM-DD
 ---
 
@@ -16,7 +22,8 @@ Describe the smallest independently verifiable result.
 
 ## Inputs
 
-- List prerequisite assets, decisions, or completed subtasks.
+- List prerequisite assets, architecture shells/red evidence, decisions, or completed
+  subtasks.
 
 ## Work
 
@@ -28,6 +35,7 @@ Describe the smallest independently verifiable result.
 
 ## Verification and Handoff
 
-- Tests:
+- Red/green tests:
 - Changed assets:
 - Notes:
+- Immutable commit:

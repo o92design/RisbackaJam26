@@ -21,7 +21,9 @@ template behavior.
 - Duplicate or derive `BP_CombatGameMode` as `Core/BP_GM_Risbacka`.
 - Duplicate or derive `BP_CombatPlayerController` as `Core/BP_PC_Risbacka`.
 - Duplicate or derive `BP_CombatCharacter` as `Characters/BP_Player_Risbacka`.
-- Create `Core/E_RisbackaPhase`: `Day`, `Night`, `Success`, `Failure`.
+- Create `Core/E_RisbackaPhase`: `Day`, `Night`.
+- Create `Core/E_RisbackaRunState`: `Bootstrapping`, `Ready`, `Playing`, `Success`,
+  `Failure`.
 - Repoint Risbacka-owned class defaults to other Risbacka-owned classes.
 - Record inherited/template dependencies that remain.
 

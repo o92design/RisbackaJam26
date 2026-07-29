@@ -5,13 +5,22 @@ status: BLOCKED
 owner: unassigned
 computer: unassigned
 branch: unassigned
-depends_on: [TASK-020, TASK-030, TASK-040, TASK-060]
+depends_on: [TASK-010, TASK-020, TASK-030, TASK-040, TASK-060]
+architecture_gates: [ARCH-TASK-060]
 updated: 2026-07-29
 ---
 
 # TASK-080 — Phase 1 HUD
 
 [Tasks overview](../README.md) · [GAME_DESIGN.md](../../GAME_DESIGN.md)
+
+## Architecture Gate
+
+- Module: [Shared HUD](../../Architecture/Modules/ARC-MOD-090-ui.md)
+- Contract: [UI Read Model](../../Architecture/Contracts/ARC-CON-090-ui-read-model.md)
+- Gate: [ARCH-TASK-060](../../Architecture/Tasks/07-ui/ARCH-TASK-060-ui.md)
+- Begin after producer read APIs and HUD red tests are stable. `DONE` requires a
+  fresh-context review of binding lifecycle and presentation.
 
 ## Goal
 

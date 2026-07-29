@@ -3,3 +3,6 @@
 # This is the Unreal Editor host's LAN address. Update it if DHCP changes the address.
 [mcp_servers.unreal-mcp]
 url = "http://192.168.1.157:8000/mcp"
+
+[agents]
+max_concurrent_threads_per_session = 3

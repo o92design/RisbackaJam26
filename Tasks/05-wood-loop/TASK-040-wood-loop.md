@@ -6,12 +6,24 @@ owner: unassigned
 computer: unassigned
 branch: unassigned
 depends_on: [TASK-001]
+architecture_gates: [ARCH-TASK-050]
 updated: 2026-07-29
 ---
 
 # TASK-040 — Axe, Wood Pickups, and Shared Storage
 
 [Tasks overview](../README.md) · [TASK-001](../01-foundation/TASK-001-foundation.md)
+
+## Architecture Gate
+
+- Module:
+  [Resources & Interaction](../../Architecture/Modules/ARC-MOD-050-resources-interaction.md)
+- Contracts:
+  [Resource Store](../../Architecture/Contracts/ARC-CON-040-resource-store.md) and
+  [Carry Interaction](../../Architecture/Contracts/ARC-CON-050-carry-interaction.md)
+- Gate:
+  [ARCH-TASK-050](../../Architecture/Tasks/06-resources-building/ARCH-TASK-050-resources-building.md)
+- Begin after component/store shells and red tests; `DONE` requires independent review.
 
 ## Goal
 
