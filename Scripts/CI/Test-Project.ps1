@@ -57,6 +57,22 @@ Invoke-CIStage -Name 'Project Validation' -Body {
         -not $testPipeline.Contains('currentBuild.displayName')) {
         throw 'Automatic Jenkins pipeline must build the Test stream, upload windows-test, and apply the informative Build ID.'
     }
+    foreach ($collaborationGuardContract in @(
+        "GIT_LFS_SKIP_SMUDGE = '1'",
+        "CI_SKIP_EXPENSIVE   = 'false'",
+        'hudson.triggers.SCMTrigger$SCMTriggerCause',
+        'Collaboration-only SCM change',
+        "lowerPath.endsWith('.md')",
+        "lowerPath == '.gitignore'",
+        "lowerPath == '.editorconfig'",
+        "lowerPath.startsWith('.codex/')",
+        "lowerPath.startsWith('.agents/')",
+        "lowerPath.startsWith('.obsidian/')"
+    )) {
+        if (-not $testPipeline.Contains($collaborationGuardContract)) {
+            throw "Automatic Jenkins pipeline collaboration-only guard is missing: $collaborationGuardContract"
+        }
+    }
     if (-not $promotionPipeline.Contains("name: 'TEST_BUILD_ID'") -or
         -not $promotionPipeline.Contains("ITCH_CHANNEL        = 'windows-dev'")) {
         throw 'Development promotion pipeline must require TEST_BUILD_ID and target windows-dev.'

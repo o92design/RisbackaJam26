@@ -45,6 +45,26 @@ Run one manual build first. Download it from the restricted itch.io page and lau
 This job packages Development configuration once, archives it under `Runs\Test`, and
 uploads it to `windows-test`.
 
+### Collaboration-only Test runs
+
+Jenkins Pipeline-from-SCM polling may compare only the previous and remote commit IDs,
+even when the job's Git configuration contains excluded path regions. The Test
+`Jenkinsfile` therefore applies a second, authoritative guard after checkout.
+
+An SCM-triggered run skips Git LFS downloads, Unreal validation and tests, packaging,
+archival, dashboard updates, and upload when every changed path is explicitly
+collaboration-only:
+
+- Markdown files;
+- `.gitignore` and `.editorconfig` files;
+- files under `.codex`, `.agents`, and `.obsidian`.
+
+The skipped run remains visible as a short successful Jenkins record. Manual builds,
+empty or unavailable change sets, mixed commits, and unknown paths always run full CI.
+Unreal configuration, `.gitattributes`, Jenkins pipelines, CI scripts, project files,
+maps, and assets are intentionally build-relevant. The checkout suppresses automatic
+Git LFS smudging, and a full Test run pulls LFS content in its next stage.
+
 ## Development promotion job
 
 Inside the folder, create another **Pipeline script from SCM** job named `Promote-Dev`:
@@ -109,19 +129,23 @@ All three channels were confirmed on the restricted itch.io project page.
 
 ## Build pipeline stages
 
-The Test and Release jobs expose small, reusable stages:
+The Test job exposes small, reusable stages:
 
-1. checkout and Git LFS pull;
-2. LFS pointer validation;
-3. build context;
-4. tool and SSD preflight;
-5. Unreal project validation;
-6. Blueprint Functional Tests and JUnit conversion;
-7. atomic Unreal `BuildCookRun`;
-8. package and startup verification;
-9. required archive to `D:`;
-10. Butler upload;
-11. final manifest, dashboard, and Jenkins diagnostic artifacts.
+1. checkout without automatic Git LFS smudging;
+2. classify the SCM change set and finish early for collaboration-only changes;
+3. Git LFS pull and pointer validation for build-relevant changes;
+4. build context;
+5. tool and SSD preflight;
+6. Unreal project validation;
+7. Blueprint Functional Tests and JUnit conversion;
+8. atomic Unreal `BuildCookRun`;
+9. package and startup verification;
+10. required archive to `D:`;
+11. Butler upload;
+12. final manifest, dashboard, and Jenkins diagnostic artifacts.
+
+The Release job always performs the complete build flow beginning with checkout and
+Git LFS pull. Release tags are never subject to the collaboration-only Test guard.
 
 The Promote-Dev job uses a shorter, package-only flow:
 
