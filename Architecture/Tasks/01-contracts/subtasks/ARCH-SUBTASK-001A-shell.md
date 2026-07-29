@@ -2,9 +2,14 @@
 id: ARCH-SUBTASK-001A
 parent: ARCH-TASK-001
 stage: shell
-status: READY
-owner: unassigned
-computer: unassigned
+status: IN_PROGRESS
+owner: arch_001a_worker
+computer: DESKTOP-2KFO48U
+context: /root/arch_001a_worker
+branch: codex/arch-001a-contract-shells
+worktree: .cache/worktrees/arch-001a
+base_sha: 6c3cb43
+implementation_commit: unassigned
 updated: 2026-07-29
 tags:
   - architecture/task
