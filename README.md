@@ -94,7 +94,16 @@ the Output Log and run:
 ModelContextProtocol.StartServer
 ```
 
-The repository-level [.codex/config.toml](.codex/config.toml) points Codex at `http://127.0.0.1:8000/mcp`. The server is local and manually started; do not expose it to the network.
+The repository-level [.codex/config.toml](.codex/config.toml) points Codex at
+`http://192.168.1.157:8000/mcp`, the Unreal Editor host's current Wi-Fi address.
+`DefaultEngine.ini` binds HTTP port `8000` to that address. Start the server manually,
+then restart/reload Codex on each client computer.
+
+Only expose this unauthenticated editor-control endpoint on a trusted LAN. If Windows
+Firewall blocks access, add an inbound TCP rule for port `8000` restricted to the
+Private profile and local subnet. Reserve `192.168.1.157` in DHCP, or update both
+`.codex/config.toml` and the `HTTPServer.Listeners` entry in `DefaultEngine.ini` when
+this computer's address changes.
 
 ## Jenkins
 

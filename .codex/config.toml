@@ -1,4 +1,5 @@
 # Start the server manually in Unreal Editor, then restart/reload Codex.
 # The UE console command is: ModelContextProtocol.StartServer
+# This is the Unreal Editor host's LAN address. Update it if DHCP changes the address.
 [mcp_servers.unreal-mcp]
-url = "http://127.0.0.1:8000/mcp"
+url = "http://192.168.1.157:8000/mcp"
