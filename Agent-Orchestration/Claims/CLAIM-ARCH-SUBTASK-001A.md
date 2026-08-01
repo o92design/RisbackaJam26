@@ -1,13 +1,14 @@
 ---
 id: CLAIM-ARCH-SUBTASK-001A
 task: ARCH-SUBTASK-001A
-status: IN_PROGRESS
+status: REVIEW_READY
 owner: root_implementer
 computer: DESKTOP-2KFO48U
 context: /root
 branch: codex/arch-001a-contract-shells-v2
 worktree: .cache/worktrees/arch-001a-v2
 base_sha: 6a5c8149f4751d6a283fd1b81375d6be09396dd9
+implementation_commit: 528d035ec7152fc0fdd62a152e4833a50bf59ecc
 claimed_at: 2026-08-01T12:03:43.5199255+02:00
 lease_expires_at: none
 ---
@@ -132,3 +133,11 @@ staged or committed.
   helper crashed, so the worker must re-check and record the result before
   mutation.
 - Coordinator approval commit: this claim commit, to be recorded after creation
+- Frozen implementation commit:
+  `528d035ec7152fc0fdd62a152e4833a50bf59ecc`
+- Verification: all seven Blueprint interfaces compiled successfully with zero
+  compile failures; the independent reload script verified 24 assets and zero
+  failures; the task graph and project CI validation scripts passed.
+- LFS re-check: the remote reports one existing lock owned by `o92design` on
+  the old flat `E_RisbackaCarryResult.uasset` path and no other contract lock.
+  The lock will be handled by the coordinator after integration.
