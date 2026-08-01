@@ -2,7 +2,7 @@
 id: ARCH-SUBTASK-001A
 parent: ARCH-TASK-001
 stage: shell
-status: REVIEW_READY
+status: IN_REVIEW
 owner: root_implementer
 computer: DESKTOP-2KFO48U
 context: /root
@@ -69,3 +69,15 @@ Parent: [ARCH-TASK-001](../ARCH-TASK-001-contracts.md) ·
   existing lock owned by `o92design` on the old flat
   `E_RisbackaCarryResult.uasset`; no other contract lock was reported.
 - Commit: `528d035ec7152fc0fdd62a152e4833a50bf59ecc`
+
+## Independent Review
+
+- Outcome: `APPROVED`
+- Reviewed commit: `528d035ec7152fc0fdd62a152e4833a50bf59ecc`
+- Reviewer/context: `/root/arch_001a_review_v3` in a fresh detached checkout
+- Verification rerun: task graph and project CI passed; asset scope, enum and
+  struct definitions, interface signatures/pins, categories/tooltips,
+  compile/reload evidence, dependency direction, and old-path absence were
+  inspected.
+- Findings: none
+- Production fixes made by reviewer: no

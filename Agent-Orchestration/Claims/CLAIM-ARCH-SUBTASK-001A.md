@@ -1,7 +1,7 @@
 ---
 id: CLAIM-ARCH-SUBTASK-001A
 task: ARCH-SUBTASK-001A
-status: REVIEW_READY
+status: IN_REVIEW
 owner: root_implementer
 computer: DESKTOP-2KFO48U
 context: /root
@@ -141,3 +141,8 @@ staged or committed.
 - LFS re-check: the remote reports one existing lock owned by `o92design` on
   the old flat `E_RisbackaCarryResult.uasset` path and no other contract lock.
   The lock will be handled by the coordinator after integration.
+- Independent review: `APPROVED` by the fresh
+  `/root/arch_001a_review_v3` context against exact commit
+  `528d035ec7152fc0fdd62a152e4833a50bf59ecc`. The reviewer reran the graph and
+  project CI checks, inspected signatures, dependencies, compile/reload
+  evidence, and scope, found no issues, and made no production fix.
