@@ -2,12 +2,12 @@
 id: ARCH-SUBTASK-010A
 parent: ARCH-TASK-010
 stage: shell
-status: BLOCKED
+status: READY
 owner: unassigned
 computer: unassigned
 depends_on:
   - ARCH-SUBTASK-001A
-updated: 2026-07-29
+updated: 2026-08-01
 tags:
   - architecture/task
 ---

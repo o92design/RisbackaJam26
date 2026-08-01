@@ -2,12 +2,12 @@
 id: ARCH-SUBTASK-001B
 parent: ARCH-TASK-001
 stage: red-test
-status: BLOCKED
+status: READY
 owner: unassigned
 computer: unassigned
 depends_on:
   - ARCH-SUBTASK-001A
-updated: 2026-07-29
+updated: 2026-08-01
 tags:
   - architecture/task
   - testing

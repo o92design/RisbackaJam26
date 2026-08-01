@@ -2,7 +2,7 @@
 id: ARCH-SUBTASK-001A
 parent: ARCH-TASK-001
 stage: shell
-status: IN_REVIEW
+status: DONE
 owner: root_implementer
 computer: DESKTOP-2KFO48U
 context: /root
@@ -65,9 +65,8 @@ Parent: [ARCH-TASK-001](../ARCH-TASK-001-contracts.md) ·
   This shell-only task adds no runtime behavior, so no behavioral red/green
   test applies; `ARCH-SUBTASK-001B` owns the contract red tests.
 - Git/LFS: the final scope diff contains only the 24 claimed final assets and
-  removal of the 17 claimed flat duplicates. `git lfs locks` reports one
-  existing lock owned by `o92design` on the old flat
-  `E_RisbackaCarryResult.uasset`; no other contract lock was reported.
+  removal of the 17 claimed flat duplicates. The obsolete `o92design` LFS lock
+  on the old flat `E_RisbackaCarryResult.uasset` was released after integration.
 - Commit: `528d035ec7152fc0fdd62a152e4833a50bf59ecc`
 
 ## Independent Review
