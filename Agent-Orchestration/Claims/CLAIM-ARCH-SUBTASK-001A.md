@@ -2,9 +2,9 @@
 id: CLAIM-ARCH-SUBTASK-001A
 task: ARCH-SUBTASK-001A
 status: IN_PROGRESS
-owner: arch_001a_worker_v2b
+owner: root_implementer
 computer: DESKTOP-2KFO48U
-context: /root/arch_001a_worker_v2b
+context: /root
 branch: codex/arch-001a-contract-shells-v2
 worktree: .cache/worktrees/arch-001a-v2
 base_sha: 6a5c8149f4751d6a283fd1b81375d6be09396dd9
@@ -24,8 +24,11 @@ This claim supersedes the abandoned pre-cleanup claim on
 `.cache/worktrees/arch-001a` worktree. That branch is historical evidence only
 and must not be integrated or mutated by this implementation.
 
-It also replaces the stalled `/root/arch_001a_worker_v2` context, which made no
-worktree changes before the coordinator interrupted it.
+It also replaces the stalled `/root/arch_001a_worker_v2` and
+`/root/arch_001a_worker_v2b` contexts. Neither context made a worktree change
+before the coordinator interrupted it. The primary context is taking over the
+isolated implementation worktree; independent review will still use a fresh
+reviewer context.
 
 ## Exact Claimed Paths
 

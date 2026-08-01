@@ -3,9 +3,9 @@ id: ARCH-SUBTASK-001A
 parent: ARCH-TASK-001
 stage: shell
 status: IN_PROGRESS
-owner: arch_001a_worker_v2b
+owner: root_implementer
 computer: DESKTOP-2KFO48U
-context: /root/arch_001a_worker_v2b
+context: /root
 branch: codex/arch-001a-contract-shells-v2
 worktree: .cache/worktrees/arch-001a-v2
 base_sha: 6a5c8149f4751d6a283fd1b81375d6be09396dd9
