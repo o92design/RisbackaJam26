@@ -104,3 +104,9 @@ may be proposed, but changes require normal task ownership.
 
 After corrections, rerun the affected focused test plus regression. Approval records
 the reviewed commit SHA so later changes do not inherit approval automatically.
+
+History normalization must happen before review. If a coordinator squashes,
+amends, rebases, or otherwise creates a different implementation commit after
+approval, that new commit has no inherited approval and requires fresh
+independent review. The approved commit must remain an ancestor of the
+integrated main-branch history.

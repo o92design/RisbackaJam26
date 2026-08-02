@@ -164,6 +164,23 @@ explicit task approval.
 - Do not commit or push unless the task or coordinator explicitly authorizes it.
 - Never modify another task's status or evidence.
 
+## Git history strategy
+
+- Operational commits may be granular on a task branch while work is active.
+- Before `REVIEW_READY`, normalize avoidable operational churn into a compact
+  immutable review candidate, normally one implementation commit.
+- Never squash after review merely to clean history. A different commit requires
+  fresh independent review.
+- The approved candidate must remain an ancestor of integrated `main`.
+- Prefer fast-forward integration for a normalized candidate. Use `--no-ff`
+  when intentionally retaining granular task history so `git log
+  --first-parent` remains task-oriented.
+- Never rewrite `main`, a shared coordinator branch, or pushed history another
+  task may reference.
+
+Follow [the Git history strategy](Agent-Orchestration/Git-Strategy.md) for
+candidate preparation, corrections, integration, and published-history rules.
+
 ## Required handoff
 
 An implementation handoff must include:

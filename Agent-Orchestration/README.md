@@ -58,11 +58,13 @@ a `done` milestone is reached only by `DONE`.
 6. Record the claim using [the claim template](Claim-Template.md).
 7. Commit and push the claim before another computer starts.
 8. Dispatch a worker with only the task, architecture links, claim, and base SHA.
-9. Require the [implementation handoff](Implementation-Handoff-Template.md).
-10. Dispatch [independent review](Review-Handoff-Template.md) in a new context
+9. Normalize avoidable operational churn into an immutable candidate according
+   to the [Git history strategy](Git-Strategy.md).
+10. Require the [implementation handoff](Implementation-Handoff-Template.md).
+11. Dispatch [independent review](Review-Handoff-Template.md) in a new context
     against the immutable implementation commit.
-11. Return findings to the implementation context, or mark the task `DONE`.
-12. Release leases and update the human-readable boards after integration.
+12. Return findings to the implementation context, or mark the task `DONE`.
+13. Release leases and update the human-readable boards after integration.
 
 When two computers race to claim the same task, only the first pushed claim is
 valid. The losing worker must stop without touching production assets.
@@ -131,7 +133,11 @@ Each computer uses its own checkout and task branch. Before work:
 
 Workers push only their assigned branch. The coordinator integrates reviewed
 commits in dependency order. Never amend, squash, rebase, or force-push an
-implementation commit while it is under review.
+implementation commit while it is under review. Normalize task history before
+review, integrate a compact candidate by fast-forward, or retain deliberate
+detail behind a `--no-ff` task merge. Never squash an approved commit unless the
+resulting commit receives fresh independent review. See
+[Git History Strategy](Git-Strategy.md).
 
 ## Current Checkout
 
