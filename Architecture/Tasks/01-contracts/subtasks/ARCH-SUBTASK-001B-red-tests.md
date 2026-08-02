@@ -2,12 +2,16 @@
 id: ARCH-SUBTASK-001B
 parent: ARCH-TASK-001
 stage: test-fixture
-status: READY
-owner: unassigned
-computer: unassigned
+status: IN_PROGRESS
+owner: root_implementer
+computer: DESKTOP-2KFO48U
+context: /root
+branch: codex/arch-001b-contract-fixtures
+worktree: .cache/worktrees/arch-001b-contract-fixtures
+base_sha: ce2af3e7f3d7d4e86e457c1839f19cbe6d1eb949
 depends_on:
   - ARCH-SUBTASK-001A
-updated: 2026-08-01
+updated: 2026-08-02
 tags:
   - architecture/task
   - testing
