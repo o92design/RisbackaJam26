@@ -2,7 +2,7 @@
 id: ARCH-SUBTASK-001B
 parent: ARCH-TASK-001
 stage: test-fixture
-status: IN_PROGRESS
+status: REVIEW_READY
 owner: root_implementer
 computer: DESKTOP-2KFO48U
 context: /root
@@ -76,9 +76,27 @@ feature implementation or `/Game/Variant_Combat`.
 
 ## Handoff
 
-- Test assets:
-- Focused result:
-- Regression result:
-- Behavioral red delegated to: ARCH-SUBTASK-010B
-- Feature task unblocked:
-- Commit:
+- Test assets: the four doubles, four Functional Tests, and discovery map listed
+  in `Test Content Layout` above; no other Unreal asset changed.
+- Exact focused tests:
+  - `Project.Functional Tests.RisbackaJam26.Tests.Architecture.Contracts.Maps.L_FT_Contracts_Defaults.FT_Contracts_DamageDefaults`
+  - `Project.Functional Tests.RisbackaJam26.Tests.Architecture.Contracts.Maps.L_FT_Contracts_Defaults.FT_Contracts_InitializationDefaults`
+  - `Project.Functional Tests.RisbackaJam26.Tests.Architecture.Contracts.Maps.L_FT_Contracts_Defaults.FT_Contracts_ResourceDefaults`
+  - `Project.Functional Tests.RisbackaJam26.Tests.Architecture.Contracts.Maps.L_FT_Contracts_Defaults.FT_Contracts_WaveDefaults`
+- Focused result: clean-session run 1 passed 4/4 in 1.661109 seconds; run 2
+  passed 4/4 in 1.256455 seconds, with no warnings or failures.
+- Regression result: unchanged automation smoke passed 1/1; `.\Test.ps1`
+  passed 5/5 Functional Tests with project validation successful.
+- Blueprint verification: all eight Blueprints compiled with warnings treated as
+  errors; all nine assets were independently found and class-checked before and
+  after an Editor restart.
+- Dependency inspection: `Maps -> Functional Tests -> Test Doubles ->
+  Core/Contracts`, plus engine packages only; no feature implementation or
+  `/Game/Variant_Combat` dependency.
+- Graph/project validation: `Scripts/Test-AgentTaskGraph.ps1` passed with 40
+  nodes and 120 milestones; `Scripts/CI/Test-Project.ps1` passed.
+- Behavioral red intentionally delegated to ARCH-SUBTASK-010B.
+- Feature task unblocked: `TASK-001` after the required independent review marks
+  this subtask `DONE`.
+- Immutable implementation commit:
+  `d606a77a16490acdb82e15587cd333400a533c65`.
