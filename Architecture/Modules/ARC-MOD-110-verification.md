@@ -30,6 +30,19 @@ format, and fresh-context architecture inspection.
 Keep the existing `BP_AutomationSmoke` and `L_AutomationSmoke` as boot tests. New
 feature behavior belongs in separate test maps and must not expand the smoke test.
 
+Architecture and feature test roots use the same internal layout:
+
+```text
+<TestRoot>/
+├── Doubles/       reusable test actors and emitters; no assertions
+├── Functional/    Functional Test actors; owns setup, assertions, and cleanup
+└── Maps/          discovery levels only; no Level Blueprint behavior
+```
+
+Dependencies flow from `Maps` to `Functional`, from `Functional` to `Doubles`, and
+from `Doubles` to public production contracts. They must not flow in reverse. Do not
+store loose assets directly at `<TestRoot>`.
+
 ## Test Naming
 
 - Functional test actor: `BP_FT_<Module>_<Behavior>`

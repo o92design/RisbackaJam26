@@ -21,8 +21,9 @@ updated: 2026-07-29
 - Gates: [ARCH-TASK-001](../../Architecture/Tasks/01-contracts/ARCH-TASK-001-contracts.md)
   and
   [ARCH-TASK-010](../../Architecture/Tasks/02-runtime-composition/ARCH-TASK-010-runtime-composition.md)
-- Implement against the compileable shells and recorded red tests. `DONE` requires the
-  linked fresh-context reviews.
+- Implement against the compileable contract/runtime shells, the reusable contract
+  fixtures from ARCH-SUBTASK-001B, and the runtime behavior-red tests from
+  ARCH-SUBTASK-010B. `DONE` requires the linked fresh-context reviews.
 
 ## Goal
 

@@ -49,14 +49,16 @@ before feature graphs depend on them.
 
 | Subtask | Status |
 |---|---|
-| [ARCH-SUBTASK-001A](subtasks/ARCH-SUBTASK-001A-shell.md) — contract shell | `READY` |
-| [ARCH-SUBTASK-001B](subtasks/ARCH-SUBTASK-001B-red-tests.md) — red contract tests | `BLOCKED` |
+| [ARCH-SUBTASK-001A](subtasks/ARCH-SUBTASK-001A-shell.md) — contract shell | `DONE` |
+| [ARCH-SUBTASK-001B](subtasks/ARCH-SUBTASK-001B-red-tests.md) — contract test fixtures | `READY` |
 | [ARCH-SUBTASK-001C](subtasks/ARCH-SUBTASK-001C-review.md) — independent review | `BLOCKED` |
 
 ## Feature Handoff
 
-After 001A and 001B, TASK-001 may create the runtime baseline against these types.
-Contract behavior made green by TASK-001 is then inspected by 001C.
+After 001A and 001B, TASK-001 may create the runtime baseline against these types and
+reusable fixtures. ARCH-SUBTASK-010B owns the runtime behavior-red evidence that
+TASK-001 makes green. Contract behavior made green by TASK-001 is then inspected by
+001C.
 
 ## Completion Gate
 

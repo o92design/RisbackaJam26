@@ -13,7 +13,7 @@
     {
       "id": "ARCH-SUBTASK-001B",
       "file": "Architecture/Tasks/01-contracts/subtasks/ARCH-SUBTASK-001B-red-tests.md",
-      "kind": "red-test",
+      "kind": "test-fixture",
       "start_after": [
         {"id": "ARCH-SUBTASK-001A", "milestone": "done"}
       ],
