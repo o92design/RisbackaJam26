@@ -2,7 +2,7 @@
 id: ARCH-SUBTASK-001B
 parent: ARCH-TASK-001
 stage: test-fixture
-status: REVIEW_READY
+status: CHANGES_REQUESTED
 owner: root_implementer
 computer: DESKTOP-2KFO48U
 context: /root
@@ -100,3 +100,20 @@ feature implementation or `/Game/Variant_Combat`.
   this subtask `DONE`.
 - Immutable implementation commit:
   `d606a77a16490acdb82e15587cd333400a533c65`.
+
+## Independent Review
+
+- Outcome: `CHANGES_REQUESTED`
+- Reviewed commit: `d606a77a16490acdb82e15587cd333400a533c65`
+- Reviewer/context: `/root/review_arch_001b` in fresh detached worktree
+  `.cache/worktrees/review-arch-001b-d606`
+- Verification rerun: task graph, all-eight Blueprint compilation, two clean
+  Editor focused runs at 4/4, `.\Test.ps1` at 5/5, asset scope, generic Object
+  references, interface-message calls, map contents, and dependency direction.
+- Medium finding: all four Functional Tests use fixed composite failure messages
+  ending in `Actual=mismatch`; failure paths must report the exact observed enum,
+  Boolean, numeric, array/string, token, and repeated-call values.
+- Medium finding: overlapping Blueprint nodes obscure setup and invalid-default
+  failure paths; switches and terminal results must be laid out distinctly with
+  readable wiring.
+- Production fixes made by reviewer: no
