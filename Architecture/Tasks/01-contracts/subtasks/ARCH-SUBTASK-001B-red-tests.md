@@ -2,7 +2,7 @@
 id: ARCH-SUBTASK-001B
 parent: ARCH-TASK-001
 stage: test-fixture
-status: IN_PROGRESS
+status: REVIEW_READY
 owner: root_implementer
 computer: DESKTOP-2KFO48U
 context: /root
@@ -117,3 +117,28 @@ feature implementation or `/Game/Variant_Combat`.
   failure paths; switches and terminal results must be laid out distinctly with
   readable wiring.
 - Production fixes made by reviewer: no
+
+## Review Corrections
+
+- New immutable review target:
+  `29e66951841d37f214576a70caef241ce84dda03`
+- Exact scope: the four claimed Functional Test Blueprints only; doubles, map,
+  smoke assets, production contracts, and feature assets remain unchanged.
+- Observed-value finding resolved: composite `Actual=mismatch` messages were
+  replaced with focused enum, Boolean, numeric, array/string, and token
+  diagnostics containing the exact observed result.
+- Graph-readability finding resolved: all four EventGraphs were arranged after
+  reconstruction. Independent post-restart inspection found zero duplicate node
+  positions across Damage 88 nodes, Initialization 41, Resource 56, and Wave 35.
+- Boundary verification: each graph retains four `K2Node_Message` interface
+  calls, generic Object references, zero dynamic casts, and disabled runtime
+  Tick flags with no connected Tick execution.
+- Compile result: all four corrected Blueprints compiled with warnings treated
+  as errors.
+- Clean-session focused result: run 1 passed 4/4 in 2.128396 seconds; run 2
+  passed 4/4 in 1.361027 seconds, with no errors or warnings.
+- Regression result: unchanged automation smoke passed 1/1; `.\Test.ps1`
+  passed 5/5 Functional Tests with project validation successful.
+- Graph/project validation: `Scripts/Test-AgentTaskGraph.ps1` passed with 40
+  nodes and 120 milestones; `Scripts/CI/Test-Project.ps1` passed.
+- Behavioral red intentionally delegated to ARCH-SUBTASK-010B.
