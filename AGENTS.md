@@ -171,11 +171,11 @@ explicit task approval.
   immutable review candidate, normally one implementation commit.
 - Never squash after review merely to clean history. A different commit requires
   fresh independent review.
-- The approved candidate must remain an ancestor of integrated `main`.
+- The approved candidate must remain an ancestor of integrated `master`.
 - Prefer fast-forward integration for a normalized candidate. Use `--no-ff`
   when intentionally retaining granular task history so `git log
   --first-parent` remains task-oriented.
-- Never rewrite `main`, a shared coordinator branch, or pushed history another
+- Never rewrite `master`, a shared coordinator branch, or pushed history another
   task may reference.
 
 Follow [the Git history strategy](Agent-Orchestration/Git-Strategy.md) for

@@ -1,13 +1,13 @@
 # Git History Strategy
 
 This repository keeps implementation review auditable without allowing
-task-level work to overwhelm the main branch history.
+task-level work to overwhelm the `master` branch history.
 
 ## Goals
 
-- A reviewer examines the exact implementation commit that reaches `main`.
+- A reviewer examines the exact implementation commit that reaches `master`.
 - Workers may use small operational commits while investigating and iterating.
-- Main-branch history emphasizes completed tasks rather than every local step.
+- The `master` branch history emphasizes completed tasks rather than every local step.
 - Shared coordination state remains visible when parallel workers depend on it.
 - Published and reviewed history is never rewritten.
 
@@ -25,7 +25,7 @@ Task work has four distinct commit layers:
    board updates made by the coordinator.
 
 Operational commits are useful on a task branch but are not automatically
-entitled to appear individually on `main`.
+entitled to appear individually on `master`.
 
 ## Pre-review Normalization
 
@@ -62,7 +62,7 @@ was required by parallel workers or multiple computers.
 - Never amend, rebase, squash, or force-push that candidate while it is under
   review.
 - Approval applies only to that SHA.
-- The approved candidate must remain an ancestor of the integrated `main`
+- The approved candidate must remain an ancestor of the integrated `master`
   history.
 - A post-review squash creates a different commit and therefore requires fresh
   independent review.
@@ -78,20 +78,19 @@ Use one of these integration modes:
 - **Normalized candidate:** prefer fast-forward integration when it preserves
   the intended compact history.
 - **Intentionally granular task branch:** use `git merge --no-ff` so one merge
-  commit represents the task on the main branch while the detailed audit trail
+  commit represents the task on the `master` branch while the detailed audit trail
   remains reachable.
 
-Use `git log --first-parent` for the task-oriented main-branch view.
+Use `git log --first-parent` for the task-oriented `master`-branch view.
 
 Do not use `git merge --squash` after approval unless the resulting squashed
 commit is treated as a new review candidate and independently reviewed.
 
 ## Published History
 
-- Never rewrite `main`, another shared coordinator branch, or any pushed commit
+- Never rewrite `master`, another shared coordinator branch, or any pushed commit
   that another task may reference.
 - Do not retroactively compact a completed task merely for aesthetics.
 - Prefer the cleaner process on the next task rather than force-pushing history.
 - Tags, task evidence, claims, and review handoffs must continue to resolve to
   the recorded reviewed commit.
-
