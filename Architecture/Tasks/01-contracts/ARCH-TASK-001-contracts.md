@@ -50,7 +50,7 @@ before feature graphs depend on them.
 | Subtask | Status |
 |---|---|
 | [ARCH-SUBTASK-001A](subtasks/ARCH-SUBTASK-001A-shell.md) — contract shell | `DONE` |
-| [ARCH-SUBTASK-001B](subtasks/ARCH-SUBTASK-001B-red-tests.md) — contract test fixtures | `READY` |
+| [ARCH-SUBTASK-001B](subtasks/ARCH-SUBTASK-001B-red-tests.md) — contract test fixtures | `DONE` |
 | [ARCH-SUBTASK-001C](subtasks/ARCH-SUBTASK-001C-review.md) — independent review | `BLOCKED` |
 
 ## Feature Handoff

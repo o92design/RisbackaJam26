@@ -2,7 +2,7 @@
 id: ARCH-SUBTASK-001B
 parent: ARCH-TASK-001
 stage: test-fixture
-status: REVIEW_READY
+status: DONE
 owner: root_implementer
 computer: DESKTOP-2KFO48U
 context: /root
@@ -96,8 +96,9 @@ feature implementation or `/Game/Variant_Combat`.
 - Graph/project validation: `Scripts/Test-AgentTaskGraph.ps1` passed with 40
   nodes and 120 milestones; `Scripts/CI/Test-Project.ps1` passed.
 - Behavioral red intentionally delegated to ARCH-SUBTASK-010B.
-- Feature task unblocked: `TASK-001` after the required independent review marks
-  this subtask `DONE`.
+- Feature dependency satisfied: the `ARCH-SUBTASK-001B` edge for `TASK-001` is
+  complete; `TASK-001` still requires the runtime behavior-red dependency from
+  `ARCH-SUBTASK-010B`.
 - Immutable implementation commit:
   `d606a77a16490acdb82e15587cd333400a533c65`.
 
@@ -142,3 +143,25 @@ feature implementation or `/Game/Variant_Combat`.
 - Graph/project validation: `Scripts/Test-AgentTaskGraph.ps1` passed with 40
   nodes and 120 milestones; `Scripts/CI/Test-Project.ps1` passed.
 - Behavioral red intentionally delegated to ARCH-SUBTASK-010B.
+
+## Independent Re-review
+
+- Outcome: `APPROVED`
+- Reviewed commit: `29e66951841d37f214576a70caef241ce84dda03`
+- Reviewer/context: `/root/review_arch_001b_v2` in fresh detached worktree
+  `.cache/worktrees/review-arch-001b-v2`
+- Verification rerun: graph and project validation; exact eight-Blueprint
+  warnings-as-errors compilation; nine-asset class/dependency inspection; two
+  clean-process focused runs at 4/4; smoke at 1/1; `.\Test.ps1` at 5/5; map
+  check at zero errors and warnings.
+- Prior findings: both resolved. The reviewer found exact observed-value
+  diagnostics and zero overlapping node bounding-box pairs.
+- Architecture/scope inspection: all 16 calls use generic Object targets and
+  interface messages; no casts, private-variable inspection, timers, latent
+  nodes, connected Tick execution, feature dependencies, or
+  `/Game/Variant_Combat` fixture dependency.
+- Findings: none
+- Production fixes made by reviewer: no
+- Environment note: the broad compile wrapper inherited the known TAPython
+  detached-worktree absolute-path warning after reporting zero Blueprint errors,
+  warnings, and load failures; exact Blueprint compiles and all tests passed.

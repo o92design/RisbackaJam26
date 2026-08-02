@@ -1,15 +1,17 @@
 ---
 id: CLAIM-ARCH-SUBTASK-001B
 task: ARCH-SUBTASK-001B
-status: IN_PROGRESS
+status: DONE
 owner: root_implementer
 computer: DESKTOP-2KFO48U
 context: /root
 branch: codex/arch-001b-contract-fixtures
 worktree: .cache/worktrees/arch-001b-contract-fixtures
 base_sha: ce2af3e7f3d7d4e86e457c1839f19cbe6d1eb949
+implementation_commit: 29e66951841d37f214576a70caef241ce84dda03
 claimed_at: 2026-08-02T19:26:26.5633972+02:00
-lease_expires_at: none
+lease_expires_at: 2026-08-02T22:13:01.5505975+02:00
+released_at: 2026-08-02T22:13:01.5505975+02:00
 ---
 
 # Claim — ARCH-SUBTASK-001B
