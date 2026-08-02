@@ -17,7 +17,7 @@ Scheduling is controlled by the machine-checked
 [orchestration guide](../Agent-Orchestration/README.md). The board below is a
 human-readable summary.
 
-Last board update: **2026-07-29**
+Last board update: **2026-08-02**
 
 ## Status Legend
 
@@ -73,6 +73,16 @@ Suggested branch format: `codex/task-###-short-name`.
 | [TASK-080](09-hud/TASK-080-hud.md) | Phase 1 HUD | `BLOCKED` | TASK-010, 020, 030, 040, 060 | `/UI` |
 | [TASK-090](10-integration/TASK-090-integration.md) | Prototype level and system integration | `BLOCKED` | TASK-010–080 | `/Maps/L_Risbacka_Prototype`, cross-system hookup |
 | [TASK-100](11-verification/TASK-100-verification.md) | Automation and two-player playtest | `BLOCKED` | TASK-090 | `/Tests/Phase1` |
+
+## Supporting Tooling
+
+Supporting tooling follows the same claim, test, review, and handoff rules but
+does not block the Phase 1 gameplay sequence unless a dependency is added to the
+task graph.
+
+| ID | Task | Status | Depends on | Primary exclusive area |
+|---|---|---|---|---|
+| [TASK-110](12-editor-tooling/TASK-110-blueprint-interface-automation.md) | Safe Blueprint interface automation | `READY` | ARCH-SUBTASK-001B | Editor-only project plugin and MCP registration |
 
 ## Parallel Execution Waves
 

@@ -21,6 +21,21 @@
       "lease_keys": ["tests:contracts"]
     },
     {
+      "id": "TASK-110",
+      "file": "Tasks/12-editor-tooling/TASK-110-blueprint-interface-automation.md",
+      "kind": "tooling",
+      "start_after": [
+        {"id": "ARCH-SUBTASK-001B", "milestone": "done"}
+      ],
+      "done_after": [],
+      "lease_keys": [
+        "tooling:blueprint-interface-automation",
+        "plugin:risbacka-blueprint-automation",
+        "config:uproject",
+        "scripts:unreal-mcp"
+      ]
+    },
+    {
       "id": "ARCH-SUBTASK-010A",
       "file": "Architecture/Tasks/02-runtime-composition/subtasks/ARCH-SUBTASK-010A-shell.md",
       "kind": "architecture-shell",
