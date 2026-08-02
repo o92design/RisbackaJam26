@@ -2,7 +2,7 @@
 id: ARCH-SUBTASK-001B
 parent: ARCH-TASK-001
 stage: test-fixture
-status: CHANGES_REQUESTED
+status: IN_PROGRESS
 owner: root_implementer
 computer: DESKTOP-2KFO48U
 context: /root
