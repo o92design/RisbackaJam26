@@ -159,4 +159,8 @@ double before its functions can be overridden.
   `GetHealthSnapshot`, `GetCarriedActor`, and `GetPlacementResult`, but there
   is no read API to confirm it, so no claim is made.
 
-- Commit:
+### Commit
+
+- `3c643e8` — initial contract shells.
+- `96945fd` — review fixes: real Blueprint Interfaces, dispatcher categories,
+  contract-note updates, corrected handoff. **Review this commit.**
