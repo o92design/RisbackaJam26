@@ -13,6 +13,7 @@
 # To disable it: delete this file (Content/Python/init_unreal.py) and restart.
 
 import os
+import sys
 import io
 import json
 import time
@@ -20,6 +21,22 @@ import traceback
 import contextlib
 
 import unreal
+
+# --- TAPython: make the project's TAPython Python folder importable ---
+# UE's Python "Additional Paths" setting can only hold an absolute, machine-specific
+# path (relative entries resolve against the engine binaries dir, not the project),
+# so we add it here from the project directory instead - correct on every machine.
+# project_dir() can be relative to the engine binaries dir, so make it absolute.
+_tapython_path = os.path.normpath(
+    unreal.Paths.convert_relative_path_to_full(
+        os.path.join(unreal.Paths.project_dir(), "TA/TAPython/Python")
+    )
+)
+if os.path.isdir(_tapython_path) and _tapython_path not in sys.path:
+    sys.path.insert(0, _tapython_path)
+    unreal.log("[TAPython path] added to sys.path: " + _tapython_path)
+elif not os.path.isdir(_tapython_path):
+    unreal.log_warning("[TAPython path] folder not found: " + _tapython_path)
 
 _DIR = os.path.join(unreal.Paths.project_saved_dir(), "rtapy")
 _CMD = os.path.join(_DIR, "cmd.json")

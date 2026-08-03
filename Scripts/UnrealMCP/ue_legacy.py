@@ -8,7 +8,7 @@ Kept for troubleshooting and compatibility. Use `ue.py` for new automation.
 Shells out to `curl` because the server rejects urllib's default header set.
 
 Configuration (environment variables, with defaults for the current setup):
-  RISBACKA_MCP_URL    MCP endpoint. Default http://192.168.1.157:8000/mcp
+  RISBACKA_MCP_URL    MCP endpoint. Default http://127.0.0.1:8123/mcp
   RISBACKA_MCP_SAVED  Editor host's <Project>/Saved/rtapy dir the bridge watches.
                       Default J:/Dev/Projects/Unreal/RisbackaJam26/RisbackaJam26Game/Saved/rtapy
 
@@ -24,7 +24,7 @@ import tempfile
 import time
 import uuid
 
-URL = os.environ.get("RISBACKA_MCP_URL", "http://192.168.1.157:8000/mcp")
+URL = os.environ.get("RISBACKA_MCP_URL", "http://127.0.0.1:8123/mcp")
 SIDFILE = os.path.join(tempfile.gettempdir(), "risbacka-mcp-session")
 _rid = [10]
 

@@ -41,7 +41,7 @@ except ImportError:  # pragma: no cover - Python 3.11+ is recommended.
 
 
 PROTOCOL_VERSION = "2025-06-18"
-DEFAULT_MCP_URL = "http://127.0.0.1:8000/mcp"
+DEFAULT_MCP_URL = "http://127.0.0.1:8123/mcp"
 ASSET_TOOLSET = "editor_toolset.toolsets.asset.AssetTools"
 CLIENT_NAME = "risbacka-unreal-mcp"
 CLIENT_VERSION = "2.0.0"

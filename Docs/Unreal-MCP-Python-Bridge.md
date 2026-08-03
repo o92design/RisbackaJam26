@@ -35,7 +35,7 @@ The fix is two parts:
 - Unreal Engine **5.8**.
 - The editor MCP plugins enabled (`ModelContextProtocol`, `EditorToolset`,
   `AutomationTestToolset`, `ConfigSettingsToolset`), Editor target only.
-- The MCP server reachable from the client (ours: `http://<host>:8000/mcp`,
+- The MCP server reachable from the client (ours: `http://<host>:8123/mcp`,
   JSON-RPC 2.0; it requires the `initialize` handshake and an `Mcp-Session-Id` header
   on every subsequent call).
 - **TAPython** installed as a *project* plugin at
@@ -181,7 +181,7 @@ Configuration is not tied to Codex. The main client checks, in order:
    [Scripts/UnrealMCP/client.json](../Scripts/UnrealMCP/client.json);
 4. a repository `.mcp.json` `unreal-mcp` entry;
 5. `.codex/config.toml` as an optional fallback; and
-6. `http://127.0.0.1:8000/mcp` plus automatic local `.uproject` discovery.
+6. `http://127.0.0.1:8123/mcp` plus automatic local `.uproject` discovery.
 
 `client.json` is the shared project default, not a Codex setting. If the editor
 host's LAN address changes, update that file or override it with
@@ -197,6 +197,12 @@ python Scripts/UnrealMCP/ue.py call get_asset_class `
   --arg asset_path=/Game/CodexTestEnum
 python Scripts/UnrealMCP/ue.py pyexec --code "output = 6 * 7"
 ```
+
+> **Use PowerShell, not Git Bash, for `/Game/...` arguments.** Git Bash (MSYS) rewrites
+> leading-slash arguments into Windows paths, so `--arg folder_path=/Game` arrives as
+> `C:/Program Files/Git/Game`. `find_assets` then returns an empty list with **no error**,
+> which reads as "the asset is missing" — a false negative when verifying a handoff.
+> In Git Bash, prefix the command with `MSYS_NO_PATHCONV=1`.
 
 The essential bridge shape:
 

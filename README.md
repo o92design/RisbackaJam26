@@ -108,16 +108,22 @@ the Output Log and run:
 ModelContextProtocol.StartServer
 ```
 
-The repository-level [.codex/config.toml](.codex/config.toml) points Codex at
-`http://192.168.1.157:8000/mcp`, the Unreal Editor host's current Wi-Fi address.
-`DefaultEngine.ini` binds HTTP port `8000` to that address. Start the server manually,
-then restart/reload Codex on each client computer.
+The server **auto-starts** with the editor (`bAutoStartServer=True` in
+`Config/DefaultEditorPerProjectUserSettings.ini`), so the manual
+`ModelContextProtocol.StartServer` console command is no longer required. To start it
+by hand anyway, that command still works.
+
+The listener binds `127.0.0.1:8123`, and the repository-level
+[.codex/config.toml](.codex/config.toml) points clients at `http://127.0.0.1:8123/mcp`.
+Port **8123** is used instead of the plugin default 8000 because the Windows "IP Helper"
+(`iphlpsvc`) service occupies port 8000, which silently prevents the editor from binding
+it. For a remote editor host, override the client URL with the `RISBACKA_MCP_URL`
+environment variable (or edit `.codex/config.toml` /
+`Scripts/UnrealMCP/client.json`) and set that host's own LAN IP as `BindAddress`.
 
 Only expose this unauthenticated editor-control endpoint on a trusted LAN. If Windows
-Firewall blocks access, add an inbound TCP rule for port `8000` restricted to the
-Private profile and local subnet. Reserve `192.168.1.157` in DHCP, or update both
-`.codex/config.toml` and the `HTTPServer.Listeners` entry in `DefaultEngine.ini` when
-this computer's address changes.
+Firewall blocks access, add an inbound TCP rule for port `8123` restricted to the
+Private profile and local subnet.
 
 ## Jenkins
 
