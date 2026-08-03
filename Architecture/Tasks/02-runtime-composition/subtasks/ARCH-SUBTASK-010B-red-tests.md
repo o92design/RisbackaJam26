@@ -2,7 +2,7 @@
 id: ARCH-SUBTASK-010B
 parent: ARCH-TASK-010
 stage: red-test
-status: READY
+status: REVIEW_READY
 owner: unassigned
 computer: unassigned
 depends_on:
@@ -34,8 +34,18 @@ Parent: [ARCH-TASK-010](../ARCH-TASK-010-runtime-composition.md) ·
 
 ## Handoff
 
-- Test assets:
-- Expected red result:
-- Actual result:
-- Linked feature tasks:
-- Commit:
+- Test assets: four Functional Tests and one discovery map under
+  `/Game/RisbackaJam26/Tests/Architecture/Runtime/`.
+- Expected red result: the runtime shell does not yet arbitrate terminal
+  requests or provide solo/two-player life-emitter behavior.
+- Actual result: focused run completed 1/4 passed and 3/4 failed with named
+  assertions. Terminal arbitration failed with `Expected=state transition
+  after success; Actual=state unchanged`; solo and two-player checks failed
+  with explicit missing-life-emitter diagnostics.
+- Linked feature tasks: TASK-001, TASK-090
+- Red-test command: Unreal Automation `RunTests` for the four
+  `Project.Functional Tests.RisbackaJam26.Tests.Architecture.Runtime.Maps.L_FT_Runtime_Composition.*` tests.
+- Regression checks: `Scripts/Test-AgentTaskGraph.ps1` and
+  `Scripts/CI/Test-Project.ps1` passed; all four test Blueprints compiled with
+  warnings treated as errors.
+- Commit: immutable candidate SHA recorded in the coordinator handoff.

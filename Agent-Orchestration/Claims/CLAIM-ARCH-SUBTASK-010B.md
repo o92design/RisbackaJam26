@@ -1,7 +1,7 @@
 ---
 id: CLAIM-ARCH-SUBTASK-010B
 task: ARCH-SUBTASK-010B
-status: IN_PROGRESS
+status: REVIEW_READY
 owner: codex-coordinator
 computer: local
 context: codex-coordinator-2026-08-03-010b
@@ -34,3 +34,13 @@ runtime/composition Blueprint assets remain owned by ARCH-SUBTASK-010A.
 - Expected integration order: after ARCH-SUBTASK-010A; before TASK-001
 - LFS locks: none
 - Coordinator approval commit: `bcdb34f`
+
+## Evidence
+
+- Five new Unreal assets created only below the claimed runtime test scope.
+- Four Functional Tests discovered on `L_FT_Runtime_Composition`.
+- Focused run: 1/4 passed and 3/4 failed with named red assertions recorded
+  in the task handoff.
+- All four test Blueprints compiled with warnings treated as errors.
+- Graph validation and project validation passed.
+- No production Blueprint, map, config, or feature asset changed.
