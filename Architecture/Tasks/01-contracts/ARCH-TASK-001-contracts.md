@@ -49,7 +49,7 @@ before feature graphs depend on them.
 
 | Subtask | Status |
 |---|---|
-| [ARCH-SUBTASK-001A](subtasks/ARCH-SUBTASK-001A-shell.md) — contract shell | `READY` |
+| [ARCH-SUBTASK-001A](subtasks/ARCH-SUBTASK-001A-shell.md) — contract shell | `REVIEW_READY` |
 | [ARCH-SUBTASK-001B](subtasks/ARCH-SUBTASK-001B-red-tests.md) — red contract tests | `BLOCKED` |
 | [ARCH-SUBTASK-001C](subtasks/ARCH-SUBTASK-001C-review.md) — independent review | `BLOCKED` |
 
