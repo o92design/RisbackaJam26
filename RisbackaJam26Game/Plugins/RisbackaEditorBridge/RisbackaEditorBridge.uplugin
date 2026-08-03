@@ -1,0 +1,23 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "Risbacka Editor Bridge",
+	"Description": "Editor-only automation helpers for operations the stock Python and MCP APIs do not expose, chiefly Blueprint interface implementation.",
+	"Category": "Risbacka",
+	"CreatedBy": "Risbacka",
+	"CreatedByURL": "",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"EngineVersion": "5.8.0",
+	"CanContainContent": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "RisbackaEditorBridge",
+			"Type": "Editor",
+			"LoadingPhase": "Default"
+		}
+	]
+}
