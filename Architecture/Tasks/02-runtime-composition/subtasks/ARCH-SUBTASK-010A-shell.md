@@ -2,7 +2,7 @@
 id: ARCH-SUBTASK-010A
 parent: ARCH-TASK-010
 stage: shell
-status: IN_REVIEW
+status: DONE
 owner: codex-coordinator
 computer: local
 branch: codex/arch-subtask-010a-runtime-shell
@@ -55,3 +55,11 @@ Parent: [ARCH-TASK-010](../ARCH-TASK-010-runtime-composition.md) ·
 - Added `Source` to `RequestRunFailure`.
 - Added editable bootstrap references for camera/bounds, cycle, home, storage,
   waves, spawn points, and HUD ownership.
+
+## Independent Review
+
+- Reviewed commit: `928a4d9`
+- Reviewer/context: Hegel (`019fc6ce-6dfa-76f2-bfd2-59521bc81f80`)
+- Outcome: `APPROVED`
+- Findings: None.
+- Reviewer made no production changes.
