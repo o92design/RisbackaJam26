@@ -24,6 +24,16 @@ lease_expires_at: none
 Only new test assets may be created below the runtime test scope. Existing
 runtime/composition Blueprint assets remain owned by ARCH-SUBTASK-010A.
 
+New runtime test assets currently include:
+
+- `RisbackaJam26Game/Content/RisbackaJam26/Tests/Architecture/Runtime/Doubles/BP_TD_PlayerLifeEmitter_Solo.uasset`
+- `RisbackaJam26Game/Content/RisbackaJam26/Tests/Architecture/Runtime/Doubles/BP_TD_PlayerLifeEmitter_TwoPlayer.uasset`
+- `RisbackaJam26Game/Content/RisbackaJam26/Tests/Architecture/Runtime/Functional/BP_FT_Runtime_Initialization.uasset`
+- `RisbackaJam26Game/Content/RisbackaJam26/Tests/Architecture/Runtime/Functional/BP_FT_Runtime_TerminalFirstWins.uasset`
+- `RisbackaJam26Game/Content/RisbackaJam26/Tests/Architecture/Runtime/Functional/BP_FT_Runtime_PlayerLifeSolo.uasset`
+- `RisbackaJam26Game/Content/RisbackaJam26/Tests/Architecture/Runtime/Functional/BP_FT_Runtime_PlayerLifeTwoPlayer.uasset`
+- `RisbackaJam26Game/Content/RisbackaJam26/Tests/Architecture/Runtime/Maps/L_FT_Runtime_Composition.umap`
+
 ## Lease Keys
 
 - `tests:runtime`
