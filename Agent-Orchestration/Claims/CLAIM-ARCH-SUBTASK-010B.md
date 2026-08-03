@@ -53,9 +53,9 @@ New runtime test assets currently include:
   and asserts unchanged state plus unchanged dispatcher counts. Both life
   tests repeat public registration setup and assert one event per emission.
   Initialization retains its invalid/no-partial-startup/repeat assertions.
-  Terminal execution reported the intended red failure; the solo life run timed
-  out at the Unreal 60-second limit and the two-player run was stopped after
-  that timeout.
+  All four registered tests now complete with bounded named red results:
+  terminal arbitration reports its intended failure, while initialization and
+  both life tests report bounded setup-watchdog failures.
 - All four test Blueprints compiled with warnings treated as errors.
 - Graph validation and project validation passed.
 - No production Blueprint, map, config, or feature asset changed.
