@@ -49,9 +49,13 @@ New runtime test assets currently include:
 
 - Seven new Unreal assets remain only below the claimed runtime test scope.
 - Four Functional Tests discovered on `L_FT_Runtime_Composition`.
-- Corrected tests add public-contract setup and named assertions for invalid
-  initialization, duplicate-safe event counts, terminal first-wins, and solo/
-  two-player life snapshots; focused execution still requires a clean rerun.
+- Corrected terminal test adds explicit post-terminal failure/success requests
+  and asserts unchanged state plus unchanged dispatcher counts. Both life
+  tests repeat public registration setup and assert one event per emission.
+  Initialization retains its invalid/no-partial-startup/repeat assertions.
+  Terminal execution reported the intended red failure; the solo life run timed
+  out at the Unreal 60-second limit and the two-player run was stopped after
+  that timeout.
 - All four test Blueprints compiled with warnings treated as errors.
 - Graph validation and project validation passed.
 - No production Blueprint, map, config, or feature asset changed.

@@ -39,7 +39,7 @@ Parent: [ARCH-TASK-010](../ARCH-TASK-010-runtime-composition.md) ·
 - Expected red result: the runtime shell does not yet arbitrate terminal
   requests, enforce repeat-safe valid initialization, or aggregate solo/two-
   player life-emitter facts.
-- Actual result: the four tests now drive public initialization, run-state,
+- Actual result: the four tests drive public initialization, run-state,
   player registration, life-emitter, and dispatcher contracts. Initialization
   asserts invalid configuration errors, no partial startup, first-call
   `Succeeded`, and repeat `AlreadyInitialized`. Terminal coverage records the
@@ -47,14 +47,20 @@ Parent: [ARCH-TASK-010](../ARCH-TASK-010-runtime-composition.md) ·
   event counts. Solo and two-player tests register real emitter doubles,
   assert one death per emitter, count observed life events, and query the
   `Alive`/`Dead` snapshot. The shell remains intentionally red; the focused
-  run timed out in the initialization path and reported named failures for the
-  incomplete runtime behavior.
+  terminal run reported the named failure for incomplete runtime behavior, and
+  the solo life run reached the Unreal 60-second timeout before completing.
+  The two-player run was stopped after the solo timeout. Terminal coverage additionally issues both
+  failure and success requests after the first accepted terminal request and
+  asserts unchanged state and unchanged dispatcher counts. Both life tests
+  repeat the public registration setup before emitting deaths and assert the
+  expected one-event-per-emission count.
 - Linked feature tasks: TASK-001, TASK-090
 - Red-test command: Unreal Automation `RunTests` for the four
   `Project.Functional Tests.RisbackaJam26.Tests.Architecture.Runtime.Maps.L_FT_Runtime_Composition.*` tests.
 - Regression checks: `Scripts/Test-AgentTaskGraph.ps1` and
-  `Scripts/CI/Test-Project.ps1` passed before the correction; all four test
-  Blueprints compile with warnings treated as errors, as do both emitter
-  doubles. The focused run must be repeated from the corrected candidate
-  worktree before review-ready handoff.
-- Commit: pending corrected candidate commit.
+  `Scripts/CI/Test-Project.ps1` pass; the corrected Functional Tests compile
+  with warnings treated as errors, as do both emitter doubles. The focused run
+  produced the terminal red result and a bounded life-test timeout; the
+  initialization test still requires a clean focused run before review-ready
+  handoff.
+- Commit: see the immutable candidate commit in the review handoff.
