@@ -2,7 +2,7 @@
 id: ARCH-SUBTASK-001A
 parent: ARCH-TASK-001
 stage: shell
-status: DONE
+status: REVIEW_READY
 owner: claude-coordinator
 computer: BIGBOSS
 branch: task/arch-subtask-001a-contract-shells
@@ -169,7 +169,12 @@ independent review caught it and the seven assets were rebuilt with
 - `f812616` — reviewed commit. **`APPROVED`** by fresh-context review.
 - A follow-up commit folds in the reviewer's minor documentation notes
   (ARC-CON-020 owner column, ARC-CON-050/060 pin-typing rationale, this
-  frontmatter). No asset changed after `f812616`.
+  frontmatter). No asset changed between `f812616` and that commit.
+- `1076a84` — **reopens this subtask.** Every result enum gained `Unset` at
+  index 0, because leading with the success value meant an unimplemented
+  function and an unfilled struct field both silently reported success. Five
+  enums and five contract notes changed, so the earlier approval no longer
+  covers the current assets. Re-review at `1076a84`.
 
 ### Review
 

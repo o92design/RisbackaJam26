@@ -2,13 +2,13 @@
 id: ARCH-SUBTASK-001B
 parent: ARCH-TASK-001
 stage: red-test
-status: IN_PROGRESS
+status: REVIEW_READY
 owner: claude-coordinator
 computer: BIGBOSS
 branch: task/arch-subtask-001a-contract-shells
 depends_on:
   - ARCH-SUBTASK-001A
-updated: 2026-07-29
+updated: 2026-08-03
 tags:
   - architecture/task
   - testing
@@ -205,3 +205,5 @@ TASK-001, once this subtask is `DONE`. It must turn all four assertions green.
   switches should be their own bridge call.
 
 ### Commit
+
+`1076a84` — red assertions plus the `Unset` enum change. Review this commit.
