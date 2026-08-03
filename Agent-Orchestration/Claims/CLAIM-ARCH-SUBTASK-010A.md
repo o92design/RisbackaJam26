@@ -1,7 +1,7 @@
 ---
 id: CLAIM-ARCH-SUBTASK-010A
 task: ARCH-SUBTASK-010A
-status: CHANGES_REQUESTED
+status: IN_PROGRESS
 owner: codex-coordinator
 computer: local
 context: codex-coordinator-2026-08-03
@@ -32,7 +32,7 @@ lease_expires_at: none
 - Expected handoff branch: `codex/arch-subtask-010a-runtime-shell`
 - Expected integration order: after ARCH-SUBTASK-001B; before ARCH-SUBTASK-010B and dependent domain shells
 - LFS locks: none
-- Coordinator approval commit: `2c8dbb8`
+- Coordinator approval commit: pending correction candidate
 
 ## Evidence
 

@@ -2,7 +2,7 @@
 id: ARCH-SUBTASK-010A
 parent: ARCH-TASK-010
 stage: shell
-status: CHANGES_REQUESTED
+status: IN_PROGRESS
 owner: codex-coordinator
 computer: local
 branch: codex/arch-subtask-010a-runtime-shell
@@ -39,10 +39,19 @@ Parent: [ARCH-TASK-010](../ARCH-TASK-010-runtime-composition.md) ·
 
 - Changed assets: `BP_RunCoordinator`, `BP_PlayerLifeAggregator`, and
   `BP_RisbackaWorldBootstrap` under `/Game/RisbackaJam26/Core`.
-- Public APIs: initialization and validation shells, run-state commands and
-  query, player registration/snapshot query, bootstrap references, and runtime
-  event dispatchers.
+- Public APIs: contract-shaped initialization and validation shells, explicit
+  `IsRisbackaInitialized` queries, run-state commands and query, player
+  registration/snapshot query, bootstrap references, and runtime event
+  dispatchers.
 - Compile result: all three Blueprints compiled with warnings treated as errors.
 - Regression result: project validation passed; functional suite passed 5/5 with
   `-DDC-ForceMemoryCache`.
 - Commit: `2c8dbb8`.
+
+## Review Corrections
+
+- Added `InitContext`, `InitResult`, `IsRisbackaInitialized`, and `Errors`
+  surfaces to all runtime/composition shells.
+- Added `Source` to `RequestRunFailure`.
+- Added editable bootstrap references for camera/bounds, cycle, home, storage,
+  waves, spawn points, and HUD ownership.
