@@ -29,17 +29,31 @@ Separate player input from pickup ownership and physics behavior.
 
 | Function | Inputs | Outputs | Rule |
 |---|---|---|---|
-| `CanBeginCarry` | Carrier | Boolean, reason | Rejects a second carrier |
-| `BeginCarry` | Carrier, attach target | Result | Assigns one authoritative carrier |
-| `EndCarry` | Carrier, drop transform | Result | Only current carrier may drop |
-| `GetDepositValue` | — | Wood amount | Pure query for valid resource pickups |
-| `ConsumeAfterDeposit` | Storage | Result | Can succeed once |
+| `CanBeginCarry` | `Carrier: Actor` | `CanBeginCarry: bool`, `Reason: E_RisbackaCarryResult` | Rejects a second carrier |
+| `BeginCarry` | `Carrier: Actor`, `AttachTarget: SceneComponent` | `Result: E_RisbackaCarryResult` | Assigns one authoritative carrier |
+| `EndCarry` | `Carrier: Actor`, `DropTransform: Transform` | `Result: E_RisbackaCarryResult` | Only current carrier may drop |
+| `GetDepositValue` | — | `WoodAmount: int` | Pure query for valid resource pickups |
+| `ConsumeAfterDeposit` | `Storage: Actor` | `Result: E_RisbackaCarryResult` | Can succeed once |
+
+`CanBeginCarry` reports its rejection through the same result enum as the commands
+so a caller can present one reason vocabulary.
 
 ## Interactor Component
 
 `BPC_CarryInteractor` owns selection, input forwarding, and the currently carried
 actor. `BP_Player_Risbacka` forwards input to the component and does not implement
 carry state in its Event Graph.
+
+| API | Kind | Inputs | Outputs | Rule |
+|---|---|---|---|---|
+| `TryBeginCarry` | Command | `Target: Actor` | `Result: E_RisbackaCarryResult` | Forwards to the carryable after local checks |
+| `TryEndCarry` | Command | `DropTransform: Transform` | `Result: E_RisbackaCarryResult` | Drops only what this component carries |
+| `GetCarriedActor` | Pure query | — | `CarriedActor: Actor` | Authoritative carried reference |
+| `OnCarryStarted` | Dispatcher | `CarriedActor: Actor` | — | Fires after a successful begin |
+| `OnCarryEnded` | Dispatcher | `PreviouslyCarried: Actor` | — | Fires after a successful drop or deposit |
+
+State lives in `CarriedActor` and `AttachTarget`, both in the `Risbacka|Carry`
+category.
 
 ## Test Obligations
 

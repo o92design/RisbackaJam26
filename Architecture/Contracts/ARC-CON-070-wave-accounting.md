@@ -29,14 +29,22 @@ boar class or treating arbitrary actor destruction as a kill.
 
 ## Participant Interface
 
-| Function | Rule |
-|---|---|
-| `ConfigureWaveParticipant(Director, WaveToken)` | Called once after a successful spawn |
-| `GetWaveToken()` | Pure query |
-| `ReportWaveParticipantFinished(Reason)` | Accepted once by the matching director/token |
+| Function | Inputs | Outputs | Rule |
+|---|---|---|---|
+| `ConfigureWaveParticipant` | `Director: Actor`, `WaveToken: Guid` | `Configured: bool` | Called once after a successful spawn |
+| `GetWaveToken` | — | `WaveToken: Guid` | Pure query |
+| `ReportWaveParticipantFinished` | `Reason: Name` | `Accepted: bool` | Accepted once by the matching director/token |
 
 The director owns a registered set, not only an integer. Duplicate or unknown reports
 are ignored and logged for tests.
+
+Both commands return a boolean so a duplicate configuration or a duplicate
+completion report is observable to a test rather than silently absorbed.
+`WaveToken` is a `Guid`, matching `FST_RisbackaSpawnResult.WaveToken`.
+
+`Reason` is a `Name` rather than an enum, consistent with
+`FST_RisbackaDamageRequest.DamagePurpose` and `FST_RisbackaResourceChange.Reason`.
+Cleanup and cancel paths must each use a documented, stable reason name.
 
 ## Director Events
 

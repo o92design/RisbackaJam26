@@ -31,13 +31,23 @@ so invalid or concurrent requests cannot consume wood.
 
 ## Component API
 
-| Function | Rule |
-|---|---|
-| `BeginPlacement(BuildClass, Store)` | Creates preview only; spends nothing |
-| `UpdatePlacement(TargetTransform)` | Runs bounded collision/bounds validation |
-| `TryCommitPlacement()` | Revalidates, atomically spends, then spawns |
-| `CancelPlacement()` | Removes preview and clears transient state |
-| `GetPlacementResult()` | Pure read for feedback |
+| API | Kind | Outputs | Rule |
+|---|---|---|---|
+| `BeginPlacement(BuildClass: class<Actor>, Store: Actor)` | Command | `Result: E_RisbackaPlacementResult` | Creates preview only; spends nothing |
+| `UpdatePlacement(TargetTransform: Transform)` | Command | `Result: E_RisbackaPlacementResult` | Runs bounded collision/bounds validation |
+| `TryCommitPlacement()` | Command | `Result: FST_RisbackaPlacementResult` | Revalidates, atomically spends, then spawns |
+| `CancelPlacement()` | Command | — | Removes preview and clears transient state |
+| `GetPlacementResult()` | Pure query | `Result: FST_RisbackaPlacementResult` | Pure read for feedback |
+| `OnPlacementCommitted(Result)` | Dispatcher | — | Fires once after a committed placement |
+
+The in-progress calls return the bare enum because only validity matters while
+previewing. Commit and read-back return the full struct so the confirmed
+transform and spawned actor travel with the outcome. `OnPlacementCommitted`
+reports a completed placement; it is not a request to place.
+
+`Store` is typed as `Actor` in the Phase 1 shell and is accessed through the
+resource-store contract. It becomes an interface-typed pin once a Blueprint
+implements `BPI_RisbackaResourceStore`.
 
 If spawning fails after a successful spend, the component must refund through a
 documented storage command or avoid committing the transaction until spawn success can
