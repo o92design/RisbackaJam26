@@ -1,7 +1,7 @@
 ---
 id: CLAIM-ARCH-SUBTASK-010A
 task: ARCH-SUBTASK-010A
-status: IN_REVIEW
+status: CHANGES_REQUESTED
 owner: codex-coordinator
 computer: local
 context: codex-coordinator-2026-08-03
@@ -41,3 +41,10 @@ lease_expires_at: none
 - Project validation passed.
 - Functional suite passed 5/5 using `-DDC-ForceMemoryCache`.
 - No production maps, gameplay assets, or unrelated packages changed.
+
+## Review Outcome
+
+- Reviewed commit: `d62aadc`
+- Outcome: `CHANGES_REQUESTED`
+- Findings: initialization API mismatch, incomplete failure command signature,
+  incomplete bootstrap dependency surface.
