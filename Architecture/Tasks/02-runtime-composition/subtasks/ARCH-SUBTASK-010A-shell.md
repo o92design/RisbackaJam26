@@ -2,9 +2,12 @@
 id: ARCH-SUBTASK-010A
 parent: ARCH-TASK-010
 stage: shell
-status: READY
-owner: unassigned
-computer: unassigned
+status: IN_PROGRESS
+owner: codex-coordinator
+computer: local
+branch: codex/arch-subtask-010a-runtime-shell
+worktree: J:/dev/Projects/Unreal/RisbackaJam26
+base_sha: b934c46
 depends_on:
   - ARCH-SUBTASK-001A
 updated: 2026-08-01
@@ -34,7 +37,12 @@ Parent: [ARCH-TASK-010](../ARCH-TASK-010-runtime-composition.md) ·
 
 ## Handoff
 
-- Changed assets:
-- Public APIs:
-- Compile result:
-- Commit:
+- Changed assets: `BP_RunCoordinator`, `BP_PlayerLifeAggregator`, and
+  `BP_RisbackaWorldBootstrap` under `/Game/RisbackaJam26/Core`.
+- Public APIs: initialization and validation shells, run-state commands and
+  query, player registration/snapshot query, bootstrap references, and runtime
+  event dispatchers.
+- Compile result: all three Blueprints compiled with warnings treated as errors.
+- Regression result: project validation passed; functional suite passed 5/5 with
+  `-DDC-ForceMemoryCache`.
+- Commit: pending review candidate.
