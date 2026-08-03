@@ -2,7 +2,7 @@
 id: ARCH-SUBTASK-010A
 parent: ARCH-TASK-010
 stage: shell
-status: REVIEW_READY
+status: IN_REVIEW
 owner: codex-coordinator
 computer: local
 branch: codex/arch-subtask-010a-runtime-shell

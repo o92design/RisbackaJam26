@@ -1,7 +1,7 @@
 ---
 id: CLAIM-ARCH-SUBTASK-010A
 task: ARCH-SUBTASK-010A
-status: REVIEW_READY
+status: IN_REVIEW
 owner: codex-coordinator
 computer: local
 context: codex-coordinator-2026-08-03
