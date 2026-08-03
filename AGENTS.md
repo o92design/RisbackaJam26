@@ -167,14 +167,21 @@ explicit task approval.
 ## Git history strategy
 
 - Operational commits may be granular on a task branch while work is active.
-- Before `REVIEW_READY`, normalize avoidable operational churn into a compact
-  immutable review candidate, normally one implementation commit.
+- Every mutating worker must use its own task branch/worktree; do not implement
+  directly on `master`.
+- Before `REVIEW_READY`, the coordinator must squash the complete claimed
+  implementation into one candidate commit on top of the current `master`
+  base. Review that exact candidate SHA.
+- Integrate an approved candidate with `git merge --ff-only` so the task adds
+  one implementation commit to `master`; never fast-forward a granular worker
+  branch into `master`.
+- Worker branches may be pushed for review or handoff, but their operational
+  commits must not be published into `master` individually.
+- Keep coordination and claim-release commits separate from the implementation
+  candidate; do not use them to justify publishing the worker's commit chain.
 - Never squash after review merely to clean history. A different commit requires
   fresh independent review.
 - The approved candidate must remain an ancestor of integrated `master`.
-- Prefer fast-forward integration for a normalized candidate. Use `--no-ff`
-  when intentionally retaining granular task history so `git log
-  --first-parent` remains task-oriented.
 - Never rewrite `master`, a shared coordinator branch, or pushed history another
   task may reference.
 

@@ -73,13 +73,29 @@ review the new exact SHA.
 
 ## Integration Strategy
 
-Use one of these integration modes:
+The default branch workflow is:
 
-- **Normalized candidate:** prefer fast-forward integration when it preserves
-  the intended compact history.
-- **Intentionally granular task branch:** use `git merge --no-ff` so one merge
-  commit represents the task on the `master` branch while the detailed audit trail
-  remains reachable.
+1. Work on a task branch/worktree. Granular operational commits are allowed
+   there while implementation is in progress.
+2. Before review, create one squashed review-candidate commit on top of the
+   current `master` base. It must contain only the claimed implementation.
+3. Review that exact candidate SHA.
+4. After approval, fast-forward `master` to that candidate and push `master`.
+
+The normal task integration must add exactly one implementation commit to
+`master`. Never fast-forward a granular worker branch into `master`, and do
+not use a merge commit merely to preserve worker history. Keep the worker
+branch as the audit trail and push it separately only when needed for review
+or handoff.
+
+Use `git merge --squash <task-branch>` (or an equivalent non-destructive
+candidate reconstruction) before the candidate is reviewed. Record the
+squashed commit SHA in the handoff, then use `git merge --ff-only
+<candidate-branch>` for integration.
+
+Coordination, claim-release, and board-state commits must remain separate from
+the implementation candidate. They are not a reason to publish every worker
+commit into `master`.
 
 Use `git log --first-parent` for the task-oriented `master`-branch view.
 
@@ -94,3 +110,14 @@ commit is treated as a new review candidate and independently reviewed.
 - Prefer the cleaner process on the next task rather than force-pushing history.
 - Tags, task evidence, claims, and review handoffs must continue to resolve to
   the recorded reviewed commit.
+
+## Branch and Push Rules
+
+- Every mutating worker uses its own branch and worktree; never implement
+  directly on `master`.
+- Push the worker branch only as needed for independent review, backup, or
+  cross-computer handoff.
+- Before pushing `master`, verify that the intended task adds one implementation
+  commit and contains only the claimed task scope.
+- Never force-push a worker branch, candidate branch, or `master` to make the
+  history appear compact. Compact history is produced before review.
