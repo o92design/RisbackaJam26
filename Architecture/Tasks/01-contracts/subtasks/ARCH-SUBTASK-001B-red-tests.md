@@ -52,15 +52,53 @@ path maps to the automation test
 `Project.Functional Tests.RisbackaJam26.Tests.Architecture.Contracts.L_ContractShells.BP_ContractShellTests`,
 which is inside the filter CI already uses.
 
+## Harness verified, but not yet a valid red test
+
+`AutomationTestToolset.ListTests` discovers both tests, and `RunTests`
+executed them:
+
+| Test | Result | Duration |
+|---|---|---|
+| `Project.Functional Tests.RisbackaJam26.Tests.L_AutomationSmoke.BP_AutomationSmoke` | `Success` | 0.68 s |
+| `Project.Functional Tests.RisbackaJam26.Tests.Architecture.Contracts.L_ContractShells.BP_ContractShellTests` | `Fail` | 60.44 s |
+
+This confirms the scaffolding: the new level is discovered at the expected
+automation path, loads, runs as a functional test, and reports back.
+
+The failure is **not** the red result this subtask requires. Its only error is
+`FinishTest TestResult=Failed. Time's Up.. Test timed out in 60,008 seconds` —
+`BP_ContractShellTests` has no assertions and no `Finish Test` node, so it ran
+until the timeout. The acceptance criteria require a behavior assertion that
+fails for the documented missing implementation, with a message naming expected
+and actual results. A timeout satisfies neither.
+
+Lower the actor's test timeout once real assertions exist, so a genuine hang
+does not cost 60 s per run.
+
 ## Blocked on a manual editor step
 
 Each test double must implement its contract interface before its functions can
 be overridden, and interface implementation cannot be scripted — see the known
-limitation in [ARCH-SUBTASK-001A](ARCH-SUBTASK-001A-shell.md). Verified again
-here: `BlueprintEditorLibrary.add_function_override` returns `None` for an
-unimplemented interface function, and
+limitation in [ARCH-SUBTASK-001A](ARCH-SUBTASK-001A-shell.md).
+
+Confirmed exhaustively rather than by spot check. A scan of all 11,304 classes
+exposed by the editor's Python API found no way to implement a Blueprint
+interface: every match on `interface` is a reader (`get_components_by_interface`,
+`does_implement_interface`, `does_class_implement_interface`) or belongs to an
+unrelated system (MetaSound, Niagara data interfaces). `FBPInterfaceDescription`
+is not exposed, so `UBlueprint.ImplementedInterfaces` cannot be constructed
+either. Directly retested: `BlueprintEditorLibrary.add_function_override`
+returns `None` for an unimplemented interface function, and
 `PythonBPLib.set_object_property(bp, "ImplementedInterfaces", ...)` returns
 `False`.
+
+TAPython does not close this gap. Its libraries were enumerated in full —
+`PythonBPLib`, `PythonBPAssetLib` (K2 nodes and schemas), `PythonScriptLibrary`,
+`PythonWidgetLib` — and none expose interface implementation. TAPython grants
+arbitrary editor Python, but `FBlueprintEditorUtils::ImplementNewInterface` is a
+C++ static rather than a `UFunction`, so neither Python glue nor
+`call_method` reflection can reach it. Everything else in this task graph should
+continue to go through TAPython.
 
 Required, once per double, in Class Settings → Interfaces → Add:
 
