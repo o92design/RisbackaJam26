@@ -131,24 +131,25 @@ errors and no warnings were raised.
   widget, or map type. The only object/class references are `Actor`,
   `SceneComponent`, and engine structs.
 
-### Known limitation
+### Former limitation, now resolved
 
-The editor exposes no scripted way to make a Blueprint *implement* an
+Stock Unreal exposes no scripted way to make a Blueprint *implement* an
 interface: `UBlueprint.ImplementedInterfaces` is not script-visible,
-`FBPInterfaceDescription` is not exposed to Python, and neither
-`BlueprintEditorLibrary`, `BlueprintGraphEditor`, `PythonBPLib`, nor the MCP
-`BlueprintTools` exposes any matching call. Implementation must be added by
-hand in Class Settings → Implemented Interfaces.
+`FBPInterfaceDescription` is not reflected, and
+`FBlueprintEditorUtils::ImplementNewInterface` is a C++ static rather than a
+`UFUNCTION`, so neither the editor Python API nor TAPython can reach it.
+Confirmed against all 11,304 exposed Python classes.
 
-That manual step is viable because these are real `BPTYPE_Interface` assets and
-therefore appear in the Class Settings picker. An earlier revision of this
+Resolved by the `RisbackaEditorBridge` editor plugin, which wraps that call as
+`unreal.RisbackaBlueprintInterfaceLibrary.implement_interface`. Contract
+implementation is now fully scripted for the whole project, not only for tests.
+See [the editor bridge guide](../../../../Docs/Risbacka-Editor-Bridge.md).
+
+The interface assets had to be correct first. An earlier revision of this
 subtask created them as ordinary Blueprints parented to `UInterface`, which
-looked correct by name and generated-class but could not be implemented at all;
+looked correct by name and generated class but could not be implemented at all;
 independent review caught it and the seven assets were rebuilt with
 `BlueprintInterfaceFactory`.
-
-ARCH-SUBTASK-001B must budget for one manual interface assignment per test
-double before its functions can be overridden.
 
 ### Not verifiable with current tooling
 

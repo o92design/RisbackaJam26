@@ -39,10 +39,10 @@ Scaffolding is in place under `/Game/RisbackaJam26/Tests/Architecture/Contracts/
 
 | Asset | Kind | State |
 |---|---|---|
-| `BP_TD_Initializable` | Actor | Created; interface not yet implemented |
-| `BP_TD_Damageable` | Actor | Created; interface not yet implemented |
-| `BP_TD_ResourceStore` | Actor | Created; interface not yet implemented |
-| `BP_TD_WaveParticipant` | Actor | Created; interface not yet implemented |
+| `BP_TD_Initializable` | Actor | Implements `BPI_RisbackaInitializable`; no overrides yet |
+| `BP_TD_Damageable` | Actor | Implements `BPI_RisbackaDamageable`; overrides stubbed |
+| `BP_TD_ResourceStore` | Actor | Implements `BPI_RisbackaResourceStore`; no overrides yet |
+| `BP_TD_WaveParticipant` | Actor | Implements `BPI_RisbackaWaveParticipant`; no overrides yet |
 | `BP_ContractShellTests` | `FunctionalTest` | Created; no assertions yet |
 | `L_ContractShells` | Level | Created and lit; hosts the test actor and one of each double |
 
@@ -75,7 +75,27 @@ and actual results. A timeout satisfies neither.
 Lower the actor's test timeout once real assertions exist, so a genuine hang
 does not cost 60 s per run.
 
-## Blocked on a manual editor step
+## Interfaces implemented, fully scripted
+
+All four doubles now implement their contract interface, with no manual step.
+This was done through
+`unreal.RisbackaBlueprintInterfaceLibrary.implement_interface`, added by the
+`RisbackaEditorBridge` plugin — see
+[the editor bridge guide](../../../../Docs/Risbacka-Editor-Bridge.md).
+
+| Double | Interface | `does_class_implement_interface` |
+|---|---|---|
+| `BP_TD_Initializable` | `BPI_RisbackaInitializable` | `True` |
+| `BP_TD_Damageable` | `BPI_RisbackaDamageable` | `True` |
+| `BP_TD_ResourceStore` | `BPI_RisbackaResourceStore` | `True` |
+| `BP_TD_WaveParticipant` | `BPI_RisbackaWaveParticipant` | `True` |
+
+Verified with the engine's own `SystemLibrary.does_class_implement_interface`
+rather than the plugin's return value. `add_function_override` now returns real
+graphs for `RequestDamage`, `CanReceiveDamage`, and `GetHealthSnapshot`, where
+it previously returned `None`.
+
+## Superseded: the former manual editor step
 
 Each test double must implement its contract interface before its functions can
 be overridden, and interface implementation cannot be scripted — see the known
@@ -92,26 +112,15 @@ returns `None` for an unimplemented interface function, and
 `PythonBPLib.set_object_property(bp, "ImplementedInterfaces", ...)` returns
 `False`.
 
-TAPython does not close this gap. Its libraries were enumerated in full —
+TAPython does not close this gap either. Its libraries were enumerated in full -
 `PythonBPLib`, `PythonBPAssetLib` (K2 nodes and schemas), `PythonScriptLibrary`,
-`PythonWidgetLib` — and none expose interface implementation. TAPython grants
+`PythonWidgetLib` - and none expose interface implementation. TAPython grants
 arbitrary editor Python, but `FBlueprintEditorUtils::ImplementNewInterface` is a
-C++ static rather than a `UFunction`, so neither Python glue nor
-`call_method` reflection can reach it. Everything else in this task graph should
-continue to go through TAPython.
+C++ static rather than a `UFUNCTION`, so neither Python glue nor `call_method`
+reflection can reach it.
 
-Required, once per double, in Class Settings → Interfaces → Add:
-
-| Double | Interface |
-|---|---|
-| `BP_TD_Initializable` | `BPI_RisbackaInitializable` |
-| `BP_TD_Damageable` | `BPI_RisbackaDamageable` |
-| `BP_TD_ResourceStore` | `BPI_RisbackaResourceStore` |
-| `BP_TD_WaveParticipant` | `BPI_RisbackaWaveParticipant` |
-
-After that, the remaining work is scriptable: add the interface function
-overrides returning explicit unimplemented/invalid defaults, write the focused
-assertions in `BP_ContractShellTests`, and record the red run.
+This is why the `RisbackaEditorBridge` plugin exists. Everything else in this
+task graph continues to go through TAPython.
 
 ## Known gap
 

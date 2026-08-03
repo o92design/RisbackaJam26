@@ -128,6 +128,18 @@ directory; CI fails if one exists).
   the TAPython **Python bridge**. See
   [Docs/Unreal-MCP-Python-Bridge.md](Docs/Unreal-MCP-Python-Bridge.md) for setup,
   the execution protocol, and the verified enum/struct API.
+- `BlueprintTools.create` sets a Blueprint's *parent class*. Passing
+  `/Script/CoreUObject.Interface` produces a `BPTYPE_Normal` Blueprint that
+  looks like an interface but cannot be implemented. Create real Blueprint
+  interfaces with `unreal.BlueprintInterfaceFactory` through the bridge, and
+  verify `BlueprintType == BPTYPE_Interface` rather than trusting
+  `get_asset_class`, which returns a `_C` name either way.
+- Making a Blueprint *implement* an interface is not scriptable in stock
+  Unreal. Use
+  `unreal.RisbackaBlueprintInterfaceLibrary.implement_interface` from the
+  `RisbackaEditorBridge` plugin. See
+  [Docs/Risbacka-Editor-Bridge.md](Docs/Risbacka-Editor-Bridge.md). Keep that
+  plugin narrow: editor automation only, never gameplay logic.
 - Work one MCP call at a time (let the editor finish each operation) and use
   `/Game/...` package paths, not absolute filesystem paths.
 - The bridge executes arbitrary editor Python; use it only on a trusted editor
