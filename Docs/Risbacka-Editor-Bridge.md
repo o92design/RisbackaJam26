@@ -34,12 +34,33 @@ cannot be replayed on a fresh checkout or in CI.
 
 The Blueprint-only baseline forbids a **project** `Source/` directory, and
 `Scripts/CI/Test-Project.ps1` enforces exactly that — it checks for
-`RisbackaJam26Game/Source`. Plugin C++ is not covered, and TAPython already
-ships as a project plugin with its own `Source/` tree that this machine
-compiles. This plugin follows that precedent.
+`RisbackaJam26Game/Source`. Plugin C++ is not covered.
+[Technical-Decisions](Technical-Decisions.md) states the policy directly:
+gameplay is Blueprint-only, plugin functionality may use C++, and the build
+machine retains the Visual Studio toolchain. Gameplay stays Blueprint-only.
 
-It is editor-only (`"Type": "Editor"`, `TargetAllowList: ["Editor"]`), so it is
-never part of a packaged build and cannot affect runtime gameplay.
+It is editor-only three times over, so it cannot reach a packaged build:
+`"Type": "Editor"` in the `.uplugin`, `TargetAllowList: ["Editor"]` in the
+`.uproject`, and a private dependency on `UnrealEd`, which does not exist in a
+packaged build and would fail to link. `Scripts/CI/Test-Project.ps1` asserts the
+`TargetAllowList` restriction.
+
+## This plugin must be compiled — TAPython is not a precedent for that
+
+TAPython is a project plugin with a `Source/` tree, but its **binaries are
+committed**: `Plugins/TAPython/Binaries/Win64/UnrealEditor-TAPython.dll` and
+friends are tracked, force-added past the `**/Binaries/` rule in `.gitignore`.
+No machine ever compiles it.
+
+`RisbackaEditorBridge` commits source only, with `Binaries/` gitignored, so it
+is the first component in this project that a fresh clone must build before the
+editor will open. Consequences:
+
+- A new checkout needs the Visual Studio toolchain, not just the editor.
+- Build it before first launch, or let the editor's "missing modules — rebuild
+  now?" prompt do it.
+- If that is unacceptable for a given machine, commit the built DLL the way
+  TAPython's is committed.
 
 ## API
 

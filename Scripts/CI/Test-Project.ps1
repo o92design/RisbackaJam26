@@ -11,7 +11,7 @@ Invoke-CIStage -Name 'Project Validation' -Body {
 
     $pluginMap = @{}
     foreach ($plugin in $project.Plugins) { $pluginMap[$plugin.Name] = $plugin }
-    foreach ($name in @('ModelContextProtocol', 'EditorToolset', 'AutomationTestToolset', 'ConfigSettingsToolset')) {
+    foreach ($name in @('ModelContextProtocol', 'EditorToolset', 'AutomationTestToolset', 'ConfigSettingsToolset', 'RisbackaEditorBridge')) {
         if (-not $pluginMap.ContainsKey($name) -or -not $pluginMap[$name].Enabled) {
             throw "Required editor plugin is not enabled: $name"
         }

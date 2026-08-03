@@ -43,7 +43,7 @@ Scaffolding is in place under `/Game/RisbackaJam26/Tests/Architecture/Contracts/
 | `BP_TD_Damageable` | Actor | Implements `BPI_RisbackaDamageable` |
 | `BP_TD_ResourceStore` | Actor | Implements `BPI_RisbackaResourceStore` |
 | `BP_TD_WaveParticipant` | Actor | Implements `BPI_RisbackaWaveParticipant` |
-| `BP_ContractShellTests` | `FunctionalTest` | Four red assertions; 15 s time limit |
+| `BP_ContractShellTests` | `FunctionalTest` | Seven assertions (4 red, 3 Unset guards); 15 s time limit |
 | `L_ContractShells` | Level | Created and lit; hosts the test actor and one of each double |
 
 The level has a directional light, sky light, sky atmosphere, height fog, a
@@ -54,14 +54,32 @@ which is inside the filter CI already uses.
 
 ## Red test achieved
 
-`BP_ContractShellTests` runs four focused assertions, one per contract named by
-this subtask, and every one fails today for the documented missing
-implementation. Run time is 0.67 s, not a timeout.
+`BP_ContractShellTests` runs seven assertions. Four state the target behaviour
+and fail today for the documented missing implementation; three assert that an
+unimplemented shell returns the explicit `Unset` value and pass today. Run time
+is 0.72 s, not a timeout.
+
+The three passing assertions are the guard for the index-0 convention. Review
+finding B1 established that the behaviour assertions alone are insensitive to
+enum ordering: move `Succeeded` back to index 0 and they fail identically, so
+the defect that reopened 001A could silently return. These assert the
+convention directly, via `EnumtoString` so the failure message names the enum
+value rather than a number:
+
+- `ARC-CON-040 an unimplemented DepositWood must return Unset, never a success value`
+- `ARC-CON-001 an unimplemented InitializeRisbacka must return Unset, never Succeeded`
+- `ARC-CON-020 a default FST_RisbackaDamageResult must read Unset, never Applied`
+
+The third calls `RequestDamage` and breaks the returned struct, so it guards the
+struct-field default specifically — the worse half of the original hazard.
+
+TASK-001 must flip these three from `Unset` to real values *and* turn the four
+behaviour assertions green.
 
 | Test | Result | Duration |
 |---|---|---|
-| `Project.Functional Tests.RisbackaJam26.Tests.Architecture.Contracts.L_ContractShells.BP_ContractShellTests` | `Fail` | 0.67 s |
-| `Project.Functional Tests.RisbackaJam26.Tests.L_AutomationSmoke.BP_AutomationSmoke` | `Success` | 0.78 s |
+| `Project.Functional Tests.RisbackaJam26.Tests.Architecture.Contracts.L_ContractShells.BP_ContractShellTests` | `Fail` | 0.72 s |
+| `Project.Functional Tests.RisbackaJam26.Tests.L_AutomationSmoke.BP_AutomationSmoke` | `Success` | 0.77 s |
 
 Expected red output, verbatim:
 
@@ -177,8 +195,8 @@ See the verbatim block above.
 
 ### Actual result/log
 
-Matches exactly. `BP_ContractShellTests` = `Fail` in 0.67 s with those four
-errors and no warnings. `BP_AutomationSmoke` = `Success` in 0.78 s, unchanged.
+Matches exactly. `BP_ContractShellTests` = `Fail` in 0.72 s with those four
+errors and no warnings. `BP_AutomationSmoke` = `Success` in 0.77 s, unchanged.
 
 ### Contract change made during this subtask
 
@@ -193,6 +211,28 @@ re-review, since it changes assets that were already approved.
 ### Feature task unblocked
 
 TASK-001, once this subtask is `DONE`. It must turn all four assertions green.
+
+### Review round 1 findings
+
+Fresh-context review of `5a390e1` returned `CHANGES_REQUESTED` on B1 and
+`APPROVED` for 001A. Addressed here:
+
+| Finding | Resolution |
+|---|---|
+| B1 — the Work item "assert default shell results are explicitly unimplemented/invalid" was not discharged, and nothing guarded the `Unset` convention | Three `Unset` assertions added, described above |
+| B2 — `ConfigureWaveParticipant` received a default zero `Guid` | Now passes a real token from `Guid|NewGuid` |
+| B3 — assertions skipped the result enum alongside the value | Subsumed by B1 |
+| B4 — empty `Event Tick` | Left in place; it is a default `FunctionalTest` event node and removing it has no effect on the test |
+| 001A recommendation — `E_RisbackaFailureReason` should also lead with `Unset` | Accepted. An unset reason on a genuinely failed run read as `HomeDestroyed` and reaches the HUD through `ARC-CON-090`. Done in the same commit so 001A is not reopened again |
+
+Deferred, needs a decision:
+
+- **P2 — the plugin's UFUNCTIONs are `BlueprintCallable`**, so they appear in
+  the palette of gameplay Blueprints and a stray reference would fail at cook.
+  The obvious fix, `meta=(BlueprintInternalUseOnly="true")`, risks also hiding
+  them from the Python reflection this project depends on, and verifying that
+  costs a rebuild and editor restart. Not attempted late in a working session.
+  Worth doing deliberately, with the Python path re-verified afterwards.
 
 ### Remaining risks
 

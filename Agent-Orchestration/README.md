@@ -127,7 +127,11 @@ Each computer uses its own checkout and task branch. Before work:
 2. confirm the pushed claim names this computer and branch;
 3. confirm the base SHA;
 4. acquire any required LFS locks;
-5. run graph validation locally.
+5. build the `RisbackaEditorBridge` plugin module, or accept the editor's
+   rebuild prompt on first launch — its binaries are not committed, so a fresh
+   checkout will not open the editor until it is compiled. See
+   [the editor bridge guide](../Docs/Risbacka-Editor-Bridge.md);
+6. run graph validation locally.
 
 Workers push only their assigned branch. The coordinator integrates reviewed
 commits in dependency order. Never amend, squash, rebase, or force-push an

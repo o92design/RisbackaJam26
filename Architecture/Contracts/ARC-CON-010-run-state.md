@@ -24,8 +24,16 @@ times of day.
 
 - `E_RisbackaPhase`: `Day`, `Night`
 - `E_RisbackaRunState`: `Bootstrapping`, `Ready`, `Playing`, `Success`, `Failure`
-- `E_RisbackaFailureReason`: `HomeDestroyed`, `SoloPlayerDead`,
+- `E_RisbackaFailureReason`: `Unset`, `HomeDestroyed`, `SoloPlayerDead`,
   `AllLocalPlayersDead`, `InvalidConfiguration`
+
+`E_RisbackaFailureReason` leads with `Unset` for the same reason the result
+enums do. A caller that reaches `RequestRunFailure` without setting a reason
+would otherwise report `HomeDestroyed` — wrong but entirely plausible — and that
+value travels through `OnRunFailed` to the HUD via
+[UI Read Model](ARC-CON-090-ui-read-model.md). `E_RisbackaPhase` and
+`E_RisbackaRunState` need no such entry: `Day` and `Bootstrapping` are the
+genuine initial values of a cycle and a run.
 
 This replaces the earlier proposal to place success and failure inside
 `E_RisbackaPhase`.
