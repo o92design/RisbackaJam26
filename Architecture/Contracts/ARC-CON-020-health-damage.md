@@ -31,14 +31,20 @@ flow through an adapter.
 
 ## Interface and Component API
 
-| Function | Inputs | Outputs | Rule |
-|---|---|---|---|
-| `RequestDamage` | Request struct | Result struct | The health owner applies or rejects once |
-| `CanReceiveDamage` | Request struct | Boolean | Pure policy query |
-| `GetHealthSnapshot` | — | Current, Max, IsDestroyed | Read-only |
-| `ResetHealthForTest` | Optional max | — | Test-only callable path; not exposed to player flow |
-| `OnHealthChanged` | Previous, Current, Max | Dispatcher | Fires after accepted damage |
-| `OnDestroyed` | Damage result | Dispatcher | Fires once |
+| API | Owner | Inputs | Outputs | Rule |
+|---|---|---|---|---|
+| `RequestDamage` | Interface + component | Request struct | Result struct | The health owner applies or rejects once |
+| `CanReceiveDamage` | Interface + component | Request struct | Boolean | Pure policy query |
+| `GetHealthSnapshot` | Interface + component | — | Current, Max, IsDestroyed | Read-only |
+| `ResetHealthForTest` | Component only | Optional max | — | Test-only callable path; not exposed to player flow |
+| `OnHealthChanged` | Component only | Previous, Current, Max | Dispatcher | Fires after accepted damage |
+| `OnDestroyed` | Component only | Damage result | Dispatcher | Fires once |
+
+The interface carries only the three cross-module calls. The test reset seam and
+both dispatchers live on `BPC_Health`, because a Blueprint Interface cannot host
+an event dispatcher and because the reset path must not appear on the production
+contract. An actor that adapts the Combat health implementation instead of using
+`BPC_Health` therefore has no scripted reset seam and must supply its own.
 
 The request includes amount, source actor, instigator actor, and a damage-purpose tag
 or enum. Negative and zero amounts are rejected. Health is clamped to `[0, Max]`.

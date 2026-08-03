@@ -2,10 +2,10 @@
 id: ARCH-SUBTASK-001A
 parent: ARCH-TASK-001
 stage: shell
-status: REVIEW_READY
+status: DONE
 owner: claude-coordinator
 computer: BIGBOSS
-branch: master
+branch: task/arch-subtask-001a-contract-shells
 base_commit: 11e717d
 updated: 2026-08-03
 tags:
@@ -88,8 +88,9 @@ Type choices the contract notes left open:
 - `BeginCarry`'s "attach target" is typed `SceneComponent`.
 - `BPC_BuildMode.BeginPlacement(Store)` and
   `BPI_RisbackaCarryable.ConsumeAfterDeposit(Storage)` are typed as raw `Actor`
-  in this shell. They become interface-typed pins once a Blueprint implements
-  `BPI_RisbackaResourceStore`; see the known limitation below.
+  in this shell to avoid pinning the calling shape before a store exists. An
+  interface is usable as a pin type with no implementers, so either may be
+  narrowed to `BPI_RisbackaResourceStore` at any time.
 - `BPC_BuildMode` returns the bare `E_RisbackaPlacementResult` from
   `BeginPlacement` / `UpdatePlacement` but the full
   `FST_RisbackaPlacementResult` from `TryCommitPlacement` /
@@ -161,6 +162,27 @@ double before its functions can be overridden.
 
 ### Commit
 
-- `3c643e8` — initial contract shells.
+- `3c643e8` — initial contract shells. Reviewed, `CHANGES_REQUESTED`.
 - `96945fd` — review fixes: real Blueprint Interfaces, dispatcher categories,
-  contract-note updates, corrected handoff. **Review this commit.**
+  contract-note updates, corrected handoff.
+- `f812616` — reviewed commit. **`APPROVED`** by fresh-context review.
+- A follow-up commit folds in the reviewer's minor documentation notes
+  (ARC-CON-020 owner column, ARC-CON-050/060 pin-typing rationale, this
+  frontmatter). No asset changed after `f812616`.
+
+### Review
+
+Independent fresh-context review, worktree `agent-aec5c6142f5e6c951`.
+
+First pass against `3c643e8` returned `CHANGES_REQUESTED` on a blocking defect:
+the seven `BPI_` assets were ordinary Blueprints parented to `UInterface`
+(`BPTYPE_Normal`, with an `EventGraph`), so nothing could have implemented them.
+`get_asset_class` had returned a plausible `_C` name for both kinds, so the
+original verification never tested the property that mattered.
+
+Second pass against `f812616` returned `APPROVED`. The reviewer confirmed
+`BPTYPE_Interface` in the committed bytes, in the live asset registry, and
+structurally (no member variables, no dispatchers, no `EventGraph`, matching
+`BPI_Damageable`); re-ran the duplicate-parameter scan clean after the
+delete-and-rebuild; confirmed all 33 function signatures unchanged from
+`3c643e8`; and confirmed no `ObjectRedirector` was left behind.

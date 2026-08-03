@@ -46,8 +46,9 @@ transform and spawned actor travel with the outcome. `OnPlacementCommitted`
 reports a completed placement; it is not a request to place.
 
 `Store` is typed as `Actor` in the Phase 1 shell and is accessed through the
-resource-store contract. It becomes an interface-typed pin once a Blueprint
-implements `BPI_RisbackaResourceStore`.
+resource-store contract. It may be narrowed to `BPI_RisbackaResourceStore` at
+any time — an interface is usable as a pin type with no implementers — and
+should be once a store exists and the calling shape is settled.
 
 If spawning fails after a successful spend, the component must refund through a
 documented storage command or avoid committing the transaction until spawn success can

@@ -38,11 +38,21 @@ Separate player input from pickup ownership and physics behavior.
 `CanBeginCarry` reports its rejection through the same result enum as the commands
 so a caller can present one reason vocabulary.
 
+`ConsumeAfterDeposit(Storage: Actor)` is typed as `Actor` in the Phase 1 shell for
+the same reason as `BPC_BuildMode.BeginPlacement(Store)`: an interface is usable
+as a pin type with no implementers, so this may be narrowed to
+`BPI_RisbackaResourceStore` once a store exists.
+
 ## Interactor Component
 
-`BPC_CarryInteractor` owns selection, input forwarding, and the currently carried
-actor. `BP_Player_Risbacka` forwards input to the component and does not implement
-carry state in its Event Graph.
+`BPC_CarryInteractor` owns input forwarding and the currently carried actor.
+`BP_Player_Risbacka` forwards input to the component and does not implement carry
+state in its Event Graph.
+
+Candidate selection is the caller's: `TryBeginCarry` takes an explicit `Target`
+rather than searching for one. This keeps overlap/trace policy on the pawn, where
+it can differ per input scheme, and keeps the component testable without a world
+query.
 
 | API | Kind | Inputs | Outputs | Rule |
 |---|---|---|---|---|
