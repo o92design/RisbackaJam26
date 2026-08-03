@@ -1,7 +1,7 @@
 ---
 id: CLAIM-ARCH-SUBTASK-010A
 task: ARCH-SUBTASK-010A
-status: IN_PROGRESS
+status: REVIEW_READY
 owner: codex-coordinator
 computer: local
 context: codex-coordinator-2026-08-03
@@ -32,4 +32,12 @@ lease_expires_at: none
 - Expected handoff branch: `codex/arch-subtask-010a-runtime-shell`
 - Expected integration order: after ARCH-SUBTASK-001B; before ARCH-SUBTASK-010B and dependent domain shells
 - LFS locks: none
-- Coordinator approval commit: pending
+- Coordinator approval commit: `2c8dbb8`
+
+## Evidence
+
+- Three claimed assets independently discovered as Blueprint classes.
+- All three compiled with warnings treated as errors.
+- Project validation passed.
+- Functional suite passed 5/5 using `-DDC-ForceMemoryCache`.
+- No production maps, gameplay assets, or unrelated packages changed.

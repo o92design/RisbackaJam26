@@ -2,7 +2,7 @@
 id: ARCH-SUBTASK-010A
 parent: ARCH-TASK-010
 stage: shell
-status: IN_PROGRESS
+status: REVIEW_READY
 owner: codex-coordinator
 computer: local
 branch: codex/arch-subtask-010a-runtime-shell
@@ -45,4 +45,4 @@ Parent: [ARCH-TASK-010](../ARCH-TASK-010-runtime-composition.md) ·
 - Compile result: all three Blueprints compiled with warnings treated as errors.
 - Regression result: project validation passed; functional suite passed 5/5 with
   `-DDC-ForceMemoryCache`.
-- Commit: pending review candidate.
+- Commit: `2c8dbb8`.
