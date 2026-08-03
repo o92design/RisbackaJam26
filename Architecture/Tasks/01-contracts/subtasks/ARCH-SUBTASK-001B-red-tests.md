@@ -2,7 +2,7 @@
 id: ARCH-SUBTASK-001B
 parent: ARCH-TASK-001
 stage: red-test
-status: REVIEW_READY
+status: DONE
 owner: claude-coordinator
 computer: BIGBOSS
 branch: task/arch-subtask-001a-contract-shells
@@ -212,10 +212,20 @@ re-review, since it changes assets that were already approved.
 
 TASK-001, once this subtask is `DONE`. It must turn all four assertions green.
 
-### Review round 1 findings
+### Review
 
-Fresh-context review of `5a390e1` returned `CHANGES_REQUESTED` on B1 and
-`APPROVED` for 001A. Addressed here:
+Round 1 against `5a390e1` returned `CHANGES_REQUESTED` on B1. Round 2 against
+`b1f81f6` returned **`APPROVED`**, with the red result reproduced independently
+by the reviewer: `BP_ContractShellTests` fails in 0.67 s with exactly the four
+behaviour errors and no fifth, confirming the three `Unset` guards pass.
+
+The reviewer also confirmed the enum-ordering sensitivity is proven by
+composition rather than needing a deliberate reorder: `EnumtoString` resolves
+display names, `set_enum_items` rewrites display names in place over fixed raw
+enumerators, so moving a success value to index 0 changes what index 0 displays
+as and fails the guard.
+
+Round 1 findings and their resolutions:
 
 | Finding | Resolution |
 |---|---|
@@ -229,10 +239,14 @@ Deferred, needs a decision:
 
 - **P2 — the plugin's UFUNCTIONs are `BlueprintCallable`**, so they appear in
   the palette of gameplay Blueprints and a stray reference would fail at cook.
-  The obvious fix, `meta=(BlueprintInternalUseOnly="true")`, risks also hiding
-  them from the Python reflection this project depends on, and verifying that
-  costs a rebuild and editor restart. Not attempted late in a working session.
-  Worth doing deliberately, with the Python path re-verified afterwards.
+  The reviewer accepted deferring the metadata change and proposed a cheaper,
+  safer guard instead, which is now in `Scripts/CI/Test-Project.ps1`: validation
+  fails if any `.uasset` under `Content/` references
+  `RisbackaBlueprintInterfaceLibrary`. That needs no rebuild, carries no
+  reflection risk, and catches the failure at validation rather than at cook.
+  The reviewer noted the metadata route may not even be the right fix, since
+  neither `BlueprintInternalUseOnly` nor `DevelopmentOnly` reliably restricts
+  palette visibility, so the CI assertion may be the permanent answer.
 
 ### Remaining risks
 
@@ -243,7 +257,21 @@ Deferred, needs a decision:
   bridge in the same script as other world work crashed the editor with
   `World Memory Leaks` (`EditorServer.cpp:2544`). Nothing was lost, but level
   switches should be their own bridge call.
+- **Unproven CI cook, and this one gates integration.** `RisbackaEditorBridge`
+  adds plugin C++ to a project that had none, and
+  `Scripts/CI/Build-Package.ps1` runs `BuildCookRun -build -cook`, whose cook
+  stage launches an editor that must load the module. UAT should treat a
+  project with plugin source as code-based and build the editor target, but
+  that is inference — no CI run has covered this branch. Prove one clean-clone
+  run before merging. If it fails, commit the built DLL the way TAPython's is
+  committed.
+- The `Unset` guard covers `E_RisbackaResourceResult`, `E_RisbackaInitResult`
+  and `E_RisbackaDamageResult` only. `E_RisbackaCarryResult`,
+  `E_RisbackaPlacementResult` and `E_RisbackaFailureReason` have no test double
+  yet and rest on the written rule alone. TASK-001 should extend the pattern as
+  those contracts gain implementers.
 
 ### Commit
 
-`1076a84` — red assertions plus the `Unset` enum change. Review this commit.
+`b1f81f6` — reviewed and `APPROVED`. Earlier: `c809454` scaffolding,
+`1076a84` first red result plus the `Unset` enum change.

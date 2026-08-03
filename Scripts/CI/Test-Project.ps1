@@ -23,6 +23,19 @@ Invoke-CIStage -Name 'Project Validation' -Body {
         throw 'AllToolsets must remain disabled; enable only the approved focused toolsets.'
     }
 
+    # RisbackaEditorBridge is an editor-only module, but its functions are
+    # BlueprintCallable and therefore visible in gameplay Blueprint palettes.
+    # A reference from Content would only fail at cook; catch it here instead.
+    $contentRoot = Join-Path (Split-Path $paths.Project) 'Content'
+    $bridgeReferences = @(
+        Get-ChildItem -LiteralPath $contentRoot -Recurse -File -Filter '*.uasset' -ErrorAction SilentlyContinue |
+            Where-Object { (Select-String -LiteralPath $_.FullName -Pattern 'RisbackaBlueprintInterfaceLibrary' -SimpleMatch -Quiet -ErrorAction SilentlyContinue) }
+    )
+    if ($bridgeReferences.Count -gt 0) {
+        $names = ($bridgeReferences | ForEach-Object { $_.Name }) -join ', '
+        throw "Editor-only RisbackaBlueprintInterfaceLibrary is referenced by content, which would fail at cook: $names"
+    }
+
     $engineIni = Get-Content -Raw -LiteralPath (Join-Path (Split-Path $paths.Project) 'Config\DefaultEngine.ini')
     $requiredSettings = @(
         'GameDefaultMap=/Game/Variant_Combat/Lvl_Combat.Lvl_Combat',
