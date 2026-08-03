@@ -27,7 +27,7 @@ flow through an adapter.
 - `BPC_Health`
 - `FST_RisbackaDamageRequest`
 - `FST_RisbackaDamageResult`
-- `E_RisbackaDamageResult`: `Applied`, `Rejected`, `AlreadyDestroyed`
+- `E_RisbackaDamageResult`: `Unset`, `Applied`, `Rejected`, `AlreadyDestroyed`
 
 ## Interface and Component API
 

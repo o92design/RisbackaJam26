@@ -32,6 +32,11 @@ but every consumer and test must then be updated together.
 ## Contract Rules
 
 - Commands that can fail return an explicit result; they do not silently do nothing.
+- A result enum reserves index `0` for `Unset`, never for success. Blueprint
+  returns the zero value from an unimplemented function, and a struct field that
+  nobody filled in is also zero, so a success-at-zero enum makes both silently
+  report success. `E_RisbackaRunState` shows the same idea for state enums: its
+  index `0` is `Bootstrapping`, the honest "nothing has happened yet" value.
 - Currency and counters change in one atomic function on the state owner.
 - Event dispatchers describe completed state changes, not requests.
 - A terminal event fires once.

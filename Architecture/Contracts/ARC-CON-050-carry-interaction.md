@@ -23,7 +23,8 @@ Separate player input from pickup ownership and physics behavior.
 
 - `BPI_RisbackaCarryable`
 - `BPC_CarryInteractor`
-- `E_RisbackaCarryResult`
+- `E_RisbackaCarryResult`: `Unset`, `Succeeded`, `AlreadyCarried`,
+  `NotCurrentCarrier`, `InvalidCarrier`, `AlreadyConsumed`
 
 ## Carryable Interface
 

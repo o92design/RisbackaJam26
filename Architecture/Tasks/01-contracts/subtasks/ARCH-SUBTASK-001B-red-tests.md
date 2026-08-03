@@ -39,11 +39,11 @@ Scaffolding is in place under `/Game/RisbackaJam26/Tests/Architecture/Contracts/
 
 | Asset | Kind | State |
 |---|---|---|
-| `BP_TD_Initializable` | Actor | Implements `BPI_RisbackaInitializable`; no overrides yet |
-| `BP_TD_Damageable` | Actor | Implements `BPI_RisbackaDamageable`; overrides stubbed |
-| `BP_TD_ResourceStore` | Actor | Implements `BPI_RisbackaResourceStore`; no overrides yet |
-| `BP_TD_WaveParticipant` | Actor | Implements `BPI_RisbackaWaveParticipant`; no overrides yet |
-| `BP_ContractShellTests` | `FunctionalTest` | Created; no assertions yet |
+| `BP_TD_Initializable` | Actor | Implements `BPI_RisbackaInitializable` |
+| `BP_TD_Damageable` | Actor | Implements `BPI_RisbackaDamageable` |
+| `BP_TD_ResourceStore` | Actor | Implements `BPI_RisbackaResourceStore` |
+| `BP_TD_WaveParticipant` | Actor | Implements `BPI_RisbackaWaveParticipant` |
+| `BP_ContractShellTests` | `FunctionalTest` | Four red assertions; 15 s time limit |
 | `L_ContractShells` | Level | Created and lit; hosts the test actor and one of each double |
 
 The level has a directional light, sky light, sky atmosphere, height fog, a
@@ -52,28 +52,61 @@ path maps to the automation test
 `Project.Functional Tests.RisbackaJam26.Tests.Architecture.Contracts.L_ContractShells.BP_ContractShellTests`,
 which is inside the filter CI already uses.
 
-## Harness verified, but not yet a valid red test
+## Red test achieved
 
-`AutomationTestToolset.ListTests` discovers both tests, and `RunTests`
-executed them:
+`BP_ContractShellTests` runs four focused assertions, one per contract named by
+this subtask, and every one fails today for the documented missing
+implementation. Run time is 0.67 s, not a timeout.
 
 | Test | Result | Duration |
 |---|---|---|
-| `Project.Functional Tests.RisbackaJam26.Tests.L_AutomationSmoke.BP_AutomationSmoke` | `Success` | 0.68 s |
-| `Project.Functional Tests.RisbackaJam26.Tests.Architecture.Contracts.L_ContractShells.BP_ContractShellTests` | `Fail` | 60.44 s |
+| `Project.Functional Tests.RisbackaJam26.Tests.Architecture.Contracts.L_ContractShells.BP_ContractShellTests` | `Fail` | 0.67 s |
+| `Project.Functional Tests.RisbackaJam26.Tests.L_AutomationSmoke.BP_AutomationSmoke` | `Success` | 0.78 s |
 
-This confirms the scaffolding: the new level is discovered at the expected
-automation path, loads, runs as a functional test, and reports back.
+Expected red output, verbatim:
 
-The failure is **not** the red result this subtask requires. Its only error is
-`FinishTest TestResult=Failed. Time's Up.. Test timed out in 60,008 seconds` —
-`BP_ContractShellTests` has no assertions and no `Finish Test` node, so it ran
-until the timeout. The acceptance criteria require a behavior assertion that
-fails for the documented missing implementation, with a message naming expected
-and actual results. A timeout satisfies neither.
+```text
+Expected 'ARC-CON-040 DepositWood(10) must report the new balance'
+  to be {10}, but it was {0}
+Expected 'ARC-CON-001 IsRisbackaInitialized must be true after InitializeRisbacka'
+  to be {1}, but it was {0}
+Expected 'ARC-CON-020 GetHealthSnapshot must report a configured Max health'
+  to be {100.000000}, but it was {0.000000} within tolerance {0.010000}
+Expected 'ARC-CON-070 ConfigureWaveParticipant must accept its first configuration'
+  to be {1}, but it was {0}
+```
 
-Lower the actor's test timeout once real assertions exist, so a genuine hang
-does not cost 60 s per run.
+Every message names both the expectation and the actual value. `AssertTrue` was
+deliberately replaced with `AssertEqual(Bool)` for the two boolean cases,
+because `AssertTrue` reports only the expectation.
+
+The pre-existing smoke test still passes, so this changed no existing behavior.
+
+TASK-001 must make all four green.
+
+### Acceptance criteria
+
+| Criterion | State |
+|---|---|
+| Test setup and asset loading succeed | Met — the level loads and all four doubles spawn |
+| The behavior assertion fails for the documented missing implementation | Met — four failures, each naming its contract |
+| Failure messages name expected and actual results | Met — see the verbatim output above |
+| Tests do not inspect private Blueprint variables | Met — every call goes through a contract function; no variable reads |
+
+### Substitution caveat
+
+The assertions call the contract functions, but two of them resolve to the
+*concrete* class rather than dispatching through the interface:
+`Class|BPTDInitializable|InitializeRisbacka` and
+`Class|BPTDDamageable|GetHealthSnapshot`. `SpawnActor from Class` returns a
+concretely-typed reference, so Blueprint binds the call directly.
+
+That satisfies this subtask's criteria, which require public-API calls rather
+than interface dispatch specifically. It does not yet fully discharge
+ARCH-TASK-001's completion gate, "test doubles prove interface substitution".
+Routing the calls through an interface-typed reference is the remaining work for
+that gate, and it belongs with TASK-001, when a second implementer exists to
+substitute against.
 
 ## Interfaces implemented, fully scripted
 
@@ -131,8 +164,44 @@ would render invisible until its template mesh is set.
 
 ## Handoff
 
-- Test assets:
-- Expected red result:
-- Actual result/log:
-- Feature task unblocked:
-- Commit:
+### Test assets
+
+All under `/Game/RisbackaJam26/Tests/Architecture/Contracts/`:
+`BP_TD_Initializable`, `BP_TD_Damageable`, `BP_TD_ResourceStore`,
+`BP_TD_WaveParticipant`, `BP_ContractShellTests`, `L_ContractShells`.
+
+### Expected red result
+
+Four assertion failures, one per contract, each naming expected and actual.
+See the verbatim block above.
+
+### Actual result/log
+
+Matches exactly. `BP_ContractShellTests` = `Fail` in 0.67 s with those four
+errors and no warnings. `BP_AutomationSmoke` = `Success` in 0.78 s, unchanged.
+
+### Contract change made during this subtask
+
+Every result enum gained `Unset` at index 0. Blueprint returns the zero value
+from an unimplemented function, and a struct field nobody filled in is also
+zero, so the previous ordering made both silently report success — a
+default-constructed `FST_RisbackaDamageResult` meant `Applied`. Verified at
+runtime: `DepositWood` on a shell now returns `E_RisbackaResourceResult.UNSET`
+where it previously returned `Succeeded`. This reopens ARCH-SUBTASK-001A for
+re-review, since it changes assets that were already approved.
+
+### Feature task unblocked
+
+TASK-001, once this subtask is `DONE`. It must turn all four assertions green.
+
+### Remaining risks
+
+- The substitution caveat above: two calls bind to the concrete class rather
+  than dispatching through the interface.
+- The `Marker` mesh gap below.
+- Editor crash risk: calling `LevelEditorSubsystem.load_level` from the Python
+  bridge in the same script as other world work crashed the editor with
+  `World Memory Leaks` (`EditorServer.cpp:2544`). Nothing was lost, but level
+  switches should be their own bridge call.
+
+### Commit

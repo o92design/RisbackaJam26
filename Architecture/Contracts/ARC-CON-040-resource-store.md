@@ -23,7 +23,8 @@ Make the shared wood balance authoritative and make building costs atomic.
 ## Proposed Asset
 
 - `BPI_RisbackaResourceStore`
-- `E_RisbackaResourceResult`: `Succeeded`, `InvalidAmount`, `InsufficientBalance`
+- `E_RisbackaResourceResult`: `Unset`, `Succeeded`, `InvalidAmount`,
+  `InsufficientBalance`
 - `FST_RisbackaResourceChange`
 
 ## Interface Functions and Events

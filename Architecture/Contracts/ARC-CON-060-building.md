@@ -26,7 +26,7 @@ so invalid or concurrent requests cannot consume wood.
 - `BPC_BuildMode`
 - `FST_RisbackaPlacementRequest`
 - `FST_RisbackaPlacementResult`
-- `E_RisbackaPlacementResult`: `Valid`, `Blocked`, `OutOfBounds`,
+- `E_RisbackaPlacementResult`: `Unset`, `Valid`, `Blocked`, `OutOfBounds`,
   `InsufficientWood`, `SpawnFailed`
 
 ## Component API

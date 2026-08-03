@@ -23,7 +23,8 @@ actors must not rely on an accidental `BeginPlay` order.
 
 - `BPI_RisbackaInitializable`
 - `FST_RisbackaInitContext`
-- `E_RisbackaInitResult`: `Succeeded`, `AlreadyInitialized`, `InvalidConfiguration`
+- `E_RisbackaInitResult`: `Unset`, `Succeeded`, `AlreadyInitialized`,
+  `InvalidConfiguration`
 
 ## Interface Functions
 
