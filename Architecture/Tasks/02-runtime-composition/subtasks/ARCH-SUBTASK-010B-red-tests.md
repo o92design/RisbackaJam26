@@ -2,7 +2,7 @@
 id: ARCH-SUBTASK-010B
 parent: ARCH-TASK-010
 stage: red-test
-status: BLOCKED
+status: READY
 owner: unassigned
 computer: unassigned
 depends_on:

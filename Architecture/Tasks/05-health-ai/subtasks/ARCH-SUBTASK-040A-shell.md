@@ -2,7 +2,7 @@
 id: ARCH-SUBTASK-040A
 parent: ARCH-TASK-040
 stage: shell
-status: BLOCKED
+status: READY
 owner: unassigned
 computer: unassigned
 depends_on:
